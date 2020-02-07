@@ -32,3 +32,28 @@ const subTaskSchema = new Schema ({
         type: [commentSchema]
     }
 });
+
+const taskSchema = new Schema ({
+    taskName: {
+        type: `String`,
+        required: true,
+        trim: true
+    },
+    taskDescription: {
+        type: `String`
+    },
+    taskCategory: {
+        type: `String`
+    },
+    taskAssignedUsers: {
+        type: [Number]
+    },
+    taskDue: {
+        type: Date
+    },
+    taskComments: {
+        type: [commentSchema]
+    }
+});
+
+module.exports = mongoose.model(`Task`, taskSchema);
