@@ -12,3 +12,23 @@ const commentSchema = new Schema ({
         required: true
     }
 });
+
+const subTaskSchema = new Schema ({
+    subTaskName: {
+        type: `String`,
+        required: true,
+        trim: true
+    },
+    subTaskDescription: {
+        type: `String`
+    },
+    subTaskAssignedUsers: {
+        type: [Number]
+    },
+    subTaskDue: {
+        type: Date
+    },
+    subTaskComments: {
+        type: [commentSchema]
+    }
+});
