@@ -101,25 +101,25 @@ describe(`Users`, () => {
 		});
 	});
 
-	
+
 	/*
     * Test the /PUT/:id route
     */
-   describe('/PUT/:id user', () => {
-	it('it should UPDATE a user given the id', (done) => {
-		let user = new User({ username: `test`, email: `test`, password: `test`, nickname: `test` });
-		User.save((err, user) => {
-			chai.request(app)
-				.put('/api/users' + user.id)
-				.send({ username: `test`, email: `test`, password: `test`, nickname: `nickname` })
-				.end((err, res) => {
-					res.should.have.status(200);
-					res.body.should.be.a('object');
-					res.body.should.have.property('message').eql('User updated!');
-					res.body.book.should.have.property('nickname').eql(`nickname`);
-					done();
-				});
+	describe('/PUT/:id user', () => {
+		it('it should UPDATE a user given the id', (done) => {
+			let user = new User({ username: `test`, email: `test`, password: `test`, nickname: `test` });
+			User.save((err, user) => {
+				chai.request(app)
+					.put('/api/users' + user.id)
+					.send({ username: `test`, email: `test`, password: `test`, nickname: `nickname` })
+					.end((err, res) => {
+						res.should.have.status(200);
+						res.body.should.be.a('object');
+						res.body.should.have.property('message').eql('User updated!');
+						res.body.book.should.have.property('nickname').eql(`nickname`);
+						done();
+					});
+			});
 		});
 	});
-});
 });
