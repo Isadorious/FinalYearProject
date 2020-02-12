@@ -83,7 +83,7 @@ describe(`Users`, () => {
 	describe('/GET/:id user', () => {
 		it('it should GET a user by the given id', (done) => {
 			let user = new User({ username: `test`, email: `test`, password: `test`, nickname: `test` });
-			User.save((err, user) => {
+			user.save((err, user) => {
 				chai.request(app)
 					.get("/api/users/" + user.id)
 					.send(user)
@@ -108,7 +108,7 @@ describe(`Users`, () => {
 	describe('/PUT/:id user', () => {
 		it('it should UPDATE a user given the id', (done) => {
 			let user = new User({ username: `test`, email: `test`, password: `test`, nickname: `test` });
-			User.save((err, user) => {
+			user.save((err, user) => {
 				chai.request(app)
 					.put('/api/users/' + user.id)
 					.send({ username: `test`, email: `test`, password: `test`, nickname: `nickname` })
@@ -129,7 +129,7 @@ describe(`Users`, () => {
 	describe('/DELETE/:id user', () => {
 		it('it should DELETE a user given the id', (done) => {
 			let user = new User({ username: `test`, email: `test`, password: `test`, nickname: `test` });
-			User.save((err, user) => {
+			user.save((err, user) => {
 				chai.request(app)
 					.delete('/api/users/' + user.id)
 					.end((err, res) => {
