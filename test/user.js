@@ -85,7 +85,7 @@ describe(`Users`, () => {
 			let user = new User({ username: `test`, email: `test`, password: `test`, nickname: `test` });
 			User.save((err, user) => {
 				chai.request(app)
-					.get("/api/users" + user.id)
+					.get("/api/users/" + user.id)
 					.send(user)
 					.end((err, res) => {
 						res.should.have.status(200);
