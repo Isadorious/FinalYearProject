@@ -31,4 +31,49 @@ describe(`Users`, () => {
 			});
 		});
 	});
+
+	/*
+	* Test the /POST route
+	*/
+	describe(`/POST user`, () => {
+		it(`it should POST a user without an email`, (done) => {
+			let user = {
+				username: `test`,
+				password: `test`,
+				nickname: `test`
+			}
+			chai.request(app)
+			.post(`/api/users`)
+			.send(user)
+			.end((err, res) => {
+				res.should.status(200);
+				res.body.should.be.a(`object`);
+				res.body.should.have.property(`errors`);
+				res.body.errors.should.have.property(`email`);
+				res.body.errors.email.should.have.property(`kind`).eql(`required`);
+				done();
+			});
+		});
+		it(`it should POST a user`, (done) => {
+			let user = {
+				username: `test`,
+				email: `test`,
+				password: `test`,
+				nickname: `test`
+			}
+			chai.request(app)
+			.post(`/api/users`)
+			.send(user)
+			.end((err, res => {
+				res.should.have.status(200);
+				res.shouold.be.a(`object`);
+				res.body.should.have.property(`message`).eql(`User added successfully!`);
+				res.body.should.have.property(`username`);
+				res.body.should.have.property(`email`);
+				res.body.should.have.property(`password`);
+				res.body.should.have.property(`nickname`);
+				done();
+			}));
+		});
+	});
 });
