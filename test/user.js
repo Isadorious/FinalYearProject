@@ -110,13 +110,34 @@ describe(`Users`, () => {
 			let user = new User({ username: `test`, email: `test`, password: `test`, nickname: `test` });
 			User.save((err, user) => {
 				chai.request(app)
-					.put('/api/users' + user.id)
+					.put('/api/users/' + user.id)
 					.send({ username: `test`, email: `test`, password: `test`, nickname: `nickname` })
 					.end((err, res) => {
 						res.should.have.status(200);
 						res.body.should.be.a('object');
 						res.body.should.have.property('message').eql('User updated!');
 						res.body.book.should.have.property('nickname').eql(`nickname`);
+						done();
+					});
+			});
+		});
+	});
+
+	/*
+	* Test the /DELETE/:id route
+	*/
+	describe('/DELETE/:id user', () => {
+		it('it should DELETE a user given the id', (done) => {
+			let user = new User({ username: `test`, email: `test`, password: `test`, nickname: `test` });
+			User.save((err, user) => {
+				chai.request(app)
+					.delete('/api/users/' + user.id)
+					.end((err, res) => {
+						res.should.have.status(200);
+						res.body.should.be.a('object');
+						res.body.should.have.property('message').eql('User successfully deleted!');
+						res.body.result.should.have.property('ok').eql(1);
+						res.body.result.should.have.property('n').eql(1);
 						done();
 					});
 			});
