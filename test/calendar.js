@@ -91,7 +91,7 @@ describe(`Calendar`, () => {
 	*/
 	describe(`PUT/:id calendar`, () => {
 		it(`it should update a calendar with the given id`, (done) => {
-			let calendar = new calendar({ calendarName: `Test calendar` });
+			let calendar = new Calendar({ calendarName: `Test calendar` });
 			calendar.save((err, calendar) => {
 				chai.request(app)
 					.put(`/api/calendars/` + calendar.id)
