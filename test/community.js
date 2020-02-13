@@ -103,6 +103,7 @@ describe(`Community`, () => {
 						res.body.should.be.a(`object`);
 						res.body.should.have.property(`message`).eql(`Community updated!`);
 						res.body.community.should.have.property(`communityName`).eql(`GC Org`);
+						done();
 					});
 			});
 		});
