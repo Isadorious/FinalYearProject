@@ -31,4 +31,15 @@ router.post(`/`, (req, res) => {
 	});
 });
 
+router.put(`/:id`, (req, res) => {
+	Calendar.findById({_id: req.params.id}, (err, calendar) => {
+		if(err) res.send(err);
+
+		Object.assign(calendar, req.body).save((err, calendar) => {
+			if(err) res.send(err);
+			res.json({message: "Calendar updated!", calendar});
+		})
+	});
+});
+
 module.exports = router;
