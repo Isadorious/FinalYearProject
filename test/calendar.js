@@ -81,7 +81,6 @@ describe(`Calendar`, () => {
 					res.should.be.a(`object`);
 					res.body.should.have.property(`message`).eql(`Calendar added successfully!`);
 					res.body.calendar.should.have.property(`calendarName`);
-					res.body.calendar.should.have.property(`ownerID`);
 					done();
 				});
 		});
