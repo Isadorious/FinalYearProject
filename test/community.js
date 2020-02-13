@@ -87,4 +87,24 @@ describe(`Community`, () => {
 				});
 		});
 	});
+
+	/*
+	*	Test the PUT/:id route
+	*/
+	describe(`PUT/:id community`, () => {
+		it(`it should update a community with the given id`, (done) => {
+			let community = new Community({ communityName: `Test Community`, ownerID: `1` });
+			community.save((err, community) => {
+				chai.request(app)
+					.put(`/api/communities/` + community.id)
+					.send({ communityName: `GC Org`, ownerID: `1` })
+					.end((err, res) => {
+						res.should.have.status(200);
+						res.body.should.be.a(`object`);
+						res.body.should.have.property(`message`).eql(`Community updated!`);
+						res.body.community.should.have.property(`communityName`).eql(`GC Org`);
+					});
+			});
+		});
+	});
 });
