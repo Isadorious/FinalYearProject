@@ -85,4 +85,25 @@ describe(`Calendar`, () => {
 				});
 		});
 	});
+
+	/*
+	*	Test the PUT/:id route
+	*/
+	describe(`PUT/:id calendar`, () => {
+		it(`it should update a calendar with the given id`, (done) => {
+			let calendar = new calendar({ calendarName: `Test calendar` });
+			calendar.save((err, calendar) => {
+				chai.request(app)
+					.put(`/api/calendars/` + calendar.id)
+					.send({ calendarName: `GC Org Calendar` })
+					.end((err, res) => {
+						res.should.have.status(200);
+						res.body.should.be.a(`object`);
+						res.body.should.have.property(`message`).eql(`Calendar updated!`);
+						res.body.calendar.should.have.property(`calendarName`).eql(`GC Org`);
+						done();
+					});
+			});
+		});
+	});
 });
