@@ -28,8 +28,19 @@ router.post(`/`, (req, res) => {
 			res.send(err);
 		}
 		else {
-			res.json({message: `User added successfully!`,user});
+			res.json({ message: `User added successfully!`, user });
 		}
+	});
+});
+
+router.put(`/:id`, (req, res) => {
+	User.findById({_id: req.params.id}, (err, user) => {
+		if(err) res.send(err);
+
+		Object.assign(user, req.body).save((err, user) => {
+			if(err) res.send(err);
+			res.json({message: "User updated!", user});
+		})
 	});
 });
 
