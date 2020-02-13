@@ -33,4 +33,15 @@ router.post(`/`, (req, res) => {
 	});
 });
 
+router.put(`/:id`, (req, res) => {
+	Community.findById({_id: req.params.id}, (err, community) => {
+		if(err) res.send(err);
+
+		Object.assign(community, req.body).save((err, community) => {
+			if(err) res.send(err);
+			res.json({message: "Community updated!", community});
+		})
+	});
+});
+
 module.exports = router;
