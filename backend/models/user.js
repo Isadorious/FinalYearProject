@@ -39,12 +39,13 @@ const userSchema = new Schema({
 
 userSchema.pre(`save`, function(next){
     const user = this;
+    const saltingRounds = parseInt(process.env.SALT_ROUNDS);
     if(!user.isModified || !user.isNew) { // Don't perform any of these operations if the user data hasn't been updated
         next();
     }
     else
     {
-        bcrypt.hash(user.password, process.env.SALT_ROUNDS, function(err, hash){
+        bcrypt.hash(user.password, saltingRounds, function(err, hash){
             if(err){
                 console.log(`Error hashing password for user`, user.username);
                 next(err);
