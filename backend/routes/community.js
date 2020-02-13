@@ -6,7 +6,9 @@ router.get(`/`, (req, res) => {
 	let query = Community.find({});
 
 	query.exec((err, communities) => {
-		if(err) res.send(err);
+		if (err) res.send(err);
 		res.json(communities);
 	});
 });
+
+module.exports = router;
