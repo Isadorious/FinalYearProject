@@ -11,4 +11,12 @@ router.get(`/`, (req, res) => {
 	});
 });
 
+router.get(`/:id`, (req, res) => {
+	let query = Community.findById(req.params.id);
+	query.exec((err, community) => {
+		if (err) res.send(err);
+		res.json(community);
+	});
+});
+
 module.exports = router;
