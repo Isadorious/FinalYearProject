@@ -108,4 +108,25 @@ describe(`Community`, () => {
 			});
 		});
 	});
+
+	/*
+	* Test the DELETE/:id route
+	*/
+	describe('DELETE/:id community', () => {
+		it('it should DELETE a community given the id', (done) => {
+			let community = new Community({ communityName: `Test Community`, ownerID: `1` });
+			community.save((err, community) => {
+				chai.request(app)
+					.delete('/api/communities/' + community.id)
+					.end((err, res) => {
+						res.should.have.status(200);
+						res.body.should.be.a('object');
+						res.body.should.have.property('message').eql('Community successfully deleted!');
+						res.body.result.should.have.property('ok').eql(1);
+						res.body.result.should.have.property('n').eql(1);
+						done();
+					});
+			});
+		});
+	});
 });
