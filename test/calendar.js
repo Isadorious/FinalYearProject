@@ -52,4 +52,38 @@ describe(`Calendar`, () => {
 			});
 		});
 	});
+
+	/*
+	*	Test the POST route
+	*/
+	describe(`/POST calendar`, () => {
+		it(`it should POST a calendar without a calendar name`, (done) => {
+			let calendar = {};
+			chai.request(app)
+				.post(`/api/calendars`)
+				.send(calendar)
+				.end((err, res) => {
+					res.should.have.status(200);
+					res.body.should.be.a(`object`);
+					res.body.should.have.property(`errors`);
+					res.body.errors.should.have.property(`calendarName`);
+					res.body.errors.calendarName.should.have.property(`kind`).eql(`required`);
+					done();
+				});
+		});
+		it(`it should POST a calendar`, (done) => {
+			let calendar = { calendarName: `Test calendar` };
+			chai.request(app)
+				.post(`/api/calendars`)
+				.send(calendar)
+				.end((err, res) => {
+					res.should.have.status(200);
+					res.should.be.a(`object`);
+					res.body.should.have.property(`message`).eql(`Calendar added successfully!`);
+					res.body.calendar.should.have.property(`calendarName`);
+					res.body.calendar.should.have.property(`ownerID`);
+					done();
+				});
+		});
+	});
 });
