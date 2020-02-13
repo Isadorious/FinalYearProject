@@ -19,4 +19,16 @@ router.get(`/:id`, (req, res) => {
 	});
 });
 
+router.post(`/`, (req, res) => {
+	var calendar = new Calendar(req.body);
+	calendar.save((err, calendar) => {
+		if (err) {
+			res.send(err);
+		}
+		else {
+			res.json({ message: `Calendar added successfully!`, calendar });
+		}
+	});
+});
+
 module.exports = router;
