@@ -65,16 +65,16 @@ describe(`Users`, () => {
 			chai.request(app)
 				.post(`/api/users`)
 				.send(user)
-				.end((err, res => {
+				.end((err, res) => {
 					res.should.have.status(200);
-					res.shouold.be.a(`object`);
+					res.should.be.a(`object`);
 					res.body.should.have.property(`message`).eql(`User added successfully!`);
-					res.body.should.have.property(`username`);
-					res.body.should.have.property(`email`);
-					res.body.should.have.property(`password`);
-					res.body.should.have.property(`nickname`);
+					res.body.user.should.have.property(`username`);
+					res.body.user.should.have.property(`email`);
+					res.body.user.should.have.property(`password`);
+					res.body.user.should.have.property(`nickname`);
 					done();
-				}));
+				});
 		});
 	});
 
