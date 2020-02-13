@@ -53,4 +53,37 @@ describe(`Community`, () => {
 			});
 		});
 	});
+
+	/*
+	*	Test the POST route
+	*/
+	describe(`/POST community`, () => {
+		it(`it should POST a community without a community name`, (done) => {
+			let community = { ownerID: `1` };
+			chai.request(app)
+				.post(`/api/communities`)
+				.send(community)
+				.end((err, res) => {
+					res.should.have.status(200);
+					res.body.should.be.a(`object`);
+					res.body.should.have.property(`erorrs`);
+					res.body.errors.should.have.property(`communityName`);
+					res.body.errors.communityName.should.have.property(`kind`).eql(`required`);
+				});
+		});
+		it(`it should POSt a community`, (done) => {
+			let community = { communityName: `Test community`, ownerID: `1` };
+			chai.request(app)
+				.post(`/api/communities`)
+				.send(community)
+				.end((err, res) => {
+					res.should.have.status(200);
+					res.should.be.a(`object`);
+					res.body.should.have.property(`message`).eql(`Community added successfully!`);
+					res.body.community.should.have.property(`communityName`);
+					res.body.community.should.have.property(`ownerID`);
+					done();
+				});
+		});
+	});
 });
