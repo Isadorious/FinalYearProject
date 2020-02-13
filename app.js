@@ -26,9 +26,11 @@ if(environment !== `production`) {
 // Setup API routing
 const userRoutes = require(`./backend/routes/user`);
 const communityRoutes = require(`./backend/routes/community`);
+const calendarRoutes = require(`./backend/routes/calendar`);
 
 app.use(`/api/users`, userRoutes);
 app.use(`/api/communities`, communityRoutes);
+app.use(`/api/calendars`, calendarRoutes);
 
 app.listen(process.env.PORT, function() {
     console.log(`Server now listening at localhost:${process.env.PORT}`);
