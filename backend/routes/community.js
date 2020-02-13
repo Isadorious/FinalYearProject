@@ -19,4 +19,18 @@ router.get(`/:id`, (req, res) => {
 	});
 });
 
+router.post(`/`, (req, res) => {
+	// Create new community from the data in the request body
+	var community = new Community(req.body);
+	// Save the new community in the database
+	community.save((err, community) => {
+		if (err) {
+			res.send(err);
+		}
+		else {
+			res.json({ message: `Community added successfully!`, community });
+		}
+	});
+});
+
 module.exports = router;
