@@ -100,7 +100,7 @@ describe(`Calendar`, () => {
 						res.should.have.status(200);
 						res.body.should.be.a(`object`);
 						res.body.should.have.property(`message`).eql(`Calendar updated!`);
-						res.body.calendar.should.have.property(`calendarName`).eql(`GC Org`);
+						res.body.calendar.should.have.property(`calendarName`).eql(`GC Org Calendar`);
 						done();
 					});
 			});
