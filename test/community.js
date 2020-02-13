@@ -16,4 +16,20 @@ describe(`Community`, () => {
 			done();
 		});
 	});
+
+	/*
+	*	Test the GET community route
+	*/
+	describe(`/GET community`, () => {
+		it(`it should get all communities`, (done) => {
+			chai.request(app)
+			.get(`/api/communities`)
+			.end((err, res) => {
+				res.should.have.status(200);
+				res.body.should.be.a(`array`);
+				res.body.length.should.be.eql(0);
+				done();
+			});
+		});
+	});
 });
