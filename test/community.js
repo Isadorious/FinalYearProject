@@ -66,9 +66,10 @@ describe(`Community`, () => {
 				.end((err, res) => {
 					res.should.have.status(200);
 					res.body.should.be.a(`object`);
-					res.body.should.have.property(`erorrs`);
+					res.body.should.have.property(`errors`);
 					res.body.errors.should.have.property(`communityName`);
 					res.body.errors.communityName.should.have.property(`kind`).eql(`required`);
+					done();
 				});
 		});
 		it(`it should POSt a community`, (done) => {
