@@ -117,7 +117,7 @@ describe(`Users`, () => {
 						res.should.have.status(200);
 						res.body.should.be.a('object');
 						res.body.should.have.property('message').eql('User updated!');
-						res.body.book.should.have.property('nickname').eql(`nickname`);
+						res.body.user.should.have.property('nickname').eql(`nickname`);
 						done();
 					});
 			});
