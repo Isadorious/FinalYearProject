@@ -38,7 +38,7 @@ describe(`Calendar`, () => {
 	*/
 	describe(`/GET/:id calendar`, () => {
 		it(`it should GET a calendar by the given id`, (done) => {
-			let calendar = new Calendar({ calendarName: `Test calendar`});
+			let calendar = new Calendar({ calendarName: `Test calendar` });
 			calendar.save((err, calendar) => {
 				chai.request(app)
 					.get(`/api/calendars/` + calendar.id)
