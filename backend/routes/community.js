@@ -44,4 +44,12 @@ router.put(`/:id`, (req, res) => {
 	});
 });
 
+router.delete(`/:id`, (req, res) => {
+	Community.deleteOne({_id: req.params.id}, (err, result) => {
+		if(err) res.send(err);
+
+		res.json({message: `Community successfully deleted!`, result});
+	})
+});
+
 module.exports = router;
