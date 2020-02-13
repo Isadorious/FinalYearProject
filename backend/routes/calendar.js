@@ -11,4 +11,12 @@ router.get(`/`, (req, res) => {
 	});
 });
 
+router.get(`/:id`, (req, res) => {
+	let query = Calendar.findById(req.params.id);
+	query.exec((err, calendar) => {
+		if (err) res.send(err);
+		res.json(calendar);
+	});
+});
+
 module.exports = router;
