@@ -10,3 +10,5 @@ router.get(`/`, (req, res) => {
 		res.json(tasks);
 	})
 });
+
+module.exports = router;
