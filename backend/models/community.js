@@ -22,20 +22,17 @@ const communitySchema = new Schema({
 		type: `String`
 	},
 	ownerID: {
-		type: Number,
+		type: `String`,
 		required: true
 	},
 	communityAdminsID: {
-		type: [Number]
+		type: [`String`]
 	},
 	communityStaffID: {
-		type: [Number]
-	},
-	communityMembersID: {
-		type: [Number]
+		type: [`String`]
 	},
 	calendarsID: {
-		type: [Number]
+		type: [`String`]
 	}
 });
 
