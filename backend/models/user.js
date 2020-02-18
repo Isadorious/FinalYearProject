@@ -34,6 +34,9 @@ const userSchema = new Schema({
    },
    profilePicture : {
        type: `String`
+   },
+   communities : {
+       type: [`String`]
    }
 });
 
