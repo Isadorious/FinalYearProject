@@ -23,13 +23,10 @@ const subTaskSchema = new Schema ({
         type: `String`
     },
     subTaskAssignedUsers: {
-        type: [Number]
+        type: [`String`]
     },
     subTaskDue: {
         type: Date
-    },
-    subTaskComments: {
-        type: [commentSchema]
     }
 });
 
@@ -46,14 +43,17 @@ const taskSchema = new Schema ({
         type: `String`
     },
     taskAssignedUsers: {
-        type: [Number]
+        type: [`String`]
     },
     taskDue: {
         type: Date
     },
     taskComments: {
         type: [commentSchema]
-    }
+	},
+	subTasks: {
+		type: [subTaskSchema]
+	}
 });
 
 const calendarSchema = new Schema({
@@ -73,7 +73,7 @@ const calendarSchema = new Schema({
 		type: [`String`]
 	},
 	tasks: {
-		type: [Number]
+		type: [taskSchema]
 	}
 });
 
