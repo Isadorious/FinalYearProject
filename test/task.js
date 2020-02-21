@@ -98,4 +98,26 @@ describe(`Task`, () => {
 			});
 		});	
 	});
+
+	/*
+	*	Test the PUT/:id route
+	*/
+	describe(`/PUT/:id Task`, () => {
+		it(`It should update a task with the given ID`, (done) => {
+			let calendar = new Calendar({calendarName: `Test Calendar`});
+			calendar.tasks.push({taskName: `Example task`});
+			calendar.save((err, calendar) => {
+				chai.request(app)
+					.put(`/api/calendars/` +calendar.ID + `/tasks/` +calendar.tasks[0].id)
+					.send({taskName: `New Task Name`})
+					.end((err, res) => {
+						res.should.have.status(200);
+						res.body.should.be.a(`object`);
+						res.body.should.have.property(`message`).eql(`Task updated!`);
+						res.body.task.should.have.property(`taskName`).eql(`New Task Name`);
+						done();
+					});
+			});
+		});
+	});
 });
