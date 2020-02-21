@@ -20,7 +20,7 @@ const calendarSchema = new Schema({
 		type: [`String`]
 	},
 	tasks: {
-		type: [Task]
+		type: [Task.schema]
 	}
 });
 

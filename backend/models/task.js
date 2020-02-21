@@ -23,10 +23,10 @@ const taskSchema = new Schema ({
         type: Date
     },
     taskComments: {
-        type: [Comment]
+        type: [Comment.schema]
 	},
 	subTasks: {
-		type: [SubTask]
+		type: [SubTask.schema]
 	}
 });
 
