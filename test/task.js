@@ -30,10 +30,31 @@ describe(`Task`, () => {
 					.end((err, res) => {
 						res.should.have.status(200);
 						res.body.should.be.a('array');
-						res.body.length.should.be(0);
+						res.body.length.should.be.eql(0);
 						done();
 					});
 			});
+		});
+	});
+
+	/*
+	* Test the GET /:id route
+	*/
+	describe(`/GET/:id task`, () => {
+		it(`it should GET a specfic tasks from a calendar`, (done) => {
+			let calendar = new Calendar({calendarName: `Test Calendar`});
+			calendar.tasks.push({taskName: `Example Task`});
+			calendar.save((err, calendar) => {
+				chai.request(app)
+					.get(`/api/calendars/` + calendar.id + `/tasks/` +calendar.tasks[0].id)
+					.send(calendar)
+					.end((err, res) => {
+						res.should.have.status(200);
+						res.body.should.be.a(`object`);
+						res.body.should.have.property(`taskName`);
+						done();
+					});
+			});	
 		});
 	});
 });
