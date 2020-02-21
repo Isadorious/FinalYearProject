@@ -1,7 +1,7 @@
 process.env.NODE_ENV = `test`;
 
 const mongoose = require(`mongoose`);
-const Task = require(`../backend/models/task`);
+const Calendar = require(`../backend/models/calendar`);
 
 const chai = require(`chai`);
 const chaiHttp = require(`chai-http`);
@@ -12,7 +12,7 @@ chai.use(chaiHttp);
 
 describe(`Task`, () => {
 	beforeEach((done) => {
-		Task.deleteMany({}, (err) => {
+		Calendar.deleteMany({}, (err) => {
 			done();
 		});
 	});
