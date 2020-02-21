@@ -70,11 +70,13 @@ describe(`Task`, () => {
 					.post(`/api/calendars/` +calendar.id + `/tasks`)
 					.send(task)
 					.end((err, res) => {
+						console.log(res.body);
 						res.should.have.status(200);
 						res.body.should.be.a(`object`);
 						res.body.should.have.property(`errors`);
-						res.body.errors.should.have.property(`taskName`);
+						res.body.errors.should.have.property(`tasks`);
 						res.body.errors.taskName.should.have.property(`kind`).eql(`required`);
+						done();
 					});
 			});
 		});
@@ -90,6 +92,7 @@ describe(`Task`, () => {
 						res.should.be.a(`object`);
 						res.body.should.have.property(`message`).eql(`Task added successfully!`);
 						res.body.task.should.have.property(`taskName`);
+						done();
 					});
 			});
 		});	
