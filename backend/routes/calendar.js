@@ -50,4 +50,15 @@ router.delete(`/:id`, (req, res) => {
 	})
 });
 
+/*
+*	TASK associated routes
+*/
+router.get(`/:id/tasks`, (req, res) => {
+	let query = Calendar.findById(req.params.id);
+	query.exec((err, calendar) => {
+		if (err) res.send(err);
+		res.json(calendar.tasks);
+	});
+});
+
 module.exports = router;
