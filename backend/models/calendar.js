@@ -1,60 +1,7 @@
 const mongoose = require(`mongoose`);
 
 const Schema = mongoose.Schema;
-
-const commentSchema = new Schema ({
-    commentUserID: {
-        type: Number,
-        required: true
-    },
-    commentContent: {
-        type: `String`,
-        required: true
-    }
-});
-
-const subTaskSchema = new Schema ({
-    subTaskName: {
-        type: `String`,
-        required: true,
-        trim: true
-    },
-    subTaskDescription: {
-        type: `String`
-    },
-    subTaskAssignedUsers: {
-        type: [`String`]
-    },
-    subTaskDue: {
-        type: Date
-    }
-});
-
-const taskSchema = new Schema ({
-    taskName: {
-        type: `String`,
-        required: true,
-        trim: true
-    },
-    taskDescription: {
-        type: `String`
-    },
-    taskCategory: {
-        type: `String`
-    },
-    taskAssignedUsers: {
-        type: [`String`]
-    },
-    taskDue: {
-        type: Date
-    },
-    taskComments: {
-        type: [commentSchema]
-	},
-	subTasks: {
-		type: [subTaskSchema]
-	}
-});
+const Task = require(`./task`);
 
 const calendarSchema = new Schema({
 	calendarName: {
@@ -73,11 +20,8 @@ const calendarSchema = new Schema({
 		type: [`String`]
 	},
 	tasks: {
-		type: [taskSchema]
+		type: [Task]
 	}
 });
 
 module.exports = mongoose.model(`Calendar`, calendarSchema);
-module.exports = mongoose.model(`Task`, taskSchema);
-module.exports = mongoose.model(`SubTask`, subTaskSchema);
-module.exports = mongoose.model(`Comment`, commentSchema);
