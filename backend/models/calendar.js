@@ -78,3 +78,6 @@ const calendarSchema = new Schema({
 });
 
 module.exports = mongoose.model(`Calendar`, calendarSchema);
+module.exports = mongoose.model(`Task`, taskSchema);
+module.exports = mongoose.model(`SubTask`, subTaskSchema);
+module.exports = mongoose.model(`Comment`, commentSchema);
