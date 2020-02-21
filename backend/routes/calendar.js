@@ -61,4 +61,12 @@ router.get(`/:id/tasks`, (req, res) => {
 	});
 });
 
+router.get(`/:id/tasks/:taskID`, (req, res) => {
+	let query = Calendar.findById(req.params.id);
+	query.exec((err, calendar) => {
+		if(err) res.send(err);
+		res.json(calendar.tasks.id(req.params.taskID));
+	})
+});
+
 module.exports = router;
