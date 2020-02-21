@@ -73,10 +73,25 @@ describe(`Task`, () => {
 						res.should.have.status(200);
 						res.body.should.be.a(`object`);
 						res.body.should.have.property(`errors`);
-						res.body.errors.should.have.properoty(`taskName`);
+						res.body.errors.should.have.property(`taskName`);
 						res.body.errors.taskName.should.have.property(`kind`).eql(`required`);
 					});
 			});
 		});
+		it(`it should POST a task`, (done) => {
+			let calendar = new Calendar({calendarName: `Test Calendar`});
+			let task = {taskName: `Example task`};
+			calendar.save((err, calendar) => {
+				chai.request(app)
+					.post(`/api/calendars/` +calendar.id + `/tasks`)
+					.send(task)
+					.end((err, res) => {
+						res.should.have.status(200);
+						res.should.be.a(`object`);
+						res.body.should.have.property(`message`).eql(`Task added successfully!`);
+						res.body.task.should.have.property(`taskName`);
+					});
+			});
+		});	
 	});
 });
