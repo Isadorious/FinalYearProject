@@ -37,4 +37,27 @@ describe(`Comment`, () => {
             });
         });
    });
+
+   /*
+   * Test the GET/:id route
+   */
+  describe(`/GET/:id comment`, () => {
+    it(`it should GET a specfic comment from a task`, (done) => {
+        let calendar = new Calendar({calendarName: `Test Clendar`});
+        calendar.tasks.push({taskName: `Example task`});
+        calendar.tasks[0].taskComments.push({commentUserID: 1, commentContent: `This is a test comment`});
+        calendar.save((err, calendar) => {
+            chai.request(app)
+                .get(`/api/calendars` + calendar.id + `/tasks/` +calendar.tasks[0].id + `/comments/` + calendar.tasks[0].taskComments[0].id)
+                .send(calendar)
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.be.a(`object`);
+                    res.body.should.have.property(commentContent);
+                    res.body.should.have.commentContent.should.be.eql(`This is a test comment`);
+                    done();
+                });
+        });
+    });
+  });
 });
