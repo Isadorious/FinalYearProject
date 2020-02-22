@@ -107,4 +107,24 @@ router.put(`/:id/tasks/:taskID`, (req, res) => {
 	})
 });
 
+router.delete(`/:id/tasks/:taskID`, (req, res) => {
+	let query = Calendar.findById(req.params.id);
+
+	query.exec((err, calendar) => {
+		if(err) {
+			res.send(err);
+		} else {
+			calendar.tasks.id(req.params.taskID).remove();
+
+			calendar.save((error, calendar) => {
+				if(err) {
+					res.send(error);
+				} else {
+					res.json({message: `Task successfully deleted!`});
+				}
+			});
+		}
+	});
+});
+
 module.exports = router;
