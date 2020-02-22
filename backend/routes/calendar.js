@@ -260,5 +260,23 @@ router.post(`/:id/tasks/:taskID/subtasks`, (req, res) => {
 
 });
 
+router.put(`/:id/tasks/:taskID/subtasks/:subTaskID`, (req, res) => {
+	let query = Calendar.findById(req.params.id);
+
+	query.exec((err, calendar) => {
+		if(err)	{
+			res.send(err);
+		} else {
+			const subTask = calendar.tasks.id(req.params.taskID).subTasks.id(req.params.subTaskID);
+			subTask.set(req.body);
+
+			calendar.save((error, calendar) => {
+				if(error) {res.send(error); } else {
+					res.json({message: `Subtask updated successfully!`, subTask});
+				}
+			});
+		}
+	})
+});
 
 module.exports = router;
