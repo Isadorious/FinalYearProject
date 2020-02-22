@@ -90,20 +90,21 @@ router.post(`/:id/tasks`, (req, res) => {
 
 router.put(`/:id/tasks/:taskID`, (req, res) => {
 	let query = Calendar.findById(req.params.id);
+
 	query.exec((err, calendar) => {
-		if(err) {
+		if(err)	{
 			res.send(err);
 		} else {
-			var task = calendar.tasks.id(req.params.taskID);
-			Object.assign(task, req.body);
+			const task = calendar.tasks.id(req.params.taskID);
+			task.set(req.body);
 
-			task.save((error, task) => {
-				if(error) { res.send(error); } else {
+			calendar.save((error, calendar) => {
+				if(error) {res.send(error); } else {
 					res.json({message: `Task updated successfully!`, task});
 				}
 			});
 		}
-	});
+	})
 });
 
 module.exports = router;
