@@ -213,4 +213,32 @@ router.delete(`/:id/tasks/:taskID/comments/:commentID`, (req, res) => {
 	});
 });
 
+/*
+* Subtask associated routes
+*/
+router.get(`/:id/tasks/:taskID/subtasks`, (req, res) => {
+	let query = Calendar.findById(req.params.id);
+	query.exec((err, calendar) => {
+		if(err) {
+			res.send(err);
+		} else {
+			const task = calendar.tasks.id(req.params.taskID);
+			res.send(task.subTasks);
+		}
+	});
+});
+
+router.get(`/:id/tasks/:taskID/subtasks/:subTaskID`, (req, res) => {
+	let query = Calendar.findById(req.params.id);
+	query.exec((err, calendar) => {
+		if(err) {
+			res.send(err);
+		} else {
+			const subtask = calendar.tasks.id(req.params.taskID).subTasks.id(req.params.subTaskID);
+			res.send(subtask);
+		}
+	});
+});
+
+
 module.exports = router;
