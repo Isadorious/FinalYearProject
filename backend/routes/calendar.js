@@ -2,6 +2,7 @@ var express = require(`express`);
 var router = express.Router();
 var Calendar = require(`../models/calendar`);
 const Task = require(`../models/task`);
+const Comment = require(`../models/comment`);
 
 router.get(`/`, (req, res) => {
 	let query = Calendar.find({});
@@ -152,6 +153,25 @@ router.get(`/:id/tasks/:taskID/comments/:commentID`, (req, res) => {
 			res.send(comment);
 		}
 	});
+});
+
+router.post(`/:id/tasks/:taskID/comments`, (req, res) => {
+	let query = Calendar.findById(req.params.id);
+	let comment = new Comment(req.body);
+	query.exec((err, calendar) => {
+		if(err) 
+		{
+			res.send(err)
+		} else {
+			calendar.tasks.id(req.params.taskID).taskComments.push(comment);
+
+			calendar.save((error, calendar) => {
+				if(error) { res.send(error); } else {
+				res.json({message : `Comment added successfully!`,comment}); }
+			});
+		}
+	});
+
 });
 
 module.exports = router;
