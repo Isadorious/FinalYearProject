@@ -110,7 +110,7 @@ describe(`Subtask`, () => {
         it(`It should update a subtask with the given id`, (done) => {
             let calendar = new Calendar({ calendarName: `Test Calendar` });
             calendar.tasks.push({ taskName: `Example task` });
-            calendar.tasks[0].subTasks.push({subTaskName: `This is a test subtask`});
+            calendar.tasks[0].subTasks.push({ subTaskName: `This is a test subtask` });
             calendar.save((err, calendar) => {
                 chai.request(app)
                     .put(`/api/calendars/` + calendar.id + `/tasks/` + calendar.tasks[0].id + `/subtasks/` + calendar.tasks[0].subTasks[0].id)
@@ -129,21 +129,21 @@ describe(`Subtask`, () => {
     /*
     * Test the DELETE/:id route
     */
-   describe(`DELETE/:id subtask`, () => {
-    it(`It should delete a subtask with the given ID`, (done) => {
-        let calendar = new Calendar({ calendarName: `Test Calendar` });
-        calendar.tasks.push({ taskName: `Example task` });
-        calendar.tasks[0].subTasks.push({subTaskName: `This is a test subtask`});
-        calendar.save((err, calendar) => {
-            chai.request(app)
-                .delete(`/api/calendars/` + calendar.id + `/tasks/` + calendar.tasks[0].id + `/subtasks/` + calendar.tasks[0].subTasks[0].id)
-                .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.be.a('object');
-                    res.body.should.have.property('message').eql('Subtask successfully deleted!');
-                    done();
-                });
+    describe(`DELETE/:id subtask`, () => {
+        it(`It should delete a subtask with the given ID`, (done) => {
+            let calendar = new Calendar({ calendarName: `Test Calendar` });
+            calendar.tasks.push({ taskName: `Example task` });
+            calendar.tasks[0].subTasks.push({ subTaskName: `This is a test subtask` });
+            calendar.save((err, calendar) => {
+                chai.request(app)
+                    .delete(`/api/calendars/` + calendar.id + `/tasks/` + calendar.tasks[0].id + `/subtasks/` + calendar.tasks[0].subTasks[0].id)
+                    .end((err, res) => {
+                        res.should.have.status(200);
+                        res.body.should.be.a('object');
+                        res.body.should.have.property('message').eql('Subtask successfully deleted!');
+                        done();
+                    });
+            });
         });
     });
-});
 });
