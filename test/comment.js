@@ -84,5 +84,21 @@ describe(`Comment`, () => {
                 });
         });
     });
+    it(`it should POST a comment`, (done) => {
+        let calendar = new Calendar({calendarName: `Test Calendar`});
+        calendar.tasks.push({taskName: `Example task`});
+        let comment = {commentUserID: 1, commentContent: `This is a test comment`};
+        calendar.save((err, calendar) => {
+            chai.request(app)
+                .post(`/api/calendars/` + calendar.id + `/tasks/` + calendar.tasks[0].id + `/comments`)
+                .send(comment)
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.should.be.a(`object`);
+                    res.body.should.have.property(`message`).eql(`Comment added successfully!`);
+                    res.body.comment.should.have.property(`commentContent`);
+                });
+        });     
+    });
  });
 });
