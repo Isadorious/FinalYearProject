@@ -279,4 +279,24 @@ router.put(`/:id/tasks/:taskID/subtasks/:subTaskID`, (req, res) => {
 	})
 });
 
+router.delete(`/:id/tasks/:taskID/subtasks/:subTaskID`, (req, res) => {
+	let query = Calendar.findById(req.params.id);
+
+	query.exec((err, calendar) => {
+		if(err) {
+			res.send(err);
+		} else {
+			calendar.tasks.id(req.params.taskID).subTasks.id(req.params.subTaskID).remove();
+
+			calendar.save((error, calendar) => {
+				if(err) {
+					res.send(error);
+				} else {
+					res.json({message: `Subtask successfully deleted!`});
+				}
+			});
+		}
+	});
+});
+
 module.exports = router;
