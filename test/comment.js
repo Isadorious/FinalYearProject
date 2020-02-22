@@ -113,13 +113,14 @@ describe(`Comment`, () => {
             calendar.tasks[0].taskComments.push({commentUserID: 1, commentContent: `This is a test comment`});
             calendar.save((err, calendar) => {
                 chai.request(app)
-                    .put(`/api/calendars` + calendar.id + `/tasks/` +calendar.tasks[0].id + `/comments/` + calendar.tasks.taskComments[0].id)
+                    .put(`/api/calendars/` + calendar.id + `/tasks/` +calendar.tasks[0].id + `/comments/` + calendar.tasks[0].taskComments[0].id)
                     .send({commentContent: `This is an updated comment!`})
                     .end((err, res) => {
                         res.should.have.status(200);
                         res.body.should.be.a(`object`);
                         res.body.should.have.property(`message`).eql(`Comment updated successfully!`);
                         res.body.comment.should.have.property(`commentContent`).eql(`This is an updated comment!`);
+                        done();
                     });
             });
         });
