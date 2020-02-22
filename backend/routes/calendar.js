@@ -174,4 +174,23 @@ router.post(`/:id/tasks/:taskID/comments`, (req, res) => {
 
 });
 
+router.put(`/:id/tasks/:taskID/comments/:commentID`, (req, res) => {
+	let query = Calendar.findById(req.params.id);
+
+	query.exec((err, calendar) => {
+		if(err)	{
+			res.send(err);
+		} else {
+			const comment = calendar.tasks.id(req.params.taskID).taskComments.id(req.params.commentID);
+			comment.set(req.body);
+
+			calendar.save((error, calendar) => {
+				if(error) {res.send(error); } else {
+					res.json({message: `Comment updated successfully!`, comment});
+				}
+			});
+		}
+	})
+});
+
 module.exports = router;
