@@ -20,13 +20,13 @@ describe(`Subtask`, () => {
     /*
     * Test the GET route
     */
-   describe(`/GET all subtasks for one task`, () => {
+    describe(`/GET all subtasks for one task`, () => {
         it(`it should GET all subtasks for the task with the given id`, (done) => {
-            let calendar = new Calendar({calendarName: `Test Calendar`});
-            calendar.tasks.push({taskName: `Example task`});
+            let calendar = new Calendar({ calendarName: `Test Calendar` });
+            calendar.tasks.push({ taskName: `Example task` });
             calendar.save((err, calendar) => {
                 chai.request(app)
-                    .get(`/api/calendars/` + calendar.id + `/tasks/` +calendar.tasks[0].id + `/subtasks`)
+                    .get(`/api/calendars/` + calendar.id + `/tasks/` + calendar.tasks[0].id + `/subtasks`)
                     .send(calendar)
                     .end((err, res) => {
                         res.should.have.status(200);
@@ -34,29 +34,29 @@ describe(`Subtask`, () => {
                         res.body.length.should.be.eql(0);
                         done();
                     });
-            }); 
+            });
         });
-   });
+    });
 
     /*
     * Test the GET/:id route
     */
-  describe(`/GET/:id subtask`, () => {
-    it(`it should GET a specfic subtask from a task`, (done) => {
-        let calendar = new Calendar({calendarName: `Test Calendar`});
-        calendar.tasks.push({taskName: `Example task`});
-        calendar.tasks[0].subTasks.push({subTaskName: `This is a test subtask`});
-        calendar.save((err, calendar) => {
-            chai.request(app)
-                .get(`/api/calendars/` + calendar.id + `/tasks/` +calendar.tasks[0].id + `/subtasks/` + calendar.tasks[0].subTasks[0].id)
-                .send(calendar)
-                .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.be.a(`object`);
-                    res.body.should.have.property(`subTaskName`);
-                    done();
-                });
+    describe(`/GET/:id subtask`, () => {
+        it(`it should GET a specfic subtask from a task`, (done) => {
+            let calendar = new Calendar({ calendarName: `Test Calendar` });
+            calendar.tasks.push({ taskName: `Example task` });
+            calendar.tasks[0].subTasks.push({ subTaskName: `This is a test subtask` });
+            calendar.save((err, calendar) => {
+                chai.request(app)
+                    .get(`/api/calendars/` + calendar.id + `/tasks/` + calendar.tasks[0].id + `/subtasks/` + calendar.tasks[0].subTasks[0].id)
+                    .send(calendar)
+                    .end((err, res) => {
+                        res.should.have.status(200);
+                        res.body.should.be.a(`object`);
+                        res.body.should.have.property(`subTaskName`);
+                        done();
+                    });
+            });
         });
     });
-  });
 });
