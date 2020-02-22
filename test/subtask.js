@@ -96,7 +96,7 @@ describe(`Subtask`, () => {
                         res.should.have.status(200);
                         res.should.be.a(`object`);
                         res.body.should.have.property(`message`).eql(`SubTask added successfully!`);
-                        res.body.comment.should.have.property(`subTaskName`);
+                        res.body.subTask.should.have.property(`subTaskName`);
                         done();
                     });
             });
