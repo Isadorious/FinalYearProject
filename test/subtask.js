@@ -102,4 +102,27 @@ describe(`Subtask`, () => {
             });
         });
     });
+
+    /*
+    * Test the PUT/:id route
+    */
+    describe(`/PUT/:id Subtask`, () => {
+        it(`It should update a subtask with the given id`, (done) => {
+            let calendar = new Calendar({ calendarName: `Test Calendar` });
+            calendar.tasks.push({ taskName: `Example task` });
+            calendar.tasks[0].subTasks.push({subTaskName: `This is a test subtask`});
+            calendar.save((err, calendar) => {
+                chai.request(app)
+                    .put(`/api/calendars/` + calendar.id + `/tasks/` + calendar.tasks[0].id + `/subtasks/` + calendar.tasks[0].subTasks[0].id)
+                    .send({ subTaskName: `This is an updated subtask!` })
+                    .end((err, res) => {
+                        res.should.have.status(200);
+                        res.body.should.be.a(`object`);
+                        res.body.should.have.property(`message`).eql(`Subtask updated successfully!`);
+                        res.body.subTask.should.have.property(`subTaskName`).eql(`This is an updated subtask!`);
+                        done();
+                    });
+            });
+        });
+    });
 });
