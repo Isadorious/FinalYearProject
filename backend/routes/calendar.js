@@ -3,6 +3,7 @@ var router = express.Router();
 var Calendar = require(`../models/calendar`);
 const Task = require(`../models/task`);
 const Comment = require(`../models/comment`);
+const SubTask = require(`../models/subtask`);
 
 router.get(`/`, (req, res) => {
 	let query = Calendar.find({});
@@ -238,6 +239,25 @@ router.get(`/:id/tasks/:taskID/subtasks/:subTaskID`, (req, res) => {
 			res.send(subtask);
 		}
 	});
+});
+
+router.post(`/:id/tasks/:taskID/subtasks`, (req, res) => {
+	let query = Calendar.findById(req.params.id);
+	let subTask = new SubTask(req.body);
+	query.exec((err, calendar) => {
+		if(err) 
+		{
+			res.send(err)
+		} else {
+			calendar.tasks.id(req.params.taskID).subTasks.push(subTask);
+
+			calendar.save((error, calendar) => {
+				if(error) { res.send(error); } else {
+				res.json({message : `SubTask added successfully!`,subTask}); }
+			});
+		}
+	});
+
 });
 
 
