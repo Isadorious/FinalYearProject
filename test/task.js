@@ -120,4 +120,26 @@ describe(`Task`, () => {
 			});
 		});
 	});
+
+	/*
+	* Test the DELETE/:id route
+	*/
+	describe(`DELETE/:id task`, () => {
+		it(`it should DELETE a task with the given id`, (done) => {
+			let calendar = new Calendar({calendarName: `Test Calendar`});
+			calendar.tasks.push({taskName: `Example task`});
+			calendar.save((err, calendar) => {
+				chai.request(app)
+					.delete(`/api/calendars/` + calendar.id + `/tasks/` + calendar.tasks[0].id)
+					.end((err, res) => {
+						res.should.have.status(200);
+						res.body.should.be.a('object');
+						res.body.should.have.property('message').eql('Task successfully deleted!');
+						res.body.result.should.have.property('ok').eql(1);
+						res.body.result.should.have.property('n').eql(1);
+						done();
+					})
+			});
+		});
+	});
 });
