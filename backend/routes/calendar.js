@@ -127,4 +127,18 @@ router.delete(`/:id/tasks/:taskID`, (req, res) => {
 	});
 });
 
+/*
+* Comment associated routes
+*/
+router.get(`/:id/tasks/:taskID/comments`, (req, res) => {
+	let query = Calendar.findById(req.params.id);
+	query.exec((err, calendar) => {
+		if(err) {
+			res.send(err);
+		} else {
+			const task = calendar.tasks.id(req.params.taskID);
+			res.send(task.taskComments);
+		}
+	});
+});
 module.exports = router;
