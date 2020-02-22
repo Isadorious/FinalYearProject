@@ -108,12 +108,12 @@ describe(`Task`, () => {
 			calendar.tasks.push({taskName: `Example task`});
 			calendar.save((err, calendar) => {
 				chai.request(app)
-					.put(`/api/calendars/` +calendar.ID + `/tasks/` +calendar.tasks[0].id)
+					.put(`/api/calendars/` +calendar.id + `/tasks/` +calendar.tasks[0].id)
 					.send({taskName: `New Task Name`})
 					.end((err, res) => {
 						res.should.have.status(200);
 						res.body.should.be.a(`object`);
-						res.body.should.have.property(`message`).eql(`Task updated!`);
+						res.body.should.have.property(`message`).eql(`Task updated successfully!`);
 						res.body.task.should.have.property(`taskName`).eql(`New Task Name`);
 						done();
 					});
