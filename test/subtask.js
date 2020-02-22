@@ -59,4 +59,47 @@ describe(`Subtask`, () => {
             });
         });
     });
+
+    /*
+    * Test the POST route
+    */
+    describe(`/POST task`, () => {
+        it(`it should POST a subtask without a name`, (done) => {
+            let calendar = new Calendar({ calendarName: `Test Calendar` });
+            calendar.tasks.push({ taskName: `Example task` });
+            let subTask = {};
+            calendar.save((err, calendar) => {
+                chai.request(app)
+                    .post(`/api/calendars/` + calendar.id + `/tasks/` + calendar.tasks[0].id + `/subtasks`)
+                    .send(subTask)
+                    .end((err, res) => {
+                        res.should.have.status(200);
+                        res.body.should.be.a(`object`);
+                        res.body.should.have.property(`errors`);
+                        res.body.errors.should.be.a(`object`);
+                        res.body.errors.should.have.property(`tasks.0.subTasks.0.subTaskName`);
+                        var errorBody = res.body.errors[`tasks.0.subTasks.0.subTaskName`];
+                        errorBody.should.have.property(`kind`).eql(`required`);
+                        done();
+                    });
+            });
+        });
+        it(`it should POST a subtask`, (done) => {
+            let calendar = new Calendar({ calendarName: `Test Calendar` });
+            calendar.tasks.push({ taskName: `Example task` });
+            let subTask = { subTaskName: `This is a test subtask` };
+            calendar.save((err, calendar) => {
+                chai.request(app)
+                    .post(`/api/calendars/` + calendar.id + `/tasks/` + calendar.tasks[0].id + `/subtasks`)
+                    .send(subTask)
+                    .end((err, res) => {
+                        res.should.have.status(200);
+                        res.should.be.a(`object`);
+                        res.body.should.have.property(`message`).eql(`SubTask added successfully!`);
+                        res.body.comment.should.have.property(`subTaskName`);
+                        done();
+                    });
+            });
+        });
+    });
 });
