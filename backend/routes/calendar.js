@@ -141,4 +141,17 @@ router.get(`/:id/tasks/:taskID/comments`, (req, res) => {
 		}
 	});
 });
+
+router.get(`/:id/tasks/:taskID/comments/:commentID`, (req, res) => {
+	let query = Calendar.findById(req.params.id);
+	query.exec((err, calendar) => {
+		if(err) {
+			res.send(err);
+		} else {
+			const comment = calendar.tasks.id(req.params.taskID).taskComments.id(req.params.commentID);
+			res.send(comment);
+		}
+	});
+});
+
 module.exports = router;
