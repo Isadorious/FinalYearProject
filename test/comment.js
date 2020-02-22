@@ -97,6 +97,7 @@ describe(`Comment`, () => {
                     res.should.be.a(`object`);
                     res.body.should.have.property(`message`).eql(`Comment added successfully!`);
                     res.body.comment.should.have.property(`commentContent`);
+                    done();
                 });
         });     
     });
