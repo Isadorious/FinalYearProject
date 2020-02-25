@@ -1,6 +1,5 @@
 process.env.NODE_ENV = `test`;
 
-const mongoose = require(`mongoose`);
 const User = require(`../backend/models/user`);
 
 const chai = require(`chai`);
@@ -38,11 +37,11 @@ describe(`Users`, () => {
 	*/
 	describe(`/POST user`, () => {
 		it(`it should POST a user without an email`, (done) => {
-			let user = {
+			const user = {
 				username: `test`,
 				password: `test`,
 				nickname: `test`
-			}
+			};
 			chai.request(app)
 				.post(`/api/users`)
 				.send(user)
@@ -56,12 +55,12 @@ describe(`Users`, () => {
 				});
 		});
 		it(`it should POST a user`, (done) => {
-			let user = {
+			const user = {
 				username: `test`,
 				email: `test`,
 				password: `test`,
 				nickname: `test`
-			}
+			};
 			chai.request(app)
 				.post(`/api/users`)
 				.send(user)
@@ -81,21 +80,21 @@ describe(`Users`, () => {
 	/*
     * Test the /GET/:id route
     */
-	describe('/GET/:id user', () => {
-		it('it should GET a user by the given id', (done) => {
-			let user = new User({ username: `test`, email: `test`, password: `test`, nickname: `test` });
+	describe(`/GET/:id user`, () => {
+		it(`it should GET a user by the given id`, (done) => {
+			const user = new User({ username: `test`, email: `test`, password: `test`, nickname: `test` });
 			user.save((err, user) => {
 				chai.request(app)
-					.get("/api/users/" + user.id)
+					.get(`/api/users/` + user.id)
 					.send(user)
 					.end((err, res) => {
 						res.should.have.status(200);
-						res.body.should.be.a('object');
-						res.body.should.have.property('username');
-						res.body.should.have.property('email');
-						res.body.should.have.property('password');
-						res.body.should.have.property('nickname');
-						res.body.should.have.property('_id').eql(user.id);
+						res.body.should.be.a(`object`);
+						res.body.should.have.property(`username`);
+						res.body.should.have.property(`email`);
+						res.body.should.have.property(`password`);
+						res.body.should.have.property(`nickname`);
+						res.body.should.have.property(`_id`).eql(user.id);
 						done();
 					});
 			});
@@ -106,18 +105,18 @@ describe(`Users`, () => {
 	/*
     * Test the /PUT/:id route
     */
-	describe('/PUT/:id user', () => {
-		it('it should UPDATE a user given the id', (done) => {
-			let user = new User({ username: `test`, email: `test`, password: `test`, nickname: `test` });
+	describe(`/PUT/:id user`, () => {
+		it(`it should UPDATE a user given the id`, (done) => {
+			const user = new User({ username: `test`, email: `test`, password: `test`, nickname: `test` });
 			user.save((err, user) => {
 				chai.request(app)
-					.put('/api/users/' + user.id)
+					.put(`/api/users/` + user.id)
 					.send({ username: `test`, email: `test`, password: `test`, nickname: `nickname` })
 					.end((err, res) => {
 						res.should.have.status(200);
-						res.body.should.be.a('object');
-						res.body.should.have.property('message').eql('User updated!');
-						res.body.user.should.have.property('nickname').eql(`nickname`);
+						res.body.should.be.a(`object`);
+						res.body.should.have.property(`message`).eql(`User updated!`);
+						res.body.user.should.have.property(`nickname`).eql(`nickname`);
 						done();
 					});
 			});
@@ -127,18 +126,18 @@ describe(`Users`, () => {
 	/*
 	* Test the /DELETE/:id route
 	*/
-	describe('/DELETE/:id user', () => {
-		it('it should DELETE a user given the id', (done) => {
-			let user = new User({ username: `test`, email: `test`, password: `test`, nickname: `test` });
+	describe(`/DELETE/:id user`, () => {
+		it(`it should DELETE a user given the id`, (done) => {
+			const user = new User({ username: `test`, email: `test`, password: `test`, nickname: `test` });
 			user.save((err, user) => {
 				chai.request(app)
-					.delete('/api/users/' + user.id)
+					.delete(`/api/users/` + user.id)
 					.end((err, res) => {
 						res.should.have.status(200);
-						res.body.should.be.a('object');
-						res.body.should.have.property('message').eql('User successfully deleted!');
-						res.body.result.should.have.property('ok').eql(1);
-						res.body.result.should.have.property('n').eql(1);
+						res.body.should.be.a(`object`);
+						res.body.should.have.property(`message`).eql(`User successfully deleted!`);
+						res.body.result.should.have.property(`ok`).eql(1);
+						res.body.result.should.have.property(`n`).eql(1);
 						done();
 					});
 			});

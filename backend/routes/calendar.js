@@ -1,34 +1,37 @@
-var express = require(`express`);
-var router = express.Router();
-var Calendar = require(`../models/calendar`);
+const express = require(`express`);
+const router = express.Router();
+const Calendar = require(`../models/calendar`);
 const Task = require(`../models/task`);
 const Comment = require(`../models/comment`);
 const SubTask = require(`../models/subtask`);
 
 router.get(`/`, (req, res) => {
-	let query = Calendar.find({});
+	const query = Calendar.find({});
 
 	query.exec((err, calendars) => {
-		if (err) res.send(err);
+		if (err) {
+			res.send(err);
+		}
 		res.json(calendars);
 	});
 });
 
 router.get(`/:id`, (req, res) => {
-	let query = Calendar.findById(req.params.id);
+	const query = Calendar.findById(req.params.id);
 	query.exec((err, calendar) => {
-		if (err) res.send(err);
+		if (err) {
+			res.send(err);
+		}
 		res.json(calendar);
 	});
 });
 
 router.post(`/`, (req, res) => {
-	var calendar = new Calendar(req.body);
+	const calendar = new Calendar(req.body);
 	calendar.save((err, calendar) => {
 		if (err) {
 			res.send(err);
-		}
-		else {
+		} else {
 			res.json({ message: `Calendar added successfully!`, calendar });
 		}
 	});
@@ -36,62 +39,74 @@ router.post(`/`, (req, res) => {
 
 router.put(`/:id`, (req, res) => {
 	Calendar.findById({_id: req.params.id}, (err, calendar) => {
-		if(err) res.send(err);
+		if(err) {
+			res.send(err);
+		}
 
 		Object.assign(calendar, req.body).save((err, calendar) => {
-			if(err) res.send(err);
-			res.json({message: "Calendar updated!", calendar});
-		})
+			if(err) {
+				res.send(err);
+			}
+			res.json({message: `Calendar updated!`, calendar});
+		});
 	});
 });
 
 router.delete(`/:id`, (req, res) => {
 	Calendar.deleteOne({_id: req.params.id}, (err, result) => {
-		if(err) res.send(err);
+		if(err) {
+			res.send(err);
+		}
 
 		res.json({message: `Calendar successfully deleted!`, result});
-	})
+	});
 });
 
 /*
 *	TASK associated routes
 */
 router.get(`/:id/tasks`, (req, res) => {
-	let query = Calendar.findById(req.params.id);
+	const query = Calendar.findById(req.params.id);
 	query.exec((err, calendar) => {
-		if (err) res.send(err);
+		if (err) {
+			res.send(err);
+		}
 		res.json(calendar.tasks);
 	});
 });
 
 router.get(`/:id/tasks/:taskID`, (req, res) => {
-	let query = Calendar.findById(req.params.id);
+	const query = Calendar.findById(req.params.id);
 	query.exec((err, calendar) => {
-		if(err) res.send(err);
+		if(err) {
+			res.send(err);
+		}
 		res.json(calendar.tasks.id(req.params.taskID));
-	})
+	});
 });
 
 router.post(`/:id/tasks`, (req, res) => {
-	let query = Calendar.findById(req.params.id);
-	let task = new Task(req.body)
+	const query = Calendar.findById(req.params.id);
+	const task = new Task(req.body);
 	query.exec((err, calendar) => {
-		if(err) 
-		{
-			res.send(err)
+		if(err) {
+			res.send(err);
 		} else {
 			calendar.tasks.push(task);
 
-			calendar.save((error, calendar) => {
-				if(error) { res.send(error); } else {
-				res.json({message : `Task added successfully!`,task}); }
+			calendar.save((error) => {
+				if(error) {
+					res.send(error); 
+				} else {
+					res.json({message : `Task added successfully!`,task}); 
+				}
 			});
 		}
 	});
 });
 
 router.put(`/:id/tasks/:taskID`, (req, res) => {
-	let query = Calendar.findById(req.params.id);
+	const query = Calendar.findById(req.params.id);
 
 	query.exec((err, calendar) => {
 		if(err)	{
@@ -100,17 +115,19 @@ router.put(`/:id/tasks/:taskID`, (req, res) => {
 			const task = calendar.tasks.id(req.params.taskID);
 			task.set(req.body);
 
-			calendar.save((error, calendar) => {
-				if(error) {res.send(error); } else {
+			calendar.save((error) => {
+				if(error) {
+					res.send(error); 
+				} else {
 					res.json({message: `Task updated successfully!`, task});
 				}
 			});
 		}
-	})
+	});
 });
 
 router.delete(`/:id/tasks/:taskID`, (req, res) => {
-	let query = Calendar.findById(req.params.id);
+	const query = Calendar.findById(req.params.id);
 
 	query.exec((err, calendar) => {
 		if(err) {
@@ -118,7 +135,7 @@ router.delete(`/:id/tasks/:taskID`, (req, res) => {
 		} else {
 			calendar.tasks.id(req.params.taskID).remove();
 
-			calendar.save((error, calendar) => {
+			calendar.save((error) => {
 				if(err) {
 					res.send(error);
 				} else {
@@ -133,7 +150,7 @@ router.delete(`/:id/tasks/:taskID`, (req, res) => {
 * Comment associated routes
 */
 router.get(`/:id/tasks/:taskID/comments`, (req, res) => {
-	let query = Calendar.findById(req.params.id);
+	const query = Calendar.findById(req.params.id);
 	query.exec((err, calendar) => {
 		if(err) {
 			res.send(err);
@@ -145,7 +162,7 @@ router.get(`/:id/tasks/:taskID/comments`, (req, res) => {
 });
 
 router.get(`/:id/tasks/:taskID/comments/:commentID`, (req, res) => {
-	let query = Calendar.findById(req.params.id);
+	const query = Calendar.findById(req.params.id);
 	query.exec((err, calendar) => {
 		if(err) {
 			res.send(err);
@@ -157,18 +174,20 @@ router.get(`/:id/tasks/:taskID/comments/:commentID`, (req, res) => {
 });
 
 router.post(`/:id/tasks/:taskID/comments`, (req, res) => {
-	let query = Calendar.findById(req.params.id);
-	let comment = new Comment(req.body);
+	const query = Calendar.findById(req.params.id);
+	const comment = new Comment(req.body);
 	query.exec((err, calendar) => {
-		if(err) 
-		{
-			res.send(err)
+		if(err) {
+			res.send(err);
 		} else {
 			calendar.tasks.id(req.params.taskID).taskComments.push(comment);
 
-			calendar.save((error, calendar) => {
-				if(error) { res.send(error); } else {
-				res.json({message : `Comment added successfully!`,comment}); }
+			calendar.save((error) => {
+				if(error) {
+					res.send(error); 
+				} else {
+					res.json({message : `Comment added successfully!`,comment}); 
+				}
 			});
 		}
 	});
@@ -176,7 +195,7 @@ router.post(`/:id/tasks/:taskID/comments`, (req, res) => {
 });
 
 router.put(`/:id/tasks/:taskID/comments/:commentID`, (req, res) => {
-	let query = Calendar.findById(req.params.id);
+	const query = Calendar.findById(req.params.id);
 
 	query.exec((err, calendar) => {
 		if(err)	{
@@ -185,17 +204,19 @@ router.put(`/:id/tasks/:taskID/comments/:commentID`, (req, res) => {
 			const comment = calendar.tasks.id(req.params.taskID).taskComments.id(req.params.commentID);
 			comment.set(req.body);
 
-			calendar.save((error, calendar) => {
-				if(error) {res.send(error); } else {
+			calendar.save((error) => {
+				if(error) {
+					res.send(error); 
+				} else {
 					res.json({message: `Comment updated successfully!`, comment});
 				}
 			});
 		}
-	})
+	});
 });
 
 router.delete(`/:id/tasks/:taskID/comments/:commentID`, (req, res) => {
-	let query = Calendar.findById(req.params.id);
+	const query = Calendar.findById(req.params.id);
 
 	query.exec((err, calendar) => {
 		if(err) {
@@ -203,7 +224,7 @@ router.delete(`/:id/tasks/:taskID/comments/:commentID`, (req, res) => {
 		} else {
 			calendar.tasks.id(req.params.taskID).taskComments.id(req.params.commentID).remove();
 
-			calendar.save((error, calendar) => {
+			calendar.save((error) => {
 				if(err) {
 					res.send(error);
 				} else {
@@ -218,7 +239,7 @@ router.delete(`/:id/tasks/:taskID/comments/:commentID`, (req, res) => {
 * Subtask associated routes
 */
 router.get(`/:id/tasks/:taskID/subtasks`, (req, res) => {
-	let query = Calendar.findById(req.params.id);
+	const query = Calendar.findById(req.params.id);
 	query.exec((err, calendar) => {
 		if(err) {
 			res.send(err);
@@ -230,7 +251,7 @@ router.get(`/:id/tasks/:taskID/subtasks`, (req, res) => {
 });
 
 router.get(`/:id/tasks/:taskID/subtasks/:subTaskID`, (req, res) => {
-	let query = Calendar.findById(req.params.id);
+	const query = Calendar.findById(req.params.id);
 	query.exec((err, calendar) => {
 		if(err) {
 			res.send(err);
@@ -242,18 +263,20 @@ router.get(`/:id/tasks/:taskID/subtasks/:subTaskID`, (req, res) => {
 });
 
 router.post(`/:id/tasks/:taskID/subtasks`, (req, res) => {
-	let query = Calendar.findById(req.params.id);
-	let subTask = new SubTask(req.body);
+	const query = Calendar.findById(req.params.id);
+	const subTask = new SubTask(req.body);
 	query.exec((err, calendar) => {
-		if(err) 
-		{
-			res.send(err)
+		if(err) {
+			res.send(err);
 		} else {
 			calendar.tasks.id(req.params.taskID).subTasks.push(subTask);
 
-			calendar.save((error, calendar) => {
-				if(error) { res.send(error); } else {
-				res.json({message : `SubTask added successfully!`,subTask}); }
+			calendar.save((error) => {
+				if(error) {
+					res.send(error); 
+				} else {
+					res.json({message : `SubTask added successfully!`,subTask}); 
+				}
 			});
 		}
 	});
@@ -261,7 +284,7 @@ router.post(`/:id/tasks/:taskID/subtasks`, (req, res) => {
 });
 
 router.put(`/:id/tasks/:taskID/subtasks/:subTaskID`, (req, res) => {
-	let query = Calendar.findById(req.params.id);
+	const query = Calendar.findById(req.params.id);
 
 	query.exec((err, calendar) => {
 		if(err)	{
@@ -270,17 +293,19 @@ router.put(`/:id/tasks/:taskID/subtasks/:subTaskID`, (req, res) => {
 			const subTask = calendar.tasks.id(req.params.taskID).subTasks.id(req.params.subTaskID);
 			subTask.set(req.body);
 
-			calendar.save((error, calendar) => {
-				if(error) {res.send(error); } else {
+			calendar.save((error) => {
+				if(error) {
+					res.send(error); 
+				} else {
 					res.json({message: `Subtask updated successfully!`, subTask});
 				}
 			});
 		}
-	})
+	});
 });
 
 router.delete(`/:id/tasks/:taskID/subtasks/:subTaskID`, (req, res) => {
-	let query = Calendar.findById(req.params.id);
+	const query = Calendar.findById(req.params.id);
 
 	query.exec((err, calendar) => {
 		if(err) {
@@ -288,7 +313,7 @@ router.delete(`/:id/tasks/:taskID/subtasks/:subTaskID`, (req, res) => {
 		} else {
 			calendar.tasks.id(req.params.taskID).subTasks.id(req.params.subTaskID).remove();
 
-			calendar.save((error, calendar) => {
+			calendar.save((error) => {
 				if(err) {
 					res.send(error);
 				} else {

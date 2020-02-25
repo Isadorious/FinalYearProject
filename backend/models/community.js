@@ -1,7 +1,5 @@
 const mongoose = require(`mongoose`);
 
-const environment = process.env.NODE_ENV;
-
 const Schema = mongoose.Schema;
 
 const communitySchema = new Schema({

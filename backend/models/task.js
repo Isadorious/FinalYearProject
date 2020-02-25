@@ -5,25 +5,25 @@ const Comment = require(`./comment`);
 const SubTask = require(`./subtask`);
 
 const taskSchema = new Schema ({
-    taskName: {
-        type: `String`,
-        required: true,
-        trim: true
-    },
-    taskDescription: {
-        type: `String`
-    },
-    taskCategory: {
-        type: `String`
-    },
-    taskAssignedUsers: {
-        type: [`String`]
-    },
-    taskDue: {
-        type: Date
-    },
-    taskComments: {
-        type: [Comment.schema]
+	taskName: {
+		type: `String`,
+		required: true,
+		trim: true
+	},
+	taskDescription: {
+		type: `String`
+	},
+	taskCategory: {
+		type: `String`
+	},
+	taskAssignedUsers: {
+		type: [`String`]
+	},
+	taskDue: {
+		type: Date
+	},
+	taskComments: {
+		type: [Comment.schema]
 	},
 	subTasks: {
 		type: [SubTask.schema]

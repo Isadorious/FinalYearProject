@@ -1,6 +1,5 @@
 process.env.NODE_ENV = `test`;
 
-const mongoose = require(`mongoose`);
 const Community = require(`../backend/models/community`);
 
 const chai = require(`chai`);
@@ -38,16 +37,16 @@ describe(`Community`, () => {
 	*/
 	describe(`/GET/:id community`, () => {
 		it(`it should GET a community by the given id`, (done) => {
-			let community = new Community({ communityName: `Test Community`, ownerID: `1` });
+			const community = new Community({ communityName: `Test Community`, ownerID: `1` });
 			community.save((err, community) => {
 				chai.request(app)
 					.get(`/api/communities/` + community.id)
 					.send(community)
 					.end((err, res) => {
 						res.should.have.status(200);
-						res.body.should.be.a('object');
-						res.body.should.have.property('communityName');
-						res.body.should.have.property('ownerID');
+						res.body.should.be.a(`object`);
+						res.body.should.have.property(`communityName`);
+						res.body.should.have.property(`ownerID`);
 						done();
 					});
 			});
@@ -59,7 +58,7 @@ describe(`Community`, () => {
 	*/
 	describe(`/POST community`, () => {
 		it(`it should POST a community without a community name`, (done) => {
-			let community = { ownerID: `1` };
+			const community = { ownerID: `1` };
 			chai.request(app)
 				.post(`/api/communities`)
 				.send(community)
@@ -73,7 +72,7 @@ describe(`Community`, () => {
 				});
 		});
 		it(`it should POSt a community`, (done) => {
-			let community = { communityName: `Test community`, ownerID: `1` };
+			const community = { communityName: `Test community`, ownerID: `1` };
 			chai.request(app)
 				.post(`/api/communities`)
 				.send(community)
@@ -93,7 +92,7 @@ describe(`Community`, () => {
 	*/
 	describe(`PUT/:id community`, () => {
 		it(`it should update a community with the given id`, (done) => {
-			let community = new Community({ communityName: `Test Community`, ownerID: `1` });
+			const community = new Community({ communityName: `Test Community`, ownerID: `1` });
 			community.save((err, community) => {
 				chai.request(app)
 					.put(`/api/communities/` + community.id)
@@ -112,18 +111,18 @@ describe(`Community`, () => {
 	/*
 	* Test the DELETE/:id route
 	*/
-	describe('DELETE/:id community', () => {
-		it('it should DELETE a community given the id', (done) => {
-			let community = new Community({ communityName: `Test Community`, ownerID: `1` });
+	describe(`DELETE/:id community`, () => {
+		it(`it should DELETE a community given the id`, (done) => {
+			const community = new Community({ communityName: `Test Community`, ownerID: `1` });
 			community.save((err, community) => {
 				chai.request(app)
-					.delete('/api/communities/' + community.id)
+					.delete(`/api/communities/` + community.id)
 					.end((err, res) => {
 						res.should.have.status(200);
-						res.body.should.be.a('object');
-						res.body.should.have.property('message').eql('Community successfully deleted!');
-						res.body.result.should.have.property('ok').eql(1);
-						res.body.result.should.have.property('n').eql(1);
+						res.body.should.be.a(`object`);
+						res.body.should.have.property(`message`).eql(`Community successfully deleted!`);
+						res.body.result.should.have.property(`ok`).eql(1);
+						res.body.result.should.have.property(`n`).eql(1);
 						done();
 					});
 			});

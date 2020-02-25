@@ -1,6 +1,5 @@
 process.env.NODE_ENV = `test`;
 
-const mongoose = require(`mongoose`);
 const Calendar = require(`../backend/models/calendar`);
 
 const chai = require(`chai`);
@@ -38,15 +37,15 @@ describe(`Calendar`, () => {
 	*/
 	describe(`/GET/:id calendar`, () => {
 		it(`it should GET a calendar by the given id`, (done) => {
-			let calendar = new Calendar({ calendarName: `Test calendar` });
+			const calendar = new Calendar({ calendarName: `Test calendar` });
 			calendar.save((err, calendar) => {
 				chai.request(app)
 					.get(`/api/calendars/` + calendar.id)
 					.send(calendar)
 					.end((err, res) => {
 						res.should.have.status(200);
-						res.body.should.be.a('object');
-						res.body.should.have.property('calendarName');
+						res.body.should.be.a(`object`);
+						res.body.should.have.property(`calendarName`);
 						done();
 					});
 			});
@@ -58,7 +57,7 @@ describe(`Calendar`, () => {
 	*/
 	describe(`/POST calendar`, () => {
 		it(`it should POST a calendar without a calendar name`, (done) => {
-			let calendar = {};
+			const calendar = {};
 			chai.request(app)
 				.post(`/api/calendars`)
 				.send(calendar)
@@ -72,7 +71,7 @@ describe(`Calendar`, () => {
 				});
 		});
 		it(`it should POST a calendar`, (done) => {
-			let calendar = { calendarName: `Test calendar` };
+			const calendar = { calendarName: `Test calendar` };
 			chai.request(app)
 				.post(`/api/calendars`)
 				.send(calendar)
@@ -91,7 +90,7 @@ describe(`Calendar`, () => {
 	*/
 	describe(`PUT/:id calendar`, () => {
 		it(`it should update a calendar with the given id`, (done) => {
-			let calendar = new Calendar({ calendarName: `Test calendar` });
+			const calendar = new Calendar({ calendarName: `Test calendar` });
 			calendar.save((err, calendar) => {
 				chai.request(app)
 					.put(`/api/calendars/` + calendar.id)
@@ -110,18 +109,18 @@ describe(`Calendar`, () => {
 	/*
 	* Test the DELETE/:id route
 	*/
-	describe('DELETE/:id calendar', () => {
-		it('it should DELETE a calendar given the id', (done) => {
-			let calendar = new Calendar({ calendarName: `Test Calendar` });
+	describe(`DELETE/:id calendar`, () => {
+		it(`it should DELETE a calendar given the id`, (done) => {
+			const calendar = new Calendar({ calendarName: `Test Calendar` });
 			calendar.save((err, calendar) => {
 				chai.request(app)
-					.delete('/api/calendars/' + calendar.id)
+					.delete(`/api/calendars/` + calendar.id)
 					.end((err, res) => {
 						res.should.have.status(200);
-						res.body.should.be.a('object');
-						res.body.should.have.property('message').eql('Calendar successfully deleted!');
-						res.body.result.should.have.property('ok').eql(1);
-						res.body.result.should.have.property('n').eql(1);
+						res.body.should.be.a(`object`);
+						res.body.should.have.property(`message`).eql(`Calendar successfully deleted!`);
+						res.body.result.should.have.property(`ok`).eql(1);
+						res.body.result.should.have.property(`n`).eql(1);
 						done();
 					});
 			});

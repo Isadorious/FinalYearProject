@@ -1,33 +1,36 @@
-var express = require(`express`);
-var router = express.Router();
-var User = require(`../models/user`);
+const express = require(`express`);
+const router = express.Router();
+const User = require(`../models/user`);
 
 router.get(`/`, (req, res) => {
-	let query = User.find({});
+	const query = User.find({});
 
 	query.exec((err, users) => {
-		if (err) res.send(err);
+		if (err) {
+			res.send(err);
+		}
 		res.json(users);
 	});
 });
 
 router.get(`/:id`, (req, res) => {
-	let query = User.findById(req.params.id);
+	const query = User.findById(req.params.id);
 	query.exec((err, user) => {
-		if (err) res.send(err);
+		if (err) {
+			res.send(err);
+		}
 		res.json(user);
 	});
 });
 
 router.post(`/`, (req, res) => {
 	// Create new user from the data in the request body
-	var user = new User(req.body);
+	const user = new User(req.body);
 	// Save the new user in the database
 	user.save((err, user) => {
 		if (err) {
 			res.send(err);
-		}
-		else {
+		} else {
 			res.json({ message: `User added successfully!`, user });
 		}
 	});
@@ -35,21 +38,27 @@ router.post(`/`, (req, res) => {
 
 router.put(`/:id`, (req, res) => {
 	User.findById({_id: req.params.id}, (err, user) => {
-		if(err) res.send(err);
+		if(err) {
+			res.send(err);
+		}
 
 		Object.assign(user, req.body).save((err, user) => {
-			if(err) res.send(err);
-			res.json({message: "User updated!", user});
-		})
+			if(err) {
+				res.send(err);
+			}
+			res.json({message: `User updated!`, user});
+		});
 	});
 });
 
 router.delete(`/:id`, (req, res) => {
 	User.deleteOne({_id: req.params.id}, (err, result) => {
-		if(err) res.send(err);
+		if(err) {
+			res.send(err);
+		}
 
 		res.json({message: `User successfully deleted!`, result});
-	})
+	});
 });
 
 module.exports = router;
