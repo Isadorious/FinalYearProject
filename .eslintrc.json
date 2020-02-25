@@ -47,7 +47,9 @@
         "default-case": "error",
         "no-multi-spaces": [
             "error",
-            {"ignoreEOLComments": true}
+            {
+                "ignoreEOLComments": true
+            }
         ],
         "brace-style": [
             "error",
