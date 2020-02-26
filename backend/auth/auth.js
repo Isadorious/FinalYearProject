@@ -36,3 +36,16 @@ passport.use(`login`, new localStrategy({
 		}
 	});
 }));
+
+passport.use(`jwt`, new jwtStrategy({
+	jwtFromRequest: extractJWT.fromAuthHeaderWithScheme(`JWT`),
+	secretOrKey: process.env.SECRET_KEY
+}, (payload, done) => {
+	userModel.findOne({username: payload.username, email: payload.email}, (err, user) => {
+		if(err) {
+			done(err, false);
+		} else {
+			done(null, user);
+		}
+	});
+}));
