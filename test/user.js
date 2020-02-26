@@ -141,4 +141,28 @@ describe(`Users`, () => {
 			});
 		});
 	});
+
+	/*
+	* Test the GET LOGIN route
+	*/
+	describe(`/LOGIN user`, () => {
+		it(`it should LOGIN a user`, (done) => {
+			const user = new User({username: `test`, password: `test`, email:`test@test.com`});
+			user.save((err, user) => {
+				chai.request(app)
+					.get(`/api/users/login`)
+					.send({username: `test`, password: `test`})
+					.end((err, res)=> {
+						res.should.have.status(200);
+						res.body.should.be.a(`object`);
+						res.body.should.have.property(`auth`);
+						res.body.auth.should.be.eql(true);
+						res.body.should.have.property(`token`);
+						res.body.should.have.property(`message`);
+						res.body.message.should.be.eql(`User logged in successfully!`);
+						done();
+					});
+			});
+		});
+	});
 });
