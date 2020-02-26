@@ -18,3 +18,21 @@ passport.use(`register`, new localStrategy({
 		return done(null, user);
 	});
 }));
+
+passport.use(`login`, new localStrategy({
+	usernameField: `username`,
+	passwordField: `password`,
+	session: false
+}, async (username, password, done) => {
+	userModel.findOne({username: username}, (err, user) => {
+		if(err) {
+			return done(null, false, {message: `unable to find username`});
+		} else {
+			if(user.isValidPassword(password)){
+				return done(null, user);
+			} else {
+				return done(null, false, {message: `passwords do not match`});
+			}
+		}
+	});
+}));
