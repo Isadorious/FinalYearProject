@@ -1,6 +1,7 @@
 const express = require(`express`);
 const router = express.Router();
 const User = require(`../models/user`);
+const passport = require(`passport`);
 
 router.get(`/`, (req, res) => {
 	const query = User.find({});
@@ -23,17 +24,34 @@ router.get(`/:id`, (req, res) => {
 	});
 });
 
-router.post(`/`, (req, res) => {
-	// Create new user from the data in the request body
-	const user = new User(req.body);
-	// Save the new user in the database
-	user.save((err, user) => {
-		if (err) {
+router.post(`/`, (req, res, next) => {
+	passport.authenticate(`register`, (err, user, info) => {
+		if(err) {
 			res.send(err);
+		}else if(info != undefined) {
+			res.send(info);
 		} else {
-			res.json({ message: `User added successfully!`, user });
+			req.logIn(user, {session: false}, err => {
+				if(err) {
+					res.send(err);
+				}
+				User.findOne({username: req.body.username}, (err, user) => {
+					if(err) {
+						res.send(err);
+					} else {
+						Object.assign(user, req.body).save((err, user) => {
+							if(err) {
+								console.log(err);
+								res.send(err);
+							} else {
+								res.json({message: `User added successfully!`, user});
+							}
+						});
+					} 
+				});
+			});
 		}
-	});
+	})(req, res, next);
 });
 
 router.put(`/:id`, (req, res) => {
