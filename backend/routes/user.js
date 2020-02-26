@@ -2,6 +2,7 @@ const express = require(`express`);
 const router = express.Router();
 const User = require(`../models/user`);
 const passport = require(`passport`);
+const jwt = require(`jsonwebtoken`);
 
 router.get(`/`, (req, res) => {
 	const query = User.find({});
@@ -12,6 +13,35 @@ router.get(`/`, (req, res) => {
 		}
 		res.json(users);
 	});
+});
+
+router.get(`/login`, (req, res, next) => {
+	passport.authenticate(`login`, (err, user, info) => {
+		if(err) {
+			res.send(err);
+		} else if(info != undefined) {
+			res.send(info);
+		} else {
+			req.logIn(user, {session: false}, err => {
+				if(err) {
+					res.send(err);
+				} else {
+					User.findOne({username: req.body.username}, (err, user) => {
+						if(err) {
+							res.send(err);
+						} else {
+							const token = jwt.sign({username: user.username, email: user.email }, process.env.SECRET_KEY);
+							res.status(200).send({
+								auth: true,
+								token: token,
+								message: `User logged in successfully!`
+							});
+						} 
+					});
+				}
+			});
+		}
+	})(req, res, next);
 });
 
 router.get(`/:id`, (req, res) => {
