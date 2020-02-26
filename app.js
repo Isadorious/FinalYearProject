@@ -19,6 +19,9 @@ const router = express.Router();
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
+// Setup passport for use by app
+app.use(passport.initialize());
+
 if(environment !== `production`) {
 	app.use(logger(`dev`));
 }
