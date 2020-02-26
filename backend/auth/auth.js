@@ -13,7 +13,7 @@ passport.use(`register`, new localStrategy({
 	const user = new userModel({username, password});
 	user.save((err, user) => {
 		if(err){
-			return done(err, null, {message: `error: username already exists`});
+			return done(err, false, {message: `error: username already exists`});
 		}
 		return done(null, user);
 	});
