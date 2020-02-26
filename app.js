@@ -20,6 +20,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
 // Setup passport for use by app
+require(`./backend/auth/auth`);
 app.use(passport.initialize());
 
 if(environment !== `production`) {
