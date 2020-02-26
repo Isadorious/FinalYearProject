@@ -10,11 +10,11 @@ passport.use(`register`, new localStrategy({
 	passwordField: `password`,
 	session: false
 }, async (username, password, done) => {
-	try {
-		const user = await userModel.create({username, password});
+	const user = new userModel({username, password});
+	user.save((err, user) => {
+		if(err){
+			return done(err, null);
+		}
 		return done(null, user);
-	} catch (error) {
-		// Send the error to the next middlewear
-		done(error);
-	}
+	});
 }));
