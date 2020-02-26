@@ -12,7 +12,6 @@ const userSchema = new Schema({
 	},
 	email: {
 		type:`String`,
-		required: true,
 		trim: true,
 		unique: true
 	},
@@ -23,7 +22,6 @@ const userSchema = new Schema({
 	},
 	nickname: {
 		type: `String`,
-		required: true,
 		trim: true
 	},
 	description: {
