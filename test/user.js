@@ -36,21 +36,19 @@ describe(`Users`, () => {
 	* Test the /POST route
 	*/
 	describe(`/POST user`, () => {
-		it(`it should POST a user without an email`, (done) => {
+		it(`it should POST a user without a password`, (done) => {
 			const user = {
 				username: `test`,
-				password: `test`,
-				nickname: `test`
 			};
 			chai.request(app)
 				.post(`/api/users`)
 				.send(user)
 				.end((err, res) => {
 					res.should.status(200);
+					console.log(res.body);
 					res.body.should.be.a(`object`);
-					res.body.should.have.property(`errors`);
-					res.body.errors.should.have.property(`email`);
-					res.body.errors.email.should.have.property(`kind`).eql(`required`);
+					res.body.should.have.property(`message`);
+					res.body.message.should.eql(`Missing credentials`);
 					done();
 				});
 		});
