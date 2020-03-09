@@ -20,7 +20,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
 // Setup passport for use by app
-require(`./backend/auth/auth`);
+require(`./auth/auth`);
 app.use(passport.initialize());
 
 if(environment !== `production`) {
@@ -28,9 +28,9 @@ if(environment !== `production`) {
 }
 
 // Setup API routing
-const userRoutes = require(`./backend/routes/user`);
-const communityRoutes = require(`./backend/routes/community`);
-const calendarRoutes = require(`./backend/routes/calendar`);
+const userRoutes = require(`./routes/user`);
+const communityRoutes = require(`./routes/community`);
+const calendarRoutes = require(`./routes/calendar`);
 
 app.use(`/api/users`, userRoutes);
 app.use(`/api/communities`, communityRoutes);

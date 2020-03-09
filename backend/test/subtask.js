@@ -1,6 +1,6 @@
 process.env.NODE_ENV = `test`;
 
-const Calendar = require(`../backend/models/calendar`);
+const Calendar = require(`../models/calendar`);
 
 const chai = require(`chai`);
 const chaiHttp = require(`chai-http`);

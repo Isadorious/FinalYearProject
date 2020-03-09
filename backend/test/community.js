@@ -1,6 +1,6 @@
 process.env.NODE_ENV = `test`;
 
-const Community = require(`../backend/models/community`);
+const Community = require(`../models/community`);
 
 const chai = require(`chai`);
 const chaiHttp = require(`chai-http`);
