@@ -15,7 +15,7 @@ router.get(`/`, (req, res) => {
 	});
 });
 
-router.get(`/login`, (req, res, next) => {
+router.post(`/login`, (req, res, next) => {
 	passport.authenticate(`login`, (err, user, info) => {
 		if(err) {
 			res.send(err);
