@@ -27,6 +27,8 @@ passport.use(`login`, new localStrategy({
 	userModel.findOne({username: username}, (err, user) => {
 		if(err) {
 			return done(null, false, {message: `unable to find username`});
+		} else if(user == undefined) {
+			return done(null, false, {message: `unable to find username`});
 		} else {
 			if(user.isValidPassword(password)){
 				return done(null, user);
