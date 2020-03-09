@@ -1,6 +1,6 @@
 process.env.NODE_ENV = `test`;
 
-const User = require(`../backend/models/user`);
+const User = require(`../models/user`);
 
 const chai = require(`chai`);
 const chaiHttp = require(`chai-http`);
@@ -143,14 +143,14 @@ describe(`Users`, () => {
 	});
 
 	/*
-	* Test the GET LOGIN route
+	* Test the POST LOGIN route
 	*/
 	describe(`/LOGIN user`, () => {
 		it(`it should LOGIN a user`, (done) => {
 			const user = new User({username: `test`, password: `test`, email:`test@test.com`});
 			user.save((err, user) => {
 				chai.request(app)
-					.get(`/api/users/login`)
+					.post(`/api/users/login`)
 					.send({username: `test`, password: `test`})
 					.end((err, res)=> {
 						res.should.have.status(200);
