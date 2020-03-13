@@ -7,6 +7,7 @@ const express = require(`express`);
 const bodyParser = require(`body-parser`);
 const logger = require(`morgan`);
 const passport = require(`passport`);
+const cors = require(`cors`);
 
 // Get environment e.g. dev or production
 const environment = process.env.NODE_ENV;
@@ -14,6 +15,9 @@ const environment = process.env.NODE_ENV;
 // Setup express
 const app = express();
 const router = express.Router();
+
+// Setup app to use CORS
+app.use(cors());
 
 // Setup body parser for reading POST requests that contain a body
 app.use(bodyParser.urlencoded({extended: true}));
