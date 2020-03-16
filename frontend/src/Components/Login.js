@@ -1,4 +1,9 @@
 import React from 'react';
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 const axios = require('axios');
 
 class LoginForm extends React.Component {
@@ -47,19 +52,23 @@ class LoginForm extends React.Component {
     
     render() {
         return(
-        <form id="loginForm">
-            <label>
-                Username:
-                <input type="text" name="username" value={this.state.username} onChange={this.handleInputChange} />
-            </label>
-            <br></br>
-            <label>
-                Password:
-                <input type="password" name="password" value={this.state.password} onChange={this.handleInputChange} />
-            </label>
-            <br />
-            <button onClick={this.handleLogin}>Login</button>
-        </form>
+            <Container>
+                <Row>
+                    <Col>
+                        <Form>
+                            <Form.Group controlId="usernameControl">
+                                <Form.Label>Username:</Form.Label>
+                                <Form.Control type="text" placeholder="Username"/>
+                            </Form.Group>
+                            <Form.Group controlId="passwordControl">
+                                <Form.Label>Password:</Form.Label>
+                                <Form.Control type="password" placeholder="Password" />
+                            </Form.Group>
+                            <Button variant="secondary" type="submit" onClick={this.handleLogin}>Login</Button>
+                        </Form>
+                    </Col>
+                </Row>
+            </Container>
         )}
 }
 
