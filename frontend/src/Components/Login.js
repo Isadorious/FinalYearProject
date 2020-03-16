@@ -58,11 +58,11 @@ class LoginForm extends React.Component {
                         <Form>
                             <Form.Group controlId="usernameControl">
                                 <Form.Label>Username:</Form.Label>
-                                <Form.Control type="text" placeholder="Username"/>
+                                <Form.Control name="username" type="text" placeholder="Username" value={this.state.username} onChange={this.handleInputChange}/>
                             </Form.Group>
                             <Form.Group controlId="passwordControl">
                                 <Form.Label>Password:</Form.Label>
-                                <Form.Control type="password" placeholder="Password" />
+                                <Form.Control type="password" placeholder="Password" value={this.state.password} onChange={this.handleInputChange} />
                             </Form.Group>
                             <Button variant="secondary" type="submit" onClick={this.handleLogin}>Login</Button>
                         </Form>
