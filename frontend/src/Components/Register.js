@@ -58,7 +58,7 @@ class RegisterForm extends React.Component {
             <Container>
                 <Row>
                     <Col>
-                        <Form>
+                        <Form id="registerLoginForm">
                             <Form.Group controlId="usernameControl">
                                 <Form.Label>Username:</Form.Label>
                                 <Form.Control name="username" type="text" placeholder="Username" value={this.state.username} onChange={this.handleInputChange} />
