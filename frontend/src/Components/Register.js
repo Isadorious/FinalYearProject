@@ -14,6 +14,7 @@ class RegisterForm extends React.Component {
             username: '',
             email: '',
             password: '',
+            password_rpt: '',
             nickname: '',
             description: '',
         };
@@ -69,14 +70,19 @@ class RegisterForm extends React.Component {
                                 <Form.Control name="email" type="email" placeholder="Please enter your email" value={this.state.email} onChange={this.handleInputChange} />
                             </Form.Group>
 
+                            <Form.Group controlId="nicknameControl">
+                                <Form.Label>Display Name:</Form.Label>
+                                <Form.Control name="nickname" type="text" placeholder="This should be different to your username and doesn't have to be unique" value={this.state.nickname} onChange={this.handleInputChange} />
+                            </Form.Group>
+
                             <Form.Group controlId="passwordControl">
                                 <Form.Label>Password:</Form.Label>
                                 <Form.Control name="password" type="password" placeholder="Password" value={this.state.password} onChange={this.handleInputChange} />
                             </Form.Group>
 
-                            <Form.Group controlId="nicknameControl">
-                                <Form.Label>Nickname:</Form.Label>
-                                <Form.Control name="nickname" type="text" placeholder="Display Name" value={this.state.nickname} onChange={this.handleInputChange} />
+                            <Form.Group controlId="passwordRptControl">
+                                <Form.Label>Repeat Password:</Form.Label>
+                                <Form.Control name="passwordRpt" type="password" placeholder="Repeat password" value={this.state.password_rpt} onChange={this.handleInputChange} />
                             </Form.Group>
 
                             <Form.Group controlId="description">
