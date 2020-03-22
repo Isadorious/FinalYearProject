@@ -2,6 +2,9 @@ const mongoose = require(`mongoose`);
 
 const Schema = mongoose.Schema;
 
+const CustomDataStructure = require(`./customData/customDataStructure`);
+
+
 const communitySchema = new Schema({
 	communityName: {
 		type: `String`,
@@ -31,6 +34,9 @@ const communitySchema = new Schema({
 	},
 	calendarsID: {
 		type: [`String`]
+	},
+	dataStores: {
+		type: [CustomDataStructure.schema],
 	}
 });
 
