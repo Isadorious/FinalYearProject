@@ -62,7 +62,7 @@ class LoginForm extends React.Component {
                             </Form.Group>
                             <Form.Group controlId="passwordControl">
                                 <Form.Label>Password:</Form.Label>
-                                <Form.Control type="password" placeholder="Password" value={this.state.password} onChange={this.handleInputChange} />
+                                <Form.Control name="password" type="password" placeholder="Password" value={this.state.password} onChange={this.handleInputChange} />
                             </Form.Group>
                             <Button variant="secondary" type="submit" onClick={this.handleLogin}>Login</Button>
                         </Form>

@@ -36,6 +36,12 @@ class RegisterForm extends React.Component {
     async handleRegister(e) {
         e.preventDefault();
 
+
+        if(this.state.password !== this.state.password_rpt)
+        {
+            return alert("Passwords don't match");
+        }
+
         await Axios
             .post('http://localhost:9000/api/users', {
                 username: this.state.username,
@@ -82,12 +88,12 @@ class RegisterForm extends React.Component {
 
                             <Form.Group controlId="passwordRptControl">
                                 <Form.Label>Repeat Password:</Form.Label>
-                                <Form.Control name="passwordRpt" type="password" placeholder="Repeat password" value={this.state.password_rpt} onChange={this.handleInputChange} />
+                                <Form.Control name="password_rpt" type="password" placeholder="Repeat password" value={this.state.password_rpt} onChange={this.handleInputChange} />
                             </Form.Group>
 
-                            <Form.Group controlId="description">
+                            <Form.Group controlId="descriptionControl">
                                 <Form.Label>Description:</Form.Label>
-                                <Form.Control as="textarea" rows="3" value={this.state.description} onChange={this.handleInputChange} />
+                                <Form.Control name="description" as="textarea" rows="3" value={this.state.description} onChange={this.handleInputChange} />
                             </Form.Group>
                             <Button variant="secondary" type="submit" onClick={this.handleRegister}>Register</Button>
                         </Form>
