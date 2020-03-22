@@ -60,6 +60,10 @@ class RegisterForm extends React.Component {
             });
     }
 
+    componentDidMount() {
+        document.title = "Register - GCOrg";
+    }
+
     render() {
         return (
             <Container>

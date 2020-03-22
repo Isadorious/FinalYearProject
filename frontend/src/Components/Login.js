@@ -49,6 +49,10 @@ class LoginForm extends React.Component {
             });
 
     }
+
+    componentDidMount() {
+        document.title = "Login - GCOrg";
+    }
     
     render() {
         return(
