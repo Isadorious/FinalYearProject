@@ -31,4 +31,35 @@ router.get(`/:communityID/structure/:structureID/data/:dataID`, (req, res) => {
 	});
 });
 
+router.post(`/`, (req, res) => {
+	// Setup a custom data object based on submitted data
+	// Community ID, Structure ID, Author ID
+	// Put the key value pairs for the custom data into the content object
+	// Mark content as modified
+	// Save the custom data object
+	// Return result based on status
+	const customData = new CustomData(req.body);
+
+	customData.save((err, customData) => {
+		if(err) {
+			res.send(err);
+		} else {
+			res.json({message: `CustomData added successfully!`, customData});
+		}
+	});
+});
+
+router.put(`/:communityID/structure/:structureID/data/:dataID`, (req, res) => {
+	// Get the custom data object to be modified
+	// Ensure that the IDs haven't changed
+	// Manually update the key value pairs in the content object
+	// Mark content as modified
+	// Save the custom data object
+	// Return result based on status
+});
+
+router.delete(`/:communityID/structure/:structureID/data/:dataID`, (req, res) => {
+	// Delete the custom data object that matches all 3 IDs
+});
+
 module.exports = router;
