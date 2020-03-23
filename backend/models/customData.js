@@ -16,7 +16,7 @@ const customSchema = new Schema({
 		required: true,
 	},
 	content: {
-		type: Schema.Types.Mixed
+		type: [Schema.Types.Mixed]
 	}
 });
 
