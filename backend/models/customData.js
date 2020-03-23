@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 const customSchema = new Schema({
 	authorID: {
-		type: [`String`],
+		type: `String`,
 		required: true,
 	},
 	structureID: {
