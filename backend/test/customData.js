@@ -68,8 +68,11 @@ describe(`Custom Data`, () => {
 	*/
 	describe(`/POST customData`, () => {
 		it(`it should POST a customData without an author`, (done) => {
-			const customData = {structureID: `1`};
-			chai.request(app)
+			const community = new Community({ communityName: `Test Community`, ownerID: `1`});
+			community.dataStores.push({customDataTitle: `Custom Data Test`});
+			community.save((err, community) => {
+				const customData = {communityID : community.id, structure: community.dataStores[0].id};
+				chai.request(app)
 				.post(`/api/customData`)
 				.send(customData)
 				.end((err, res) => {
@@ -80,19 +83,24 @@ describe(`Custom Data`, () => {
 					res.body.errors.customDataName.should.have.property(`kind`).eql(`required`);
 					done();
 				});
+			});
 		});
 		it(`it should POST a customData`, (done) => {
-			const customData = { authorID: `1`, structureID: `1` };
-			chai.request(app)
+			const community = new Community({ communityName: `Test Community`, ownerID: `1`});
+			community.dataStores.push({customDataTitle: `Custom Data Test`});
+			community.save((err, community) => {
+				const customData = {authorID: `1`, communityID : community.id, structure: community.dataStores[0].id};
+				chai.request(app)
 				.post(`/api/customData`)
 				.send(customData)
 				.end((err, res) => {
 					res.should.have.status(200);
-					res.should.be.a(`object`);
-					res.body.should.have.property(`message`).eql(`customData added successfully!`);
-					res.body.customData.should.have.property(`authorID`);
+					res.body.should.be.a(`object`);
+					res.body.should.have.property(`message`).eql(`CustomData added successfully!`);
+					res.body.should.have.property(`authorID`);
 					done();
 				});
+			});
 		});
 	});
 
