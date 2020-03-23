@@ -1,7 +1,7 @@
 process.env.NODE_ENV = `test`;
 
+const Community = require(`../models/community`);
 const CustomData = require(`../models/customData`);
-const Community = require(`../models/Community`);
 
 const chai = require(`chai`);
 const chaiHttp = require(`chai-http`);
@@ -13,11 +13,9 @@ chai.use(chaiHttp);
 describe(`Custom Data`, () => {
 	beforeEach((done) => {
 		Community.deleteMany({}, (err) => {
-			done();
-		});
-
-		CustomData.deleteMany({}, (err) => {
-			done();
+			CustomData.deleteMany({}, (err) => {
+				done();
+			});
 		});
 	});
 
@@ -26,7 +24,7 @@ describe(`Custom Data`, () => {
 	*/
 	describe(`/GET custom data`, () => {
 		it(`it should get all custom data for the specified community and data structure`, (done) => {
-			const community = new Community({ communityName: `Test Community`});
+			const community = new Community({ communityName: `Test Community`, ownerID: `1`});
 			community.dataStores.push({customDataTitle: `Custom Data Test`});
 			community.save((err, community) => {
 				chai.request(app)
@@ -46,10 +44,10 @@ describe(`Custom Data`, () => {
 	*/
 	describe(`/GET/:id custom data`, () => {
 		it(`it should GET a piece custom data by the given id`, (done) => {
-			const community = new Community({ communityName: `Test Community`});
+			const community = new Community({ communityName: `Test Community`, ownerID: `1`});
 			community.dataStores.push({customDataTitle: `Custom Data Test`});
 			community.save((err, community) => {
-				const customData = new customData({authorID: `1`, structureID: community.dataStores[0].id});
+				const customData = new CustomData({authorID: `1`, communityID: community.id, structureID: community.dataStores[0].id});
 				customData.save((err, customData) => {
 					chai.request(app)
 					.get(`/api/customData/` + community.id + `/structure/` + community.dataStores[0].id + `/data/` + customData.id)
