@@ -10,6 +10,10 @@ const customSchema = new Schema({
 	structureID: {
 		type: `String`,
 		required: true,
+	},
+	communityID: {
+		type: `String`,
+		required: true,
 	}
 });
 
