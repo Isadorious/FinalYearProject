@@ -1,6 +1,7 @@
 process.env.NODE_ENV = `test`;
 
 const CustomData = require(`../models/customData`);
+const Community = require(`../models/Community`);
 
 const chai = require(`chai`);
 const chaiHttp = require(`chai-http`);
@@ -11,6 +12,10 @@ chai.use(chaiHttp);
 
 describe(`Custom Data`, () => {
 	beforeEach((done) => {
+		Community.deleteMany({}, (err) => {
+			done();
+		});
+
 		CustomData.deleteMany({}, (err) => {
 			done();
 		});
@@ -20,15 +25,19 @@ describe(`Custom Data`, () => {
 	*	Test the GET custom data route
 	*/
 	describe(`/GET custom data`, () => {
-		it(`it should get all custom data`, (done) => {
-			chai.request(app)
-				.get(`/api/customData`)
+		it(`it should get all custom data for the specified community and data structure`, (done) => {
+			const community = new Community({ communityName: `Test Community`});
+			community.dataStores.push({customDataTitle: `Custom Data Test`});
+			community.save((err, community) => {
+				chai.request(app)
+				.get(`/api/customData/` + community.id + `/structure/` + community.dataStores[0].id)
 				.end((err, res) => {
 					res.should.have.status(200);
 					res.body.should.be.a(`array`);
 					res.body.length.should.be.eql(0);
 					done();
 				});
+			});
 		});
 	});
 
@@ -37,10 +46,13 @@ describe(`Custom Data`, () => {
 	*/
 	describe(`/GET/:id custom data`, () => {
 		it(`it should GET a piece custom data by the given id`, (done) => {
-			const customData = new customData({ authorID: `1`, structureID: `1` });
-			customData.save((err, customData) => {
-				chai.request(app)
-					.get(`/api/customData/` + customData.id)
+			const community = new Community({ communityName: `Test Community`});
+			community.dataStores.push({customDataTitle: `Custom Data Test`});
+			community.save((err, community) => {
+				const customData = new customData({authorID: `1`, structureID: community.dataStores[0].id});
+				customData.save((err, customData) => {
+					chai.request(app)
+					.get(`/api/customData/` + community.id + `/structure/` + community.dataStores[0].id + `/data/` + customData.id)
 					.send(customData)
 					.end((err, res) => {
 						res.should.have.status(200);
@@ -48,6 +60,7 @@ describe(`Custom Data`, () => {
 						res.body.should.have.property(`authorID`);
 						done();
 					});
+				});
 			});
 		});
 	});
