@@ -7,6 +7,10 @@ const customSchema = new Schema({
 		type: [`String`],
 		required: true,
 	},
+	structureID: {
+		type: `String`,
+		required: true,
+	}
 });
 
 module.exports = mongoose.model(`CustomData`, customSchema);
