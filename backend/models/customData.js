@@ -14,6 +14,9 @@ const customSchema = new Schema({
 	communityID: {
 		type: `String`,
 		required: true,
+	},
+	content: {
+		type: Schema.Types.Mixed
 	}
 });
 
