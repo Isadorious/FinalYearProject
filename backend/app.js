@@ -35,10 +35,12 @@ if(environment !== `production`) {
 const userRoutes = require(`./routes/user`);
 const communityRoutes = require(`./routes/community`);
 const calendarRoutes = require(`./routes/calendar`);
+const customDataRoutes = require(`./routes/customData`);
 
 app.use(`/api/users`, userRoutes);
 app.use(`/api/communities`, communityRoutes);
 app.use(`/api/calendars`, calendarRoutes);
+app.use(`/api/customData`, customDataRoutes);
 
 app.listen(process.env.PORT, function() {
 	console.log(`Server now listening at localhost:${process.env.PORT}`);
