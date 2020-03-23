@@ -43,6 +43,11 @@ class LoginForm extends React.Component {
                 console.log(response.data.auth);
                 console.log(response.data.message);
                 console.log(response.data.token);
+
+                if(response.data.message === 'User logged in successfully!')
+                {
+                    alert('Authenticated user\nToken: ' +response.data.token);
+                }
             })
             .catch(error => {
                 console.log(error.data)
