@@ -89,7 +89,7 @@ describe(`Custom Data`, () => {
 			const community = new Community({ communityName: `Test Community`, ownerID: `1`});
 			community.dataStores.push({customDataTitle: `Custom Data Test`});
 			community.save((err, community) => {
-				const customData = {authorID: `1`, communityID : community.id, structure: community.dataStores[0].id};
+				const customData = {authorID: `1`, communityID : community.id, structureID: community.dataStores[0].id};
 				chai.request(app)
 				.post(`/api/customData`)
 				.send(customData)
@@ -97,7 +97,7 @@ describe(`Custom Data`, () => {
 					res.should.have.status(200);
 					res.body.should.be.a(`object`);
 					res.body.should.have.property(`message`).eql(`CustomData added successfully!`);
-					res.body.should.have.property(`authorID`);
+					res.body.should.have.property(`customData`);
 					done();
 				});
 			});
