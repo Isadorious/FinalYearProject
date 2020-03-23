@@ -12,6 +12,11 @@ const customDataPairsSchema = new Schema({
 		type: `String`,
 		required: true,
 		trim: true,
+	},
+	dataType: {
+		type: `String`,
+		required: true,
+		trim: true,
 	}
 });
 
