@@ -73,6 +73,15 @@ router.put(`/:communityID/structure/:structureID/data/:dataID`, (req, res) => {
 
 router.delete(`/:communityID/structure/:structureID/data/:dataID`, (req, res) => {
 	// Delete the custom data object that matches all 3 IDs
+	const query = CustomData.deleteOne({_id: req.params.dataID, communityID: req.params.communityID, structureID: req.params.structureID});
+
+	query.exec((err, result) => {
+		if(err) {
+			res.send(err);
+		} else {
+			res.json({message: `customData successfully deleted!`, result});
+		}
+	});
 });
 
 module.exports = router;
