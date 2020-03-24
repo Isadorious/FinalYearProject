@@ -50,12 +50,25 @@ router.post(`/`, (req, res) => {
 });
 
 router.put(`/:communityID/structure/:structureID/data/:dataID`, (req, res) => {
-	// Get the custom data object to be modified
-	// Ensure that the IDs haven't changed
-	// Manually update the key value pairs in the content object
-	// Mark content as modified
-	// Save the custom data object
-	// Return result based on status
+
+	const query = CustomData.findOne({_id: req.params.dataID, communityID: req.params.communityID, structureID: req.params.structureID});
+
+	query.exec((err, customData) => {
+		if(err) {
+			res.send(err);
+		} else {
+			customData.set(req.body);
+			
+			customData.markModified(`content`);
+			customData.save((error, customData) => {
+				if(error) {
+					res.send(error);
+				} else {
+					res.send({message: `customData updated successfully!`, customData});
+				}
+			});
+		}
+	});
 });
 
 router.delete(`/:communityID/structure/:structureID/data/:dataID`, (req, res) => {
