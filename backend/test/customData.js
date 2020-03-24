@@ -140,10 +140,10 @@ describe(`Custom Data`, () => {
 	*/
 	describe(`DELETE/:id customData`, () => {
 		it(`it should DELETE a customData given the id`, (done) => {
-			const customData = new customData({ authorID: `1`, structureID: `1` });
+			const customData = new CustomData({ authorID: `1`, structureID: `1`, communityID: `1` });
 			customData.save((err, customData) => {
 				chai.request(app)
-					.delete(`/api/customData/` + customData.id)
+					.delete(`/api/customData/` + customData.communityID + `/structure/` + customData.structureID + `/data/` + customData.id)
 					.end((err, res) => {
 						res.should.have.status(200);
 						res.body.should.be.a(`object`);
