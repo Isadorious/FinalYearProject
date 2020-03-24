@@ -109,18 +109,28 @@ describe(`Custom Data`, () => {
 	*/
 	describe(`PUT/:id customData`, () => {
 		it(`it should update a customData with the given id`, (done) => {
-			const customData = new CustomData({ authorID: `1`, structureID: `1` });
-			customData.save((err, customData) => {
-				chai.request(app)
-					.put(`/api/customData/` + customData.id)
-					.send({ customDataName: `GC Org customData` })
-					.end((err, res) => {
-						res.should.have.status(200);
-						res.body.should.be.a(`object`);
-						res.body.should.have.property(`message`).eql(`customData updated!`);
-						res.body.customData.should.have.property(`customDataName`).eql(`GC Org customData`);
-						done();
-					});
+			const community = new Community({ communityName: `Test Community`, ownerID: `1`});
+			community.dataStores.push({customDataTitle: `Custom Data Test`});
+			community.dataStores[0].DisplayKeyPairs.push({displayName: `Name`, key: `name`, dataType: `String`});
+			community.save((err, community) => {
+				const customData = new CustomData({authorID: `1`, communityID : community.id, structureID: community.dataStores[0].id});
+				customData.content.push({name: `test`});
+				customData.save((err, customData) => {
+					chai.request(app)
+						.put(`/api/customData/` +community.id + `/structure/` + community.dataStores[0].id + `/data/` + customData.id)
+						.send({content: {name: `PUT Test`}})
+						.end((err, res) => {
+							console.log(res.body);
+							console.log(res.body.customData.content);
+							res.should.have.status(200);
+							res.body.should.be.a(`object`);
+							res.body.should.have.property(`message`).eql(`customData updated successfully!`);
+							res.body.customData.should.have.property(`content`);
+							res.body.customData.content.should.be.a(`array`);
+							res.body.customData.content[0].should.have.property(`name`).eql(`PUT Test`);
+							done();
+						});
+				});
 			});
 		});
 	});
