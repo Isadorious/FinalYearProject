@@ -33,6 +33,10 @@ const userSchema = new Schema({
 	},
 	communities : {
 		type: [`String`]
+	},
+	dateOfBirth : {
+		type: Date,
+		required: true,
 	}
 });
 
