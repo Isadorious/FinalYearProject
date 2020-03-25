@@ -118,18 +118,23 @@ router.post(`/`, (req, res, next) => {
 	})(req, res, next);
 });
 
-router.put(`/:id`, (req, res) => {
-	User.findById({_id: req.params.id}, (err, user) => {
-		if(err) {
-			res.send(err);
+router.put(`/:id`, (req, res, next) => {
+	passport.authenticate(`jwt`, {session: false}, (err, user, info) => {
+		if(!user.id == req.params.id)
+		{
+			res.status(403).send({message: `can't modify other users data`});
+		} else {
+			Object.assign(user, req.body).save((err, user) => {
+				if(err) {
+					res.send(err);
+				} else {
+					user.password = ``;
+					res.send({message: `User updated!`, user});
+				}
+			});
 		}
-		Object.assign(user, req.body).save((err, user) => {
-			if(err) {
-				res.send(err);
-			}
-			res.json({message: `User updated!`, user});
-		});
-	});
+
+	})(req, res, next);
 });
 
 router.delete(`/:id`, (req, res) => {
