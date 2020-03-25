@@ -25,7 +25,7 @@ router.get(`/`, (req, res) => {
 						user.email = ``;
 						user.dateOfBirth = ``;
 					});
-					res.send(users);
+					res.send({message: `found users`, users});
 				}
 			});
 		}
@@ -37,7 +37,7 @@ router.post(`/login`, (req, res, next) => {
 		if(err) {
 			res.send(err);
 		} else if(info != undefined) {
-			res.send(info);
+			res.json({message: info.message});
 		} else {
 			req.logIn(user, {session: false}, err => {
 				if(err) {
@@ -68,8 +68,7 @@ router.get(`/:id`, (req, res, next) => {
 		}
 		if(info != undefined)
 		{
-			console.log(info.message);
-			res.send(info.message);
+			res.json({message: info.message});
 		} else {
 			const query = User.findById(req.params.id);
 
@@ -80,7 +79,7 @@ router.get(`/:id`, (req, res, next) => {
 					user.email = ``;
 					user.password = ``;
 					user.dateOfBirth = ``;
-					res.json(user);
+					res.json({message: `Found user successfully!`,user});
 				}
 			})
 		}
@@ -92,7 +91,7 @@ router.post(`/`, (req, res, next) => {
 		if(err) {
 			res.send(err);
 		}else if(info != undefined) {
-			res.send(info);
+			res.json({message: info.message});
 		} else {
 			req.logIn(user, {session: false}, err => {
 				if(err) {
@@ -128,7 +127,7 @@ router.put(`/:id`, (req, res, next) => {
 					res.send(err);
 				} else {
 					user.password = ``;
-					res.send({message: `User updated!`, user});
+					res.json({message: `User updated!`, user});
 				}
 			});
 		}
