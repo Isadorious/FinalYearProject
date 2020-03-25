@@ -4,6 +4,7 @@ import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import Alert from "react-bootstrap/Alert";
 const axios = require('axios');
 
 class LoginForm extends React.Component {
@@ -12,6 +13,8 @@ class LoginForm extends React.Component {
         this.state = {
                         username: '',
                         password: '',
+                        alertShown: false,
+                        alertMessage: `unable to login`,
                     };
 
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -31,6 +34,8 @@ class LoginForm extends React.Component {
     async handleLogin(e) {
         e.preventDefault();
 
+        this.setState({alertShown: false, alertMessage: `Unable to login`});
+
         const uname = this.state.username;
         const pword = this.state.password;
 
@@ -40,13 +45,19 @@ class LoginForm extends React.Component {
                     password: pword
             })
             .then(response => {
-                console.log(response.data.auth);
-                console.log(response.data.message);
-                console.log(response.data.token);
-
-                if(response.data.message === 'User logged in successfully!')
+                if(response.data.message === 'User logged in successfully!' && response.data.auth === true)
                 {
-                    alert('Authenticated user\nToken: ' +response.data.token);
+                    localStorage.setItem(`JWT`, response.data.token);
+                } else {
+                    if(response.data.message === `Missing credentials`)
+                    {
+                        this.setState({alertMessage: `Please enter your username and password`});
+                    } else if (response.data.message === `unable to find username`) {
+                        this.setState({alertMessage: `Incorrect username`});
+                    } else if (response.data.message === `passwords do not match`) {
+                        this.setState({alertMessage: `Incorrect password`});
+                    }
+                    this.setState({alertShown: true});
                 }
             })
             .catch(error => {
@@ -65,6 +76,9 @@ class LoginForm extends React.Component {
                 <Row>
                     <Col>
                         <Form id="registerLoginForm">
+                            <Alert variant="danger" show={this.state.alertShown}>
+                                Login Error: {this.state.alertMessage}
+                            </Alert>
                             <Form.Group controlId="usernameControl">
                                 <Form.Label>Username:</Form.Label>
                                 <Form.Control name="username" type="text" placeholder="Username" value={this.state.username} onChange={this.handleInputChange}/>
