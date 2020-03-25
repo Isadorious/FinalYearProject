@@ -44,14 +44,27 @@ router.post(`/login`, (req, res, next) => {
 	})(req, res, next);
 });
 
-router.get(`/:id`, (req, res) => {
-	const query = User.findById(req.params.id);
-	query.exec((err, user) => {
-		if (err) {
-			res.send(err);
+router.get(`/:id`, (req, res, next) => {
+	passport.authenticate(`jwt`, {session: false}, (err, user, info) => {
+		if(err) {
+			console.log(err);
 		}
-		res.json(user);
-	});
+		if(info != undefined)
+		{
+			console.log(info.message);
+			res.send(info.message);
+		} else {
+			const query = User.findById(req.params.id);
+
+			query.exec((err, user) => {
+				if (err) {
+					res.send(err);
+				} else {
+					res.json(user);
+				}
+			})
+		}
+	})(req, res, next);
 });
 
 router.post(`/`, (req, res, next) => {
