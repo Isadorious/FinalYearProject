@@ -4,15 +4,14 @@ const User = require(`../models/user`);
 const passport = require(`passport`);
 const jwt = require(`jsonwebtoken`);
 
-router.get(`/`, (req, res, next) => {
+router.get(`/`, (req, res) => {
 	passport.authenticate(`jwt`, {session : false}, (err, user, info) => {
 		if(err) {
 			console.log(err);
 		}
 		if(info != undefined)
 		{
-			console.log(info);
-			res.send(info);
+			res.json({message: info.message});
 		} else {
 			const query = User.find({});
 
@@ -30,7 +29,7 @@ router.get(`/`, (req, res, next) => {
 				}
 			});
 		}
-	})(req, res, next);
+	})(req, res);
 });
 
 router.post(`/login`, (req, res, next) => {
