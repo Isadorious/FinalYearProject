@@ -30,11 +30,14 @@ passport.use(`login`, new localStrategy({
 		} else if(user == undefined) {
 			return done(null, false, {message: `unable to find username`});
 		} else {
-			if(user.isValidPassword(password) === true){
-				return done(null, user);
-			} else {
-				return done(null, false, {message: `passwords do not match`});
-			}
+			user.isValidPassword(password).then(response => {
+				if (response === true)
+				{
+					return done(null, user);
+				} else {
+					return done(null, false, {message: `passwords do not match`});
+				}
+			});
 		}
 	});
 }));
