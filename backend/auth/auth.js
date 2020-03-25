@@ -48,7 +48,7 @@ passport.use(`jwt`, new jwtStrategy({
 }, (payload, done) => {
 	userModel.findOne({username: payload.username, email: payload.email}, (err, user) => {
 		if(err) {
-			done(err, false);
+			done(err, false, {message: `authentication error`});
 		} else {
 			done(null, user);
 		}
