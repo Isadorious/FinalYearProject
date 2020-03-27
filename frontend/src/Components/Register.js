@@ -3,7 +3,6 @@ import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import DatePicker from 'react-date-picker';
 
 const React = require('react');
 const Axios = require('axios');
@@ -34,8 +33,6 @@ class RegisterForm extends React.Component {
             [name] : value
         });
     }
-
-    calendarOnChange = dateOfBirth => this.setState({dateOfBirth});
 
     async handleRegister(e) {
         e.preventDefault();
@@ -100,12 +97,11 @@ class RegisterForm extends React.Component {
                                 <Form.Control name="password_rpt" type="password" placeholder="Repeat password" value={this.state.password_rpt} onChange={this.handleInputChange} />
                             </Form.Group>
 
-                            <Form.Group controlId="descriptionControl">
-                                <Form.Label>Description:</Form.Label>
-                                <Form.Control name="description" as="textarea" rows="3" value={this.state.description} onChange={this.handleInputChange} />
+                            <Form.Group controlId="dateOfBirthControl">
+                                <Form.Label>Date of Birth:</Form.Label>
+                                <Form.Control name="dateOfBirth" type="date" placeholder="Date of Birth" value={this.state.dateOfBirth} onChange={this.handleInputChange} />
                             </Form.Group>
 
-                            <DatePicker name="dateOfBirth" onChange={this.calendarOnChange} value={this.state.dateOfBirth}/>
                             <Button variant="secondary" type="submit" onClick={this.handleRegister}>Register</Button>
                         </Form>
                     </Col>
