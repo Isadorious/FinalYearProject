@@ -11,6 +11,7 @@ import Login from "./Components/Login";
 import Register from "./Components/Register";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
+import EditProfile from "./Components/EditProfile";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
               <Nav.Link href="/">Home</Nav.Link>
               <Nav.Link href="/login">Login</Nav.Link>
               <Nav.Link href="/register">Register</Nav.Link>
+              <Nav.Link href="/profile/">Edit Profile</Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Navbar>
@@ -35,6 +37,7 @@ function App() {
             <Route path="/register">
               <Register />
             </Route>
+            <Route path="/profile/e/:id" component={EditProfile} />
             <Route path="/">
               <Home />
             </Route>
