@@ -6,6 +6,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Alert from "react-bootstrap/Alert";
 import Axios from 'axios';
+import Loading from './Loading';
 
 class ProfileForm extends React.Component {
 	constructor(props) {
@@ -23,6 +24,7 @@ class ProfileForm extends React.Component {
 			error: false,
 			alertShown: false,
 			alertMessage: `Unable to update user details`,
+			loading: true,
 		};
 
 		this.handleInputChange = this.handleInputChange.bind(this);
@@ -79,6 +81,7 @@ class ProfileForm extends React.Component {
 						description: data.user.discription,
 						dateOfBirth: data.user.dateOfBirth,
 						profilePicture: data.user.profilePicture,
+						loading: false,
 					});
 				}
 			})
@@ -126,57 +129,61 @@ class ProfileForm extends React.Component {
 	}
 
 	render() {
-		return (
-			< >
-				<Container>
-					<Row>
-						<Col>
-							<Form id="registerLoginForm">
-								<Alert variant="danger" show={this.state.alertShown}>
-									Error: {this.state.alertMessage}
-								</Alert>
-								<Form.Group controlId="usernameControl">
-									<Form.Label>Username:</Form.Label>
-									<Form.Control readOnly name="username" type="text" placeholder="Username" value={this.state.username} onChange={this.handleInputChange} />
-								</Form.Group>
+		if (this.state.loading === true) {
+			return (<Loading />)
+		} else {
+			return (
+				< >
+					<Container>
+						<Row>
+							<Col>
+								<Form id="registerLoginForm">
+									<Alert variant="danger" show={this.state.alertShown}>
+										Error: {this.state.alertMessage}
+									</Alert>
+									<Form.Group controlId="usernameControl">
+										<Form.Label>Username:</Form.Label>
+										<Form.Control readOnly name="username" type="text" placeholder="Username" value={this.state.username} onChange={this.handleInputChange} />
+									</Form.Group>
 
-								<Form.Group controlId="dateOfBirthControl">
-									<Form.Label>Date of Birth:</Form.Label>
-									<Form.Control readOnly name="dateOfBirth" type="date" placeholder="Date of Birth" value={this.state.dateOfBirth} onChange={this.handleInputChange} />
-								</Form.Group>
+									<Form.Group controlId="dateOfBirthControl">
+										<Form.Label>Date of Birth:</Form.Label>
+										<Form.Control readOnly name="dateOfBirth" type="date" placeholder="Date of Birth" value={this.state.dateOfBirth} onChange={this.handleInputChange} />
+									</Form.Group>
 
-								<Form.Group controlId="nicknameControl">
-									<Form.Label>Display Name:</Form.Label>
-									<Form.Control name="nickname" type="text" placeholder="This should be different to your username and doesn't have to be unique" value={this.state.nickname} onChange={this.handleInputChange} />
-								</Form.Group>
+									<Form.Group controlId="nicknameControl">
+										<Form.Label>Display Name:</Form.Label>
+										<Form.Control name="nickname" type="text" placeholder="This should be different to your username and doesn't have to be unique" value={this.state.nickname} onChange={this.handleInputChange} />
+									</Form.Group>
 
-								<Form.Group controlId="descriptionControl">
-									<Form.Label>About Me:</Form.Label>
-									<Form.Control name="description" as="textarea" placeholder="Tell us a little about yourself" value={this.state.description} onChange={this.handleInputChange} />
-								</Form.Group>
+									<Form.Group controlId="descriptionControl">
+										<Form.Label>About Me:</Form.Label>
+										<Form.Control name="description" as="textarea" placeholder="Tell us a little about yourself" value={this.state.description} onChange={this.handleInputChange} />
+									</Form.Group>
 
-								<Form.Group controlId="passwordControl">
-									<Form.Label>Password:</Form.Label>
-									<Form.Control name="newPassword" type="password" placeholder="Password" value={this.state.newPassword} onChange={this.handleInputChange} />
-								</Form.Group>
+									<Form.Group controlId="passwordControl">
+										<Form.Label>Password:</Form.Label>
+										<Form.Control name="newPassword" type="password" placeholder="Password" value={this.state.newPassword} onChange={this.handleInputChange} />
+									</Form.Group>
 
-								<Form.Group controlId="passwordRptControl">
-									<Form.Label>Repeat Password:</Form.Label>
-									<Form.Control name="rptNewPassword" type="password" placeholder="Repeat password" value={this.state.rptNewPassword} onChange={this.handleInputChange} />
-								</Form.Group>
+									<Form.Group controlId="passwordRptControl">
+										<Form.Label>Repeat Password:</Form.Label>
+										<Form.Control name="rptNewPassword" type="password" placeholder="Repeat password" value={this.state.rptNewPassword} onChange={this.handleInputChange} />
+									</Form.Group>
 
-								<Form.Group controlId="emailControl">
-									<Form.Label>Email:</Form.Label>
-									<Form.Control name="email" type="email" placeholder="Please enter your email" value={this.state.email} onChange={this.handleInputChange} />
-								</Form.Group>
+									<Form.Group controlId="emailControl">
+										<Form.Label>Email:</Form.Label>
+										<Form.Control name="email" type="email" placeholder="Please enter your email" value={this.state.email} onChange={this.handleInputChange} />
+									</Form.Group>
 
-								<Button variant="secondary" type="submit" onClick={this.handleSave}>Save Changes</Button>
-							</Form>
-						</Col>
-					</Row>
-				</Container>
-			</>
-		)
+									<Button variant="secondary" type="submit" onClick={this.handleSave}>Save Changes</Button>
+								</Form>
+							</Col>
+						</Row>
+					</Container>
+				</>
+			)
+		}
 	}
 }
 
