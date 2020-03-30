@@ -136,12 +136,19 @@ router.put(`/:id`, (req, res, next) => {
 		{
 			res.status(403).send({message: `can't modify other users data`});
 		} else {
-			Object.assign(user, req.body).save((err, user) => {
+			User.findOne({_id: req.params.id}, (err, user) => {
 				if(err) {
 					res.send(err);
 				} else {
-					user.password = ``;
-					res.json({message: `User updated!`, user});
+					Object.assign(user, req.body).save((error, user) => {
+						if(error) {
+							console.log(error);
+							res.send(error);
+						} else {
+							user.password = ``;
+							res.json({message: `User updated!`, user});
+						}
+					});
 				}
 			});
 		}
