@@ -26,7 +26,7 @@ function App() {
               <Nav.Link href="/">Home</Nav.Link>
               <Nav.Link href="/login">Login</Nav.Link>
               <Nav.Link href="/register">Register</Nav.Link>
-              <Nav.Link href="/profile/">Edit Profile</Nav.Link>
+              <Nav.Link href="/profile/e/">Edit Profile</Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Navbar>
