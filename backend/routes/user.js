@@ -71,7 +71,7 @@ router.get(`/:id`, (req, res, next) => {
 		{
 			res.json({message: info.message});
 		} else {
-			const sameUser = false;
+			let sameUser = false;
 
 			if(user.id == req.params.id)
 			{
