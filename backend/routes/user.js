@@ -71,15 +71,28 @@ router.get(`/:id`, (req, res, next) => {
 		{
 			res.json({message: info.message});
 		} else {
+			const sameUser = false;
+
+			if(user.id == req.params.id)
+			{
+				sameUser = true;
+			}
+
 			const query = User.findById(req.params.id);
 
 			query.exec((err, user) => {
 				if (err) {
 					res.send(err);
 				} else {
-					user.email = ``;
+
+					if(sameUser == false)
+					{
+						user.email = ``;
+						user.dateOfBirth = ``;
+					}
+
 					user.password = ``;
-					user.dateOfBirth = ``;
+
 					res.json({message: `Found user successfully!`,user});
 				}
 			})
