@@ -15,6 +15,21 @@ import EditProfile from "./EditProfile";
 import Home from "./Home";
 
 class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      loggedIn: false
+    }
+  }
+
+  async componentDidMount() {
+    let accessString = localStorage.getItem(`JWT`);
+		if (accessString === null) {
+			this.setState({
+			loggedIn: true,
+			});
+		}
+  }
 
   render() {
     return (
