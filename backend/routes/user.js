@@ -51,7 +51,8 @@ router.post(`/login`, (req, res, next) => {
 							res.status(200).send({
 								auth: true,
 								token: token,
-								message: `User logged in successfully!`
+								message: `User logged in successfully!`,
+								id: user.id,
 							});
 						} 
 					});

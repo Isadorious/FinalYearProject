@@ -48,6 +48,7 @@ class LoginForm extends React.Component {
                 if(response.data.message === 'User logged in successfully!' && response.data.auth === true)
                 {
                     localStorage.setItem(`JWT`, response.data.token);
+                    localStorage.setItem(`UserID`, response.data.id);
                 } else {
                     if(response.data.message === `Missing credentials`)
                     {
