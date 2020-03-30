@@ -7,11 +7,11 @@ import {
   useRouteMatch,
   useParams
 } from 'react-router-dom';
-import Login from "./Components/Login";
-import Register from "./Components/Register";
+import Login from "./Login";
+import Register from "./Register";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
-import EditProfile from "./Components/EditProfile";
+import EditProfile from "./EditProfile";
 
 function App() {
   return (
