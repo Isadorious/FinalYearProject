@@ -156,6 +156,43 @@ router.put(`/:id`, (req, res, next) => {
 	})(req, res, next);
 });
 
+router.post(`/uploadProfilePicture/:id`, (req, res, next) => {
+	passport.authenticate(`jwt`, {session: false}, (err, user, info) => {
+		if(user.id != req.params.id)
+		{
+			res.status(403).send({message: `can't modify other users data`});
+		} else {
+			if(!req.files) {
+				res.status(400).send({message: `No file uploaded`});
+			} else {
+				try {
+					let profilePicture = req.files.profilePicture;
+					fileLocation = `uploads/userData/` +user.id+ `/` + profilePicture.name;
+					avatar.mv(`./` + fileLocation);
+				} catch (err) {
+					res.status(500).send(err);
+				}
+
+				User.findOne({_id: req.params.id}, (err, user) => {
+					if(err) {
+						res.status(500).send(err);
+					} else {
+						user.profilePicture = fileLocation;
+
+						user.save((error, user) => {
+							if(error) {
+								res.status(500).send(error);
+							} else {
+								res.json({message: `Profile Picture uploaded!`});
+							}
+						});
+					}
+				});
+			}
+		}
+	})
+});
+
 router.delete(`/:id`, (req, res) => {
 	User.deleteOne({_id: req.params.id}, (err, result) => {
 		if(err) {
