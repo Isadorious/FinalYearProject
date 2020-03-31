@@ -190,7 +190,7 @@ router.post(`/uploadProfilePicture/:id`, (req, res, next) => {
 				});
 			}
 		}
-	})
+	})(req, res, next);
 });
 
 router.delete(`/:id`, (req, res) => {
