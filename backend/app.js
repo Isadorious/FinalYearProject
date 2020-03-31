@@ -8,6 +8,7 @@ const bodyParser = require(`body-parser`);
 const logger = require(`morgan`);
 const passport = require(`passport`);
 const cors = require(`cors`);
+const fileUpload = require(`express-fileupload`);
 
 // Get environment e.g. dev or production
 const environment = process.env.NODE_ENV;
@@ -15,6 +16,11 @@ const environment = process.env.NODE_ENV;
 // Setup express
 const app = express();
 const router = express.Router();
+
+// Setup app to use file upload
+app.use(fileUpload({
+	createParentPath: true,
+}));
 
 // Setup app to use CORS
 app.use(cors());
