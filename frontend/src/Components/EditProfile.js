@@ -7,6 +7,7 @@ import Col from "react-bootstrap/Col";
 import Alert from "react-bootstrap/Alert";
 import Axios from 'axios';
 import Loading from './Loading';
+import UploadAvatar from './UploadAvatar';
 
 class ProfileForm extends React.Component {
 	constructor(props) {
@@ -178,6 +179,11 @@ class ProfileForm extends React.Component {
 
 									<Button variant="secondary" type="submit" onClick={this.handleSave}>Save Changes</Button>
 								</Form>
+							</Col>
+						</Row>
+						<Row>
+							<Col>
+								<UploadAvatar />
 							</Col>
 						</Row>
 					</Container>
