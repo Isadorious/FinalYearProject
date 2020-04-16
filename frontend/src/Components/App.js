@@ -61,7 +61,9 @@ class App extends React.Component {
               <Route path="/logout">
                 <Logout updateLogin={this.updateLoggedIn} />
               </Route>
-              <Route path="/" component={Home}/>
+              <Route path="/"> 
+                <Home loggedIn={this.state.loggedIn} updateLogin={this.updateLoggedIn} />
+              </Route>
             </Switch>
           </div>
         </Router>
