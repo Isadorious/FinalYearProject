@@ -7,12 +7,16 @@ class Home extends React.Component {
 		super(props);
 	}
 
+	componentDidMount() {
+		document.title = "Home - GCOrg";
+	}
+
 	render() {
 		if(this.props.loggedIn === false) {
 			return (
 				<>
-					<Login loggedIn={this.props.loggedIn} updateLogin={this.props.updateLogin} />
-					<Register loggedIn={this.props.loggedIn} updateLogin={this.props.updateLogin} />
+					<Login loggedIn={this.props.loggedIn} updateLogin={this.props.updateLogin} noTitle/>
+					<Register loggedIn={this.props.loggedIn} updateLogin={this.props.updateLogin} noTitle/>
 				</>
 			)
 		} else {
