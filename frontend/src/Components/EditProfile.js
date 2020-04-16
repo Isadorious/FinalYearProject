@@ -79,7 +79,7 @@ class ProfileForm extends React.Component {
 						username: data.user.username,
 						email: data.user.email,
 						nickname: data.user.nickname,
-						description: data.user.discription,
+						description: data.user.description,
 						dateOfBirth: data.user.dateOfBirth,
 						profilePicture: data.user.profilePicture,
 						loading: false,
