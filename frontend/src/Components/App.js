@@ -9,8 +9,7 @@ import {
 } from 'react-router-dom';
 import Login from "./Login";
 import Register from "./Register";
-import Navbar from "react-bootstrap/Navbar";
-import Nav from "react-bootstrap/Nav";
+import Navbar from "./Navbar";
 import EditProfile from "./EditProfile";
 import Home from "./Home";
 
@@ -28,7 +27,11 @@ class App extends React.Component {
 			this.setState({
 			loggedIn: true,
 			});
-		}
+		} else {
+      this.setState({
+        loggedIn: false,
+      });
+    }
   }
 
   render() {
@@ -36,18 +39,7 @@ class App extends React.Component {
       <div className="App">
         <Router>
           <div>
-          <Navbar bg="dark" variant="dark" expand="lg">
-            <Navbar.Brand>GCOrg</Navbar.Brand>
-            <Navbar.Toggle aria-controls="basic-navbar-nav" />
-            <Navbar.Collapse id="basic-navbar-nav">
-              <Nav className="mr-auto">
-                <Nav.Link href="/">Home</Nav.Link>
-                <Nav.Link href="/login">Login</Nav.Link>
-                <Nav.Link href="/register">Register</Nav.Link>
-                <Nav.Link href="/profile/e/">Edit Profile</Nav.Link>
-              </Nav>
-            </Navbar.Collapse>
-          </Navbar>
+          <Navbar />
             <Switch>
               <Route path="/login">
                 <Login />
