@@ -27,7 +27,7 @@ class ProfilePictureUploader extends React.Component {
     handleFileUpload(e) {
         e.preventDefault();
         const data = new FormData();
-        data.append('file', this.state.selectedFile);
+        data.append('profilePicture', this.state.selectedFile);
 
         let accessString = localStorage.getItem(`JWT`);
 		if (accessString === null) {
@@ -42,16 +42,16 @@ class ProfilePictureUploader extends React.Component {
 				error: true,
 			});
 		}
-
-        Axios.post(`http://localhost:9000/uploadProfilePicture/${uID}`, {
+        
+        Axios.post(`http://localhost:9000/api/users/uploadProfilePicture/${uID}`, data, {
             headers: {Authorization: `JWT ${accessString}`},
-            data,
         })
         .then(response => {
             if(response.data.message === `Profile Picture uploaded!`) {
                 alert(`Profile picture updated!`);
             } else {
                 this.setState({ alertShown: true});
+                console.log(response);
             }
         })
     }
@@ -63,7 +63,7 @@ class ProfilePictureUploader extends React.Component {
                     Error: {this.state.alertMessage}
                 </Alert>
                 <Form.Group>
-                    <Form.File id="avatar" label="Profile Picture" custom onChange={this.handleInputChange} />
+                    <Form.File id="profilePicture" name="profilePicture" label="Profile Picture" custom onChange={this.handleInputChange} />
                 </Form.Group>
                 <Button variant="secondary" type="submit" onClick={this.handleFileUpload}>Upload profile picture</Button>
             </Form>

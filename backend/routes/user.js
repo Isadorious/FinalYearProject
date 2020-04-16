@@ -161,26 +161,34 @@ router.post(`/uploadProfilePicture/:id`, (req, res, next) => {
 		if(user.id != req.params.id)
 		{
 			res.status(403).send({message: `can't modify other users data`});
+			return;
 		} else {
 			if(!req.files) {
 				res.status(400).send({message: `No file uploaded`});
+				return;
 			} else {
+				let fileLocation;
 				try {
 					let profilePicture = req.files.profilePicture;
 					fileLocation = `uploads/userData/` +user.id+ `/` + profilePicture.name;
 					profilePicture.mv(`./` + fileLocation);
 				} catch (err) {
+					console.log(err);
 					res.status(500).send(err);
+					return;
 				}
 
 				User.findOne({_id: req.params.id}, (err, user) => {
 					if(err) {
+						console.log(err);
 						res.status(500).send(err);
+						return;
 					} else {
 						user.profilePicture = fileLocation;
 
 						user.save((error, user) => {
 							if(error) {
+								console.log(error);
 								res.status(500).send(error);
 								return;
 							} else {
