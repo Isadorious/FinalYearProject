@@ -168,7 +168,7 @@ router.post(`/uploadProfilePicture/:id`, (req, res, next) => {
 				try {
 					let profilePicture = req.files.profilePicture;
 					fileLocation = `uploads/userData/` +user.id+ `/` + profilePicture.name;
-					avatar.mv(`./` + fileLocation);
+					profilePicture.mv(`./` + fileLocation);
 				} catch (err) {
 					res.status(500).send(err);
 				}
@@ -182,6 +182,7 @@ router.post(`/uploadProfilePicture/:id`, (req, res, next) => {
 						user.save((error, user) => {
 							if(error) {
 								res.status(500).send(error);
+								return;
 							} else {
 								res.json({message: `Profile Picture uploaded!`});
 							}
