@@ -41,16 +41,10 @@ class App extends React.Component {
           <div>
           <Navbar />
             <Switch>
-              <Route path="/login">
-                <Login />
-              </Route>
-              <Route path="/register">
-                <Register />
-              </Route>
+              <Route path="/login" component={Login} />
+              <Route path="/register" component={Register} />
               <Route path="/profile/e/:id" component={EditProfile} />
-              <Route path="/">
-                <Home />
-              </Route>
+              <Route path="/" component={Home}/>
             </Switch>
           </div>
         </Router>
