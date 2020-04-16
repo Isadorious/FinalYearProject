@@ -5,7 +5,8 @@ import {
   Route,
   Link,
   useRouteMatch,
-  useParams
+  useParams,
+  Redirect
 } from 'react-router-dom';
 import Login from "./Login";
 import Register from "./Register";
@@ -19,29 +20,41 @@ class App extends React.Component {
     this.state = {
       loggedIn: false
     }
+
+    this.updateLoggedIn = this.updateLoggedIn.bind(this);
   }
 
   async componentDidMount() {
     let accessString = localStorage.getItem(`JWT`);
 		if (accessString === null) {
 			this.setState({
-			loggedIn: true,
+			loggedIn: false,
 			});
 		} else {
       this.setState({
-        loggedIn: false,
+        loggedIn: true,
       });
     }
   }
+
+  updateLoggedIn(status) {
+		if(status === true) {
+			this.setState({loggedIn: true})
+		} else if(status === false) {
+      this.setState({loggedIn: false});
+		}
+	}
 
   render() {
     return (
       <div className="App">
         <Router>
           <div>
-          <Navbar />
+          <Navbar loggedIn={this.state.loggedIn} updateLogin={this.updateLoggedIn} />
             <Switch>
-              <Route path="/login" component={Login} />
+              <Route path="/login"> 
+                <Login loggedIn={this.state.loggedIn} updateLogin={this.updateLoggedIn} /> 
+              </Route>
               <Route path="/register" component={Register} />
               <Route path="/profile/e/:id" component={EditProfile} />
               <Route path="/" component={Home}/>

@@ -5,6 +5,7 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Alert from "react-bootstrap/Alert";
+import {Redirect} from "react-router-dom";
 const axios = require('axios');
 
 class LoginForm extends React.Component {
@@ -49,6 +50,7 @@ class LoginForm extends React.Component {
                 {
                     localStorage.setItem(`JWT`, response.data.token);
                     localStorage.setItem(`UserID`, response.data.id);
+                    this.props.updateLogin(true);
                 } else {
                     if(response.data.message === `Missing credentials`)
                     {
@@ -72,28 +74,36 @@ class LoginForm extends React.Component {
     }
     
     render() {
-        return(
-            <Container>
-                <Row>
-                    <Col>
-                        <Form id="registerLoginForm">
-                            <Alert variant="danger" show={this.state.alertShown}>
-                                Login Error: {this.state.alertMessage}
-                            </Alert>
-                            <Form.Group controlId="usernameControl">
-                                <Form.Label>Username:</Form.Label>
-                                <Form.Control name="username" type="text" placeholder="Username" value={this.state.username} onChange={this.handleInputChange}/>
-                            </Form.Group>
-                            <Form.Group controlId="passwordControl">
-                                <Form.Label>Password:</Form.Label>
-                                <Form.Control name="password" type="password" placeholder="Password" value={this.state.password} onChange={this.handleInputChange} />
-                            </Form.Group>
-                            <Button variant="secondary" type="submit" onClick={this.handleLogin}>Login</Button>
-                        </Form>
-                    </Col>
-                </Row>
-            </Container>
-        )}
+        if(this.props.loggedIn === true)
+        {
+            return(
+                <Redirect to="/" />
+            )
+        } else {
+            return(
+                <Container>
+                    <Row>
+                        <Col>
+                            <Form id="registerLoginForm">
+                                <Alert variant="danger" show={this.state.alertShown}>
+                                    Login Error: {this.state.alertMessage}
+                                </Alert>
+                                <Form.Group controlId="usernameControl">
+                                    <Form.Label>Username:</Form.Label>
+                                    <Form.Control name="username" type="text" placeholder="Username" value={this.state.username} onChange={this.handleInputChange}/>
+                                </Form.Group>
+                                <Form.Group controlId="passwordControl">
+                                    <Form.Label>Password:</Form.Label>
+                                    <Form.Control name="password" type="password" placeholder="Password" value={this.state.password} onChange={this.handleInputChange} />
+                                </Form.Group>
+                                <Button variant="secondary" type="submit" onClick={this.handleLogin}>Login</Button>
+                            </Form>
+                        </Col>
+                    </Row>
+                </Container>
+            )
+        }
+}
 }
 
 export default LoginForm;
