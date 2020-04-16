@@ -13,6 +13,7 @@ import Register from "./Register";
 import Navbar from "./Navbar";
 import EditProfile from "./EditProfile";
 import Home from "./Home";
+import Logout from './Logout';
 
 class App extends React.Component {
   constructor(props) {
@@ -57,6 +58,9 @@ class App extends React.Component {
               </Route>
               <Route path="/register" component={Register} />
               <Route path="/profile/e/:id" component={EditProfile} />
+              <Route path="/logout">
+                <Logout updateLogin={this.updateLoggedIn} />
+              </Route>
               <Route path="/" component={Home}/>
             </Switch>
           </div>
