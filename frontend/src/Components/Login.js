@@ -70,7 +70,9 @@ class LoginForm extends React.Component {
     }
 
     componentDidMount() {
-        document.title = "Login - GCOrg";
+        if(this.props.noTitle === undefined) {
+            document.title = "Login - GCOrg";
+        }
     }
     
     render() {

@@ -63,7 +63,9 @@ class RegisterForm extends React.Component {
     }
 
     componentDidMount() {
-        document.title = "Register - GCOrg";
+        if(this.props.noTitle === undefined) {
+            document.title = "Register - GCOrg";
+        }
     }
 
     render() {
