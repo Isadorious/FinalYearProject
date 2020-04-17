@@ -46,6 +46,8 @@ router.post(`/login`, (req, res, next) => {
 					User.findOne({username: req.body.username}, (err, user) => {
 						if(err) {
 							res.send(err);
+						} else if(user === null){
+							res.status(404).json({message: `User not found`});
 						} else {
 							const token = jwt.sign({username: user.username, email: user.email }, process.env.SECRET_KEY);
 							res.status(200).send({
@@ -83,8 +85,9 @@ router.get(`/:id`, (req, res, next) => {
 			query.exec((err, user) => {
 				if (err) {
 					res.send(err);
+				} else if (user === null){
+					res.status(404).json({message: `User not found`});
 				} else {
-
 					if(sameUser == false)
 					{
 						user.email = ``;
@@ -139,6 +142,8 @@ router.put(`/:id`, (req, res, next) => {
 			User.findOne({_id: req.params.id}, (err, user) => {
 				if(err) {
 					res.send(err);
+				} else if(user === null) {
+					res.status(404).json({message: `User not found`});
 				} else {
 					Object.assign(user, req.body).save((error, user) => {
 						if(error) {
@@ -183,6 +188,8 @@ router.post(`/uploadProfilePicture/:id`, (req, res, next) => {
 						console.log(err);
 						res.status(500).send(err);
 						return;
+					} else if(user === null) {
+						res.status(404).json({message: `User not found`});
 					} else {
 						user.profilePicture = fileLocation;
 
