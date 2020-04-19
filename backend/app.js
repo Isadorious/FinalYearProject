@@ -48,6 +48,9 @@ app.use(`/api/communities`, communityRoutes);
 app.use(`/api/calendars`, calendarRoutes);
 app.use(`/api/customData`, customDataRoutes);
 
+// Allow app access to file uploads
+app.use('/uploads', express.static(__dirname + '/uploads'));
+
 app.listen(process.env.PORT, function() {
 	console.log(`Server now listening at localhost:${process.env.PORT}`);
 	mongoose.connect(process.env.DB_CONNECTION, {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex : true}).catch(function(res){
