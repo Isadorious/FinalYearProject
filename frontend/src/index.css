@@ -23,3 +23,12 @@ code {
   padding: 15px 15px 15px 15px;
   border-radius:  10px;
 }
+
+.errorAlert {
+  margin-top: 10px;
+  width: 100%;
+  -webkit-box-shadow: 8px 7px 22px rgba(50, 50, 50, 0.75);
+  -moz-box-shadow:    8px 7px 22px rgba(50, 50, 50, 0.75);
+  box-shadow:         8px 7px 22px rgba(50, 50, 50, 0.75);
+  margin-bottom: 20px;
+}
