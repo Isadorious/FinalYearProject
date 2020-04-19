@@ -8,6 +8,7 @@ import Alert from "react-bootstrap/Alert";
 import Axios from 'axios';
 import Loading from './Loading';
 import UploadAvatar from './UploadAvatar';
+import Avatar from './Avatar';
 
 class ProfileForm extends React.Component {
 	constructor(props) {
@@ -136,6 +137,11 @@ class ProfileForm extends React.Component {
 			return (
 				< >
 					<Container>
+						<Row>
+							<Col>
+								<Avatar avatar={'http://localhost:9000/' +this.state.profilePicture} />					
+							</Col>
+						</Row>
 						<Row>
 							<Col>
 								<Form id="registerLoginForm">
