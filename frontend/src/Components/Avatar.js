@@ -9,11 +9,11 @@ class AvatarComponent extends React.Component {
     render() {
         if(this.props.avatar === 'http://localhost:9000/' || this.props.avatar === 'http://localhost:9000/undefined') {
             return (
-                <Image src='http://localhost:9000/uploads/default/avatar.png' roundedCircle style={{width: this.props.size || 100, height: this.props.size || 100, backgroundColor: "white", borderStyle: "solid", borderWidth: "2px",}} />
+                <Image src='http://localhost:9000/uploads/default/avatar.png' roundedCircle style={{width: this.props.size || 100, height: this.props.size || 100, backgroundColor: "white", borderStyle: "solid", borderWidth: "2px", marginTop: "10px",}} />
             )
         } else {
             return (
-                <Image src={this.props.avatar} roundedCircle style={{width: this.props.size || 100, height: this.props.size || 100, backgroundColor: "white", borderStyle: "solid", borderWidth: "2px",}} />
+                <Image src={this.props.avatar} roundedCircle style={{width: this.props.size || 100, height: this.props.size || 100, backgroundColor: "white", borderStyle: "solid", borderWidth: "2px", marginTop: "10px",}} />
             )
         }
 
