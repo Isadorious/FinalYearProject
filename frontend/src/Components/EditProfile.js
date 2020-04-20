@@ -9,6 +9,7 @@ import Axios from 'axios';
 import Loading from './Loading';
 import UploadAvatar from './UploadAvatar';
 import Avatar from './Avatar';
+import Error from './Error';
 
 class ProfileForm extends React.Component {
 	constructor(props) {
@@ -24,6 +25,8 @@ class ProfileForm extends React.Component {
 			dateOfBirth: new Date(),
 			currentPassword: '',
 			error: false,
+			errorMessage: `Unable to update user data`,
+			errorStatusCode: 500,
 			alertShown: false,
 			alertMessage: `Unable to update user details`,
 			loading: true,
@@ -50,20 +53,32 @@ class ProfileForm extends React.Component {
 		if (accessString === null) {
 			this.setState({
 				error: true,
+				errorMessage: `Unable to load user details from local storage`,
+				errorStatusCode: 401,
+				loading: false,
 			});
+			return;
 		}
 
 		let uID = localStorage.getItem(`UserID`);
 		if (uID === null) {
 			this.setState({
 				error: true,
+				errorMessage: `Unable to load user details from local storage`,
+				errorStatusCode: 401,
+				loading: false,
 			});
+			return;
 		}
 
 		if (uID !== this.props.match.params.id) {
 			this.setState({
 				error: true,
+				errorMessage: `Can't modify other users data!`,
+				errorStatusCode: 401,
+				loading: false,
 			});
+			return;
 		}
 
 		await Axios
@@ -98,6 +113,8 @@ class ProfileForm extends React.Component {
 		if (accessString === null) {
 			this.setState({
 				error: true,
+				errorMessage: `Unable to load user details from local storage`,
+				errorStatusCode: 401,
 			});
 		}
 
@@ -105,6 +122,8 @@ class ProfileForm extends React.Component {
 		if (uID === null) {
 			this.setState({
 				error: true,
+				errorMessage: `Unable to load user details from local storage`,
+				errorStatusCode: 401,
 			});
 		}
 
@@ -133,6 +152,8 @@ class ProfileForm extends React.Component {
 	render() {
 		if (this.state.loading === true) {
 			return (<Loading />)
+		} else if(this.state.error === true) {
+			return (<Error statusCode={this.state.errorStatusCode} message={this.state.errorMessage}/>)
 		} else {
 			return (
 				< >
