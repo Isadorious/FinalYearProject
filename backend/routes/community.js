@@ -24,14 +24,22 @@ router.get(`/:id`, (req, res) => {
 });
 
 router.post(`/`, (req, res) => {
-	// Create new community from the data in the request body
-	const community = new Community(req.body);
-	// Save the new community in the database
-	community.save((err, community) => {
-		if (err) {
+	passport.authenticate(`jwt`, {session: false}, (err, user, info) => {
+		if(err) {
 			res.send(err);
+		} else if(info != undefined) {
+			res.json({message: info.message});
 		} else {
-			res.json({ message: `Community added successfully!`, community });
+			// Create new community from the data in the request body
+			const community = new Community(req.body);
+			// Save the new community in the database
+			community.save((err, community) => {
+				if (err) {
+					res.send(err);
+				} else {
+					res.json({ message: `Community added successfully!`, community });
+				}
+			});
 		}
 	});
 });
