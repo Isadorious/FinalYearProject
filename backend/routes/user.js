@@ -210,12 +210,21 @@ router.post(`/uploadProfilePicture/:id`, (req, res, next) => {
 });
 
 router.delete(`/:id`, (req, res) => {
-	User.deleteOne({_id: req.params.id}, (err, result) => {
+	passport.authenticate(`jwt`, {session: false}, (err, user, info) => {
 		if(err) {
 			res.send(err);
+		} else if(info != undefined) {
+			res.json({message: info.message});
+		} else if(user.id === req.params.id) {
+			User.deleteOne({_id: req.params.id}, (err, result) => {
+				if(err) {
+					res.send(err);
+				}	
+				res.json({message: `User successfully deleted!`, result});
+			});
+		} else {
+			res.status(403).send({message: `can't modify other users data`});
 		}
-
-		res.json({message: `User successfully deleted!`, result});
 	});
 });
 
