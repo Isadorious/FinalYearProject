@@ -6,6 +6,10 @@ import CreateCommunity from './CreateCommunity';
 import Error from './Error';
 import Axios from 'axios';
 import Loading from './Loading';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Button from 'react-bootstrap/Button';
 
 class Home extends React.Component {
 	constructor(props) {
@@ -19,7 +23,7 @@ class Home extends React.Component {
 		}
 	}
 
-	componentDidMount() {
+	async componentDidMount() {
 		document.title = "Home - GCOrg";
 
 		if(this.props.loggedIn === true) {
@@ -66,7 +70,7 @@ class Home extends React.Component {
 
 	render() {
 		if(this.state.loading === true) {
-			<Loading />
+			return (<Loading />);
 		} else if(this.props.loggedIn === false) {
 			return (
 				<>
@@ -74,8 +78,8 @@ class Home extends React.Component {
 					<Register loggedIn={this.props.loggedIn} updateLogin={this.props.updateLogin} noTitle/>
 				</>
 			)
-		} else {
-			const cards = communities.map((communityID) =>
+		} else if(this.state.communites !== undefined) {
+			const cards = this.state.communities.map((communityID) =>
 				<Row>
 					<CommunityCard communityID={communityID}/>
 				</Row>
@@ -84,10 +88,23 @@ class Home extends React.Component {
 			return (
 				<Container>
 					<Col>
+						<Row>
+							<Button>Create new Community</Button>
+						</Row>
 						{cards}
 					</Col>
 				</Container>
 				)
+		} else {
+			return (
+				<Container>
+					<Col>
+						<Row>
+							<Button>Create new Community</Button>
+						</Row>
+					</Col>
+				</Container>
+			);
 		}
 	}
 }
