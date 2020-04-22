@@ -10,6 +10,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 
 class Home extends React.Component {
 	constructor(props) {
@@ -20,7 +21,11 @@ class Home extends React.Component {
 			error: false,
 			errorMessage: 'Unable to get community data',
 			errorStatusCode: 500,
+			showModal: false,
 		}
+
+		this.handleOpen = this.handleOpen.bind(this);
+		this.handleClose = this.handleClose.bind(this);
 	}
 
 	async componentDidMount() {
@@ -68,9 +73,20 @@ class Home extends React.Component {
 		}
 	}
 
+	handleClose() {
+		this.setState({showModal: false});
+	}
+
+	handleOpen(e) {
+		e.preventDefault();
+		this.setState({showModal: true});
+	}
+
 	render() {
 		if(this.state.loading === true) {
 			return (<Loading />);
+		} else if(this.state.error === true){
+			return (<Error statusCode={this.state.errorStatusCode} message={this.state.errorMessage}/>);
 		} else if(this.props.loggedIn === false) {
 			return (
 				<>
@@ -89,7 +105,7 @@ class Home extends React.Component {
 				<Container>
 					<Col>
 						<Row>
-							<Button>Create new Community</Button>
+							<Button id="createCommunityButton" onClick={this.handleOpen}>Create new Community</Button>
 						</Row>
 						{cards}
 					</Col>
@@ -98,9 +114,15 @@ class Home extends React.Component {
 		} else {
 			return (
 				<Container>
+					<Modal show={this.state.showModal} onHide={this.handleClose}>
+						<Modal.Header closeButton>
+							<Modal.Title>Create Community</Modal.Title>
+						</Modal.Header>
+						<CreateCommunity />
+					</Modal>
 					<Col>
 						<Row>
-							<Button>Create new Community</Button>
+							<Button id="createCommunityButton" onClick={this.handleOpen}>Create new Community</Button>
 						</Row>
 					</Col>
 				</Container>

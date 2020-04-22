@@ -18,6 +18,9 @@ class CreateCommunityForm extends React.Component {
             bannerFile: null,
             logoFile: null,
         }
+
+        this.handleInputChange = this.handleInputChange.bind(this);
+        this.handleCreation = this.handleCreation.bind(this);
     }
 
     handleInputChange(event) {
@@ -53,7 +56,7 @@ class CreateCommunityForm extends React.Component {
 			return;
         }
         
-        this.setState({loading: true});
+        this.setState({loading: false});
     }
 
     async handleCreation(e) {
@@ -84,6 +87,7 @@ class CreateCommunityForm extends React.Component {
                 if(response.data.message === `Community added successfully!`) {
                     alert(`Community created`);
                 } else {
+                    console.log(response);
                     this.setState({error: true, errorMessage: response.data});
                 }
             })
@@ -100,7 +104,7 @@ class CreateCommunityForm extends React.Component {
                 <Form id="createCommunity">
                     <Form.Group controlId="nameControl">
                         <Form.Label>Community Name:</Form.Label>
-                        <Form.Control name="communityName" type="text" placeholder="Community Name" value={this.state.communityName} onChange={this.handleInputChange}></Form.Control>
+                        <Form.Control name="name" type="text" placeholder="Community Name" value={this.state.name} onChange={this.handleInputChange} />
                     </Form.Group>
 
                     <Form.Group controlId="descriptionControl">
@@ -114,3 +118,5 @@ class CreateCommunityForm extends React.Component {
         }
     }
 }
+
+export default CreateCommunityForm;
