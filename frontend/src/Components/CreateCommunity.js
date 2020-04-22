@@ -59,6 +59,17 @@ class CreateCommunityForm extends React.Component {
     async handleCreation(e) {
         e.preventDefault();
 
+        let accessString = localStorage.getItem(`JWT`);
+		if (accessString === null) {
+			this.setState({
+				error: true,
+				errorMessage: `Unable to load user details from local storage`,
+				errorStatusCode: 401,
+				loading: false,
+			});
+			return;
+		}
+
         let data = {
             communityName: this.state.name,
             description: this.state.description,
