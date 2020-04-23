@@ -65,10 +65,10 @@ class CommunityCard extends React.Component {
 			let data = response.data;
 
 			this.setState({
-				name: data.community.name,
-				description: data.community.description,
-				logo: data.community.logo,
-				banner: data.community.banner,
+				name: data.communityName,
+				description: data.description,
+				logo: data.logo,
+				banner: data.banner,
 				loading: false,
 			});
 		}).catch(error => {
