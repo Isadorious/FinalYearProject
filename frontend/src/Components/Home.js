@@ -17,7 +17,7 @@ class Home extends React.Component {
 		super(props);
 		this.state = {
 			loading: false,
-			communities: null,
+			communities: [],
 			error: false,
 			errorMessage: 'Unable to get community data',
 			errorStatusCode: 500,
@@ -26,13 +26,19 @@ class Home extends React.Component {
 
 		this.handleOpen = this.handleOpen.bind(this);
 		this.handleClose = this.handleClose.bind(this);
+		this.fetchCommunites = this.fetchCommunites.bind(this);
 	}
 
 	async componentDidMount() {
 		document.title = "Home - GCOrg";
+	}
 
-		if(this.props.loggedIn === true) {
-			this.setState({loading: true});
+	componentDidUpdate() {
+		this.fetchCommunites();
+	}
+
+	async fetchCommunites() {
+		if(this.props.loggedIn === true && this.state.communities.length <= 0) {
 
 			let accessString = localStorage.getItem(`JWT`);
 			if (accessString === null) {
@@ -40,7 +46,6 @@ class Home extends React.Component {
 					error: true,
 					errorMessage: `Unable to load user details from local storage`,
 					errorStatusCode: 401,
-					loading: false,
 				});
 				return;
 			}
@@ -51,7 +56,6 @@ class Home extends React.Component {
 					error: true,
 					errorMessage: `Unable to load user details from local storage`,
 					errorStatusCode: 401,
-					loading: false,
 				});
 				return;
 			}
@@ -66,11 +70,10 @@ class Home extends React.Component {
 					if (data.message === "Found user successfully!") {
 						this.setState({
 							communities: data.user.communities,
-							loading: false,
 						});
 					}
 				})
-		}
+			}
 	}
 
 	handleClose() {
@@ -94,13 +97,12 @@ class Home extends React.Component {
 					<Register loggedIn={this.props.loggedIn} updateLogin={this.props.updateLogin} noTitle/>
 				</>
 			)
-		} else if(this.state.communites !== undefined) {
+		} else if(this.state.communities.length > 0) {
 			const cards = this.state.communities.map((communityID) =>
-				<Row>
+				<Row key={communityID}>
 					<CommunityCard communityID={communityID}/>
 				</Row>
 			);
-
 			return (
 				<Container>
 					<Col>
