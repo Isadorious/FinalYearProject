@@ -1,6 +1,9 @@
 const express = require(`express`);
 const router = express.Router();
 const Community = require(`../models/community`);
+const passport = require(`passport`);
+const jwt = require(`jsonwebtoken`);
+const User = require(`../models/user`);
 
 router.get(`/`, (req, res) => {
 	const query = Community.find({});
@@ -40,8 +43,15 @@ router.post(`/`, (req, res) => {
 					res.json({ message: `Community added successfully!`, community });
 				}
 			});
+
+			User.findById((user.id), (err, user) => {
+				user.communities.push(community.id);
+				user.save();
+			})
+
+			
 		}
-	});
+	})(req, res);
 });
 
 router.put(`/:id`, (req, res) => {
