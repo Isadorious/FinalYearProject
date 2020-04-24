@@ -30,6 +30,7 @@ class CommunityDashboard extends React.Component {
 
 		this.handleStaffOpen = this.handleStaffOpen.bind(this);
 		this.handleStaffClose = this.handleStaffClose.bind(this);
+		this.handleCommunityFollow = this.handleCommunityFollow.bind(this);
 	}
 
 	async componentDidMount() {
@@ -91,6 +92,59 @@ class CommunityDashboard extends React.Component {
 		this.setState({ showStaffModal: false });
 	}
 
+	async handleCommunityFollow() {
+				//Check the user is logged in
+				let accessString = localStorage.getItem(`JWT`);
+				if (accessString === null) {
+					this.setState({
+						error: true,
+						errorMessage: `Unable to load user details from local storage`,
+						errorStatusCode: 401,
+						loading: false,
+					});
+					return;
+				}
+		
+				let uID = localStorage.getItem(`UserID`);
+				if (uID === null) {
+					this.setState({
+						error: true,
+						errorMessage: `Unable to load user details from local storage`,
+						errorStatusCode: 401,
+						loading: false,
+					});
+					return;
+				}
+				
+				// Get the user object
+				await Axios
+					.get(`http://localhost:9000/api/users/${uID}`, {
+						headers: { Authorization: `JWT ${accessString}` }
+					}).then(response => {
+						let communities = response.data.user.communities;
+						communities.push(this.props.match.params.id);
+						return Axios.put(`http://localhost:9000/api/users/${uID}`, {
+							headers: {Authorization: `JWT ${accessString}`},
+							communities,
+						});
+					})
+					.then(response => {
+						if (response.data.message === 'User updated!') {
+							alert(`Now following!`);
+						}
+						else {
+							alert(`Failed to follow community`)
+						}
+					})
+					.catch(error => {
+						this.setState({
+							error: true,
+							errorMessage: `Unable to retrieve data`,
+							loading: false,
+						});
+					})		
+	}
+
 	render() {
 		if (this.state.loading === true) {
 			return (<Loading />)
@@ -108,6 +162,7 @@ class CommunityDashboard extends React.Component {
 					<Col>
 						<Row>
 							<Button id="communityStaff" onClick={this.handleStaffOpen}>Community Staff</Button>
+							<Button id="followCommunity" onClick={this.handleCommunityFollow}>Follow</Button>
 						</Row>
 					</Col>
 				</Container>
