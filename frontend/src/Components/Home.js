@@ -38,7 +38,7 @@ class Home extends React.Component {
 	}
 
 	async fetchCommunites() {
-		if(this.props.loggedIn === true && this.state.communities.length <= 0) {
+		if (this.props.loggedIn === true && this.state.communities.length <= 0) {
 
 			let accessString = localStorage.getItem(`JWT`);
 			if (accessString === null) {
@@ -49,7 +49,7 @@ class Home extends React.Component {
 				});
 				return;
 			}
-	
+
 			let uID = localStorage.getItem(`UserID`);
 			if (uID === null) {
 				this.setState({
@@ -73,38 +73,44 @@ class Home extends React.Component {
 						});
 					}
 				})
-			}
+		}
 	}
 
 	handleClose() {
-		this.setState({showModal: false});
+		this.setState({ showModal: false });
 	}
 
 	handleOpen(e) {
 		e.preventDefault();
-		this.setState({showModal: true});
+		this.setState({ showModal: true });
 	}
 
 	render() {
-		if(this.state.loading === true) {
+		if (this.state.loading === true) {
 			return (<Loading />);
-		} else if(this.state.error === true){
-			return (<Error statusCode={this.state.errorStatusCode} message={this.state.errorMessage}/>);
-		} else if(this.props.loggedIn === false) {
+		} else if (this.state.error === true) {
+			return (<Error statusCode={this.state.errorStatusCode} message={this.state.errorMessage} />);
+		} else if (this.props.loggedIn === false) {
 			return (
 				<>
-					<Login loggedIn={this.props.loggedIn} updateLogin={this.props.updateLogin} noTitle/>
-					<Register loggedIn={this.props.loggedIn} updateLogin={this.props.updateLogin} noTitle/>
+					<Login loggedIn={this.props.loggedIn} updateLogin={this.props.updateLogin} noTitle />
+					<Register loggedIn={this.props.loggedIn} updateLogin={this.props.updateLogin} noTitle />
 				</>
 			)
-		} else if(this.state.communities.length > 0) {
+		} else if (this.state.communities.length > 0) {
 			const cards = this.state.communities.map((communityID) =>
-				<Row key={communityID}>
-					<CommunityCard communityID={communityID}/>
+				<Row key={communityID} >
+					<CommunityCard communityID={communityID} />
 				</Row>
 			);
 			return (
 				<Container>
+					<Modal show={this.state.showModal} onHide={this.handleClose}>
+						<Modal.Header closeButton>
+							<Modal.Title>Create Community</Modal.Title>
+						</Modal.Header>
+						<CreateCommunity />
+					</Modal>
 					<Col>
 						<Row>
 							<Button id="createCommunityButton" onClick={this.handleOpen}>Create new Community</Button>
@@ -112,7 +118,7 @@ class Home extends React.Component {
 						{cards}
 					</Col>
 				</Container>
-				)
+			)
 		} else {
 			return (
 				<Container>
