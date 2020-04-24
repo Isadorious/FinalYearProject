@@ -27,6 +27,7 @@ class Home extends React.Component {
 		this.handleOpen = this.handleOpen.bind(this);
 		this.handleClose = this.handleClose.bind(this);
 		this.fetchCommunites = this.fetchCommunites.bind(this);
+		this.onCommunityCreation = this.onCommunityCreation.bind(this);
 	}
 
 	async componentDidMount() {
@@ -34,46 +35,50 @@ class Home extends React.Component {
 	}
 
 	componentDidUpdate() {
-		this.fetchCommunites();
+		if (this.props.loggedIn === true && this.state.communities.length <= 0) {
+			this.fetchCommunites();
+		}
 	}
 
 	async fetchCommunites() {
-		if (this.props.loggedIn === true && this.state.communities.length <= 0) {
-
-			let accessString = localStorage.getItem(`JWT`);
-			if (accessString === null) {
-				this.setState({
-					error: true,
-					errorMessage: `Unable to load user details from local storage`,
-					errorStatusCode: 401,
-				});
-				return;
-			}
-
-			let uID = localStorage.getItem(`UserID`);
-			if (uID === null) {
-				this.setState({
-					error: true,
-					errorMessage: `Unable to load user details from local storage`,
-					errorStatusCode: 401,
-				});
-				return;
-			}
-
-			await Axios
-				.get('http://localhost:9000/api/users/' + uID, {
-					headers: { Authorization: `JWT ${accessString}` }
-				})
-				.then(response => {
-					let data = response.data;
-
-					if (data.message === "Found user successfully!") {
-						this.setState({
-							communities: data.user.communities,
-						});
-					}
-				})
+		let accessString = localStorage.getItem(`JWT`);
+		if (accessString === null) {
+			this.setState({
+				error: true,
+				errorMessage: `Unable to load user details from local storage`,
+				errorStatusCode: 401,
+			});
+			return;
 		}
+
+		let uID = localStorage.getItem(`UserID`);
+		if (uID === null) {
+			this.setState({
+				error: true,
+				errorMessage: `Unable to load user details from local storage`,
+				errorStatusCode: 401,
+			});
+			return;
+		}
+
+		await Axios
+			.get('http://localhost:9000/api/users/' + uID, {
+				headers: { Authorization: `JWT ${accessString}` }
+			})
+			.then(response => {
+				let data = response.data;
+
+				if (data.message === "Found user successfully!") {
+					this.setState({
+						communities: data.user.communities,
+					});
+				}
+			})
+	}
+
+	async onCommunityCreation() {
+		this.handleClose();
+		await this.fetchCommunites();
 	}
 
 	handleClose() {
@@ -109,7 +114,7 @@ class Home extends React.Component {
 						<Modal.Header closeButton>
 							<Modal.Title>Create Community</Modal.Title>
 						</Modal.Header>
-						<CreateCommunity />
+						<CreateCommunity onComplete={this.onCommunityCreation} />
 					</Modal>
 					<Col>
 						<Row>
@@ -126,7 +131,7 @@ class Home extends React.Component {
 						<Modal.Header closeButton>
 							<Modal.Title>Create Community</Modal.Title>
 						</Modal.Header>
-						<CreateCommunity />
+						<CreateCommunity onComplete={this.onCommunityCreation} />
 					</Modal>
 					<Col>
 						<Row>
