@@ -23,7 +23,11 @@ class CommunityDashboard extends React.Component {
 			description: '',
 			logo: '',
 			banner: '',
+			showStaffModal: false,
 		}
+
+		this.handleStaffOpen = this.handleStaffOpen.bind(this);
+		this.handleStaffClose = this.handleStaffClose.bind(this);
 	}
 
 	componentDidMount() {
@@ -53,29 +57,59 @@ class CommunityDashboard extends React.Component {
 		}
 
 		await Axios
-		.get('http://localhost:9000/api/communities/' + this.props.match.params.id, {
-			headers: {Authorization: `JWT ${accessString}`}
-		}).then(response => {
-			let data = response.data;
+			.get('http://localhost:9000/api/communities/' + this.props.match.params.id, {
+				headers: { Authorization: `JWT ${accessString}` }
+			}).then(response => {
+				let data = response.data;
 
-			document.title = `${data.communityName} - GCOrg`;
-			this.setState({
-				communityID = data.communityID,
-				name: data.communityName,
-				description: data.description,
-				logo: data.logo,
-				banner: data.banner,
-				calendars: data.calendarsID,
-				loading: false,
-			});
-		}).catch(error => {
-			this.setState({
-				error: true,
-				errorMessage: `Unable to retrieve community data`,
-				loading: false,
-			});
-		})
+				document.title = `${data.communityName} - GCOrg`;
+				this.setState({
+					communityID = data.communityID,
+					name: data.communityName,
+					description: data.description,
+					logo: data.logo,
+					banner: data.banner,
+					calendars: data.calendarsID,
+					loading: false,
+				});
+			}).catch(error => {
+				this.setState({
+					error: true,
+					errorMessage: `Unable to retrieve community data`,
+					loading: false,
+				});
+			})
 	}
+
+	handleStaffOpen() {
+		this.setState({ showStaffModal: true });
+	}
+
+	handleStaffClose() {
+		this.setState({ showStaffModal: false });
+	}
+
+	render() {
+		if (this.state.loading === true) {
+			return (<Loading />)
+		} else if (this.state.error === true) {
+			return (<Error statusCode={this.state.errorStatusCode} message={this.state.errorMessage} />)
+		} else {
+			<Container>
+				<Modal show={this.state.showStaffModal} onHide={this.handleStaffClose}>
+					<Modal.Header closeButton>
+						<Modal.Title>Edit Community Staff</Modal.Title>
+					</Modal.Header>
+				</Modal>
+				<Col>
+					<Row>
+						<Button id="communityStaff" onClick={this.handleStaffOpen}>Community Staff</Button>
+					</Row>
+				</Col>
+			</Container>
+		}
+	}
+
 }
 
 export default CommunityDashboard;
