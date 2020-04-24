@@ -7,6 +7,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import ManageStaff from './ManageStaff';
 
 class CommunityDashboard extends React.Component {
 	constructor(props) {
@@ -31,7 +32,7 @@ class CommunityDashboard extends React.Component {
 		this.handleStaffClose = this.handleStaffClose.bind(this);
 	}
 
-	componentDidMount() {
+	async componentDidMount() {
 		document.title = "Community - GCOrg";
 
 		// Load community data, check the user is logged in
@@ -96,18 +97,22 @@ class CommunityDashboard extends React.Component {
 		} else if (this.state.error === true) {
 			return (<Error statusCode={this.state.errorStatusCode} message={this.state.errorMessage} />)
 		} else {
-			<Container>
-				<Modal show={this.state.showStaffModal} onHide={this.handleStaffClose}>
-					<Modal.Header closeButton>
-						<Modal.Title>Edit Community Staff</Modal.Title>
-					</Modal.Header>
-				</Modal>
-				<Col>
-					<Row>
-						<Button id="communityStaff" onClick={this.handleStaffOpen}>Community Staff</Button>
-					</Row>
-				</Col>
-			</Container>
+			return (
+				<Container>
+					<Modal show={this.state.showStaffModal} onHide={this.handleStaffClose}>
+						<Modal.Header closeButton>
+							<Modal.Title>Edit Community Staff</Modal.Title>
+						</Modal.Header>
+						<ManageStaff />
+					</Modal>
+					<Col>
+						<Row>
+							<Button id="communityStaff" onClick={this.handleStaffOpen}>Community Staff</Button>
+						</Row>
+					</Col>
+				</Container>
+			)
+
 		}
 	}
 

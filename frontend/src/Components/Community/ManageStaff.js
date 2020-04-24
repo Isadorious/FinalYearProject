@@ -24,7 +24,7 @@ class ManageStaffForm extends React.Component {
 
 	}
 
-	componentDidMount() {
+	async componentDidMount() {
 		let accessString = localStorage.getItem(`JWT`);
 		if (accessString === null) {
 			this.setState({
@@ -46,15 +46,14 @@ class ManageStaffForm extends React.Component {
 			});
 			return;
 		}
-		
+
 		await Axios
 			.get('http://localhost:9000/api/users/', {
 				headers: { Authorization: `JWT ${accessString}` }
 			}).then(response => {
 				let data = response.data;
 
-				if(data.message === `found users`)
-				{
+				if (data.message === `found users`) {
 					this.setState({
 						users: data.users,
 					});
@@ -69,7 +68,7 @@ class ManageStaffForm extends React.Component {
 				});
 			})
 
-			await Axios
+		await Axios
 			.get('http://localhost:9000/api/communities/' + this.props.id, {
 				headers: { Authorization: `JWT ${accessString}` }
 			}).then(response => {
@@ -90,57 +89,69 @@ class ManageStaffForm extends React.Component {
 	}
 
 	handleInputChange(event) {
-        const target = event.target;
-        const value = target.value;
-        const name = target.name;
-        
-        this.setState({
-            [name] : value
-        });
+		const target = event.target;
+		const value = target.value;
+		const name = target.name;
+
+		this.setState({
+			[name]: value
+		});
 	}
-	
-	handlePromote(e) {
+
+	async handlePromote(e) {
 		e.preventDefault();
 
 		const user = this.state.users.find(u => u.username === this.state.usernameToFind);
 
-		if(user !== undefined)
-		{
+		let accessString = localStorage.getItem(`JWT`);
+		if (accessString === null) {
+			this.setState({
+				error: true,
+				errorMessage: `Unable to load user details from local storage`,
+				errorStatusCode: 401,
+				loading: false,
+			});
+			return;
+		}
+
+		if (user !== undefined) {
 			alert('Unable to find user');
 			return;
 		} else {
 			let communityStaff = this.state.communityStaffID;
 			communityStaff.push(user._id);
-			this.setState({communityStaffID: communityStaff});
+			this.setState({ communityStaffID: communityStaff });
 
 			await Axios
-			.put('http://localhost:9000/api/communities/' + this.props.id, {
-				headers: { Authorization: `JWT ${accessString}` },
-				communityStaffID: this.state.communityStaffID,
-			})
-			.then(response => {
-				if (response.data.message === 'Community updated!') {
-					alert(`Community updated!`);
-				} else {
-					alert(response.data);
-				}
-			})
+				.put('http://localhost:9000/api/communities/' + this.props.id, {
+					headers: { Authorization: `JWT ${accessString}` },
+					communityStaffID: this.state.communityStaffID,
+				})
+				.then(response => {
+					if (response.data.message === 'Community updated!') {
+						alert(`Community updated!`);
+					} else {
+						alert(response.data);
+					}
+				})
 		}
 	}
 
 	render() {
 		if (this.state.loading === true) {
-			return(<Loading />)
+			return (<Loading />)
 		} else if (this.state.error === true) {
-			return (<Error statusCode={this.state.errorStatusCode} message={this.state.errorMessage}/>)
+			return (<Error statusCode={this.state.errorStatusCode} message={this.state.errorMessage} />)
 		} else {
-			<Form id="addStaff" className={"modalForm"}>
-				<Form.Group>
-					<Form.Label>User to promote:</Form.Label>
-					<Form.Control name="usernameToFind" type="text" placeholder="User to promote" value={this.state.usernameToFind} onChange={this.handleInputChange} />
-				</Form.Group>
-				<Button variant="secondary" type="submit" onClick={this.handlePromote}>Find and promote user</Button>
-			</Form>
+			return (
+				<Form id="addStaff" className={"modalForm"}>
+					<Form.Group>
+						<Form.Label>User to promote:</Form.Label>
+						<Form.Control name="usernameToFind" type="text" placeholder="User to promote" value={this.state.usernameToFind} onChange={this.handleInputChange} />
+					</Form.Group>
+					<Button variant="secondary" type="submit" onClick={this.handlePromote}>Find and promote user</Button>
+				</Form>
+			)
 		}
 	}
 }
