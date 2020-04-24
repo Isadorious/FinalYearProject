@@ -22,6 +22,7 @@ class Home extends React.Component {
 			errorMessage: 'Unable to get community data',
 			errorStatusCode: 500,
 			showModal: false,
+			hasFetched: false,
 		}
 
 		this.handleOpen = this.handleOpen.bind(this);
@@ -35,12 +36,13 @@ class Home extends React.Component {
 	}
 
 	componentDidUpdate() {
-		if (this.props.loggedIn === true && this.state.communities.length <= 0) {
+		if (this.props.loggedIn === true && this.state.communities.length <= 0 && this.state.hasFetched === false) {
 			this.fetchCommunites();
 		}
 	}
 
 	async fetchCommunites() {
+		this.setState({hasFetched: true}); // stops API spam when user has 0 communities
 		let accessString = localStorage.getItem(`JWT`);
 		if (accessString === null) {
 			this.setState({
