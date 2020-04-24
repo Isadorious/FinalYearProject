@@ -3,6 +3,7 @@ import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import { Redirect } from "react-router-dom";
 
 const React = require('react');
 const Axios = require('axios');
@@ -18,6 +19,7 @@ class RegisterForm extends React.Component {
             nickname: '',
             description: '',
             dateOfBirth: new Date(),
+            registered: false,
         };
 
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -53,8 +55,12 @@ class RegisterForm extends React.Component {
                 dateOfBirth: this.state.dateOfBirth,
             })
             .then(response => {
-                console.log(response);
-                alert(response.data.message);
+                if(response.data.message === `User added successfully!`)
+                {
+                    this.setState({registered: true});
+                } else {
+                    alert(response.data.message);
+                }
             })
             .catch(error => {
                 console.log(error);
@@ -69,6 +75,11 @@ class RegisterForm extends React.Component {
     }
 
     render() {
+        if(this.state.registered == true) {
+            return (
+                <Redirect to="/login" />
+            )
+        }
         return (
             <Container>
                 <Row>
