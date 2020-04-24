@@ -58,6 +58,7 @@ class CommunityDashboard extends React.Component {
 		}).then(response => {
 			let data = response.data;
 
+			document.title = `${data.communityName} - GCOrg`;
 			this.setState({
 				communityID = data.communityID,
 				name: data.communityName,
