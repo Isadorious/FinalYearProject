@@ -103,7 +103,7 @@ class CommunityDashboard extends React.Component {
 						<Modal.Header closeButton>
 							<Modal.Title>Edit Community Staff</Modal.Title>
 						</Modal.Header>
-						<ManageStaff />
+						<ManageStaff id={this.props.match.params.id}/>
 					</Modal>
 					<Col>
 						<Row>
