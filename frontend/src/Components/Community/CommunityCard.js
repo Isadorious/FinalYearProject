@@ -3,6 +3,7 @@ import Card from 'react-bootstrap/Card';
 import Axios from 'axios';
 import Loading from '../Utils/Loading';
 import Error from '../Utils/Error';
+import {Link} from 'react-router-dom';
 
 class CommunityCard extends React.Component {
 	constructor(props) {
@@ -107,6 +108,7 @@ class CommunityCard extends React.Component {
 					<Card.Body>
 						<Card.Title>{this.state.name}</Card.Title>
 						<Card.Text>{this.state.description}</Card.Text>
+						<Link to={`/community/${this.props.communityID}`} className={"stretched-link"} />
 					</Card.Body>
 				</Card>
 			)
