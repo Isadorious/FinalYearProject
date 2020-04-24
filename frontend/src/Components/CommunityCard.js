@@ -64,6 +64,13 @@ class CommunityCard extends React.Component {
 		}).then(response => {
 			let data = response.data;
 
+			if(data.description.length > 100)
+			{
+				var res = data.description.substring(0, 96);
+				res += "..."
+				data.description = res;
+			}
+
 			this.setState({
 				name: data.communityName,
 				description: data.description,
