@@ -114,7 +114,7 @@ class ManageStaffForm extends React.Component {
 			return;
 		}
 
-		if (user !== undefined) {
+		if (user === undefined) {
 			alert('Unable to find user');
 			return;
 		} else {
