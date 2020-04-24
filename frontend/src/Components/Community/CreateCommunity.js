@@ -85,6 +85,12 @@ class CreateCommunityForm extends React.Component {
             })
             .then(response => {
                 if(response.data.message === `Community added successfully!`) {
+                    
+                    if(this.props.onComplete !== undefined) {
+                        this.props.onComplete();
+                        return;
+                    }
+                    
                     alert(`Community created`);
                 } else {
                     console.log(response);
@@ -117,6 +123,10 @@ class CreateCommunityForm extends React.Component {
             )
         }
     }
+}
+
+CreateCommunityForm.defaultProps = {
+    onComplete: undefined,
 }
 
 export default CreateCommunityForm;
