@@ -101,7 +101,7 @@ class CreateCommunityForm extends React.Component {
             return(<Error />)
         } else {
             return (
-                <Form id="createCommunity">
+                <Form id="createCommunity" className={"modalForm"}>
                     <Form.Group controlId="nameControl">
                         <Form.Label>Community Name:</Form.Label>
                         <Form.Control name="name" type="text" placeholder="Community Name" value={this.state.name} onChange={this.handleInputChange} />
