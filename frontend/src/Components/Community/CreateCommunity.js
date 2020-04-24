@@ -1,8 +1,8 @@
 import React from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import Loading from './Loading';
-import Error from './Error';
+import Loading from '../Utils/Loading';
+import Error from '../Utils/Error';
 import Axios from 'axios';
 
 class CreateCommunityForm extends React.Component {

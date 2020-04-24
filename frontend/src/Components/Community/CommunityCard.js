@@ -1,8 +1,8 @@
 import React from 'react';
 import Card from 'react-bootstrap/Card';
 import Axios from 'axios';
-import Loading from './Loading';
-import Error from './Error';
+import Loading from '../Utils/Loading';
+import Error from '../Utils/Error';
 
 class CommunityCard extends React.Component {
 	constructor(props) {

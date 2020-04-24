@@ -8,12 +8,12 @@ import {
   useParams,
   Redirect
 } from 'react-router-dom';
-import Login from "./Login";
-import Register from "./Register";
+import Login from "./User/Login";
+import Register from "./User/Register";
 import Navbar from "./Navbar";
-import EditProfile from "./EditProfile";
+import EditProfile from "./User/EditProfile";
 import Home from "./Home";
-import Logout from './Logout';
+import Logout from './User/Logout';
 
 class App extends React.Component {
   constructor(props) {

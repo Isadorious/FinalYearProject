@@ -6,10 +6,10 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Alert from "react-bootstrap/Alert";
 import Axios from 'axios';
-import Loading from './Loading';
+import Loading from '../Utils/Loading';
 import UploadAvatar from './UploadAvatar';
 import Avatar from './Avatar';
-import Error from './Error';
+import Error from '../Utils/Error';
 
 class ProfileForm extends React.Component {
 	constructor(props) {
