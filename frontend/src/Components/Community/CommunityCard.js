@@ -90,13 +90,13 @@ class CommunityCard extends React.Component {
 	render() {
 		if(this.state.loading === true) {
 			return (
-				<Card id="loading">
+				<Card id="loading" className={"infoCard"}>
 					<Loading />
 				</Card>
 			)
 		} else if(this.state.error == true) {
 			return (			
-				<Card id="error">
+				<Card id="error" className={"infoCard"}>
 					<Error message={this.state.errorMessage}/>
 				</Card>
 				)
