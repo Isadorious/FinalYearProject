@@ -118,22 +118,55 @@ class ManageStaffForm extends React.Component {
 			alert('Unable to find user');
 			return;
 		} else {
-			let communityStaff = this.state.communityStaffID;
-			communityStaff.push(user._id);
-			this.setState({ communityStaffID: communityStaff });
 
-			await Axios
-				.put('http://localhost:9000/api/communities/' + this.props.id, {
-					headers: { Authorization: `JWT ${accessString}` },
-					communityStaffID: this.state.communityStaffID,
-				})
-				.then(response => {
-					if (response.data.message === 'Community updated!') {
-						alert(`Community updated!`);
-					} else {
-						alert(response.data);
-					}
-				})
+			const isStaff = this.state.communityStaffID.includes(user._id);
+			const isAdmin = this.state.communityAdminsID.includes(user._id);
+
+			if (isStaff === true) {
+				let adminIDs = this.state.communityAdminsID;
+				adminIDs.push(user._id);
+				this.setState({ communityAdminsID: adminIDs });
+
+				let staffIDs = this.state.communityStaffID;
+				const index = staffIDs.indexOf(user._id);
+
+				if(index > -1) {
+					staffIDs.splice(index, 1);
+					this.setState({communityStaffID: staffIDs});
+				}
+
+				await Axios
+					.put('http://localhost:9000/api/communities/' + this.props.id, {
+						headers: { Authorization: `JWT ${accessString}` },
+						communityAdminsID: this.state.communityAdminsID,
+					})
+					.then(response => {
+						if (response.data.message === 'Community updated!') {
+							alert(`${user.username} promoted to admin!`);
+						} else {
+							alert(response.data);
+						}
+					})
+			} else if (isAdmin === true) {
+				alert(`${user.username} is already an admin!`);
+			} else {
+				let communityStaff = this.state.communityStaffID;
+				communityStaff.push(user._id);
+				this.setState({ communityStaffID: communityStaff });
+
+				await Axios
+					.put('http://localhost:9000/api/communities/' + this.props.id, {
+						headers: { Authorization: `JWT ${accessString}` },
+						communityStaffID: this.state.communityStaffID,
+					})
+					.then(response => {
+						if (response.data.message === 'Community updated!') {
+							alert(`${user.username} promoted to staff!`);
+						} else {
+							alert(response.data);
+						}
+					})
+			}
 		}
 	}
 
