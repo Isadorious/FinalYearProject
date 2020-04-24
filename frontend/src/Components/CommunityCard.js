@@ -95,7 +95,7 @@ class CommunityCard extends React.Component {
 				)
 		} else {
 			return (
-				<Card id={this.props.communityID}>
+				<Card id={this.props.communityID} className={"infoCard"}>
 					<Card.Img variant="top" src={'http://localhost:9000/' + this.banner} />
 					<Card.Body>
 						<Card.Title>{this.state.name}</Card.Title>
