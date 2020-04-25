@@ -15,7 +15,6 @@ class ManageStaffForm extends React.Component {
 			loading: true,
 			communityStaffID: [],
 			communityAdminsID: [],
-			users: [],
 			usernameToFind: '',
 		}
 
@@ -49,27 +48,6 @@ class ManageStaffForm extends React.Component {
 			});
 			return;
 		}
-
-		await Axios
-			.get('http://localhost:9000/api/users/', {
-				headers: { Authorization: `JWT ${accessString}` }
-			}).then(response => {
-				let data = response.data;
-
-				if (data.message === `found users`) {
-					this.setState({
-						users: data.users,
-					});
-				} else {
-					alert(data.message);
-				}
-			}).catch(error => {
-				this.setState({
-					error: true,
-					errorMessage: `Unable to retrieve user data`,
-					loading: false,
-				});
-			})
 
 		await Axios
 			.get('http://localhost:9000/api/communities/' + this.props.id, {
@@ -106,7 +84,6 @@ class ManageStaffForm extends React.Component {
 	}
 
 	async handlePromote(username) {
-		const user = this.state.users.find(u => u.username === username);
 
 		let accessString = localStorage.getItem(`JWT`);
 		if (accessString === null) {
@@ -119,60 +96,70 @@ class ManageStaffForm extends React.Component {
 			return;
 		}
 
-		if (user === undefined) {
-			alert('Unable to find user');
-			return;
-		} else {
+		await Axios.get(`http://localhost:9000/api/users?username=${username}`, {
+			headers: {Authorization: `JWT ${accessString}`}
+		}).then(response => {
+				const user = response.data.user
 
-			const isStaff = this.state.communityStaffID.includes(user._id);
-			const isAdmin = this.state.communityAdminsID.includes(user._id);
-
-			if (isStaff === true) {
-				let adminIDs = this.state.communityAdminsID;
-				adminIDs.push(user._id);
-				this.setState({ communityAdminsID: adminIDs });
-
-				let staffIDs = this.state.communityStaffID;
-				const index = staffIDs.indexOf(user._id);
-
-				if (index > -1) {
-					staffIDs.splice(index, 1);
-					this.setState({ communityStaffID: staffIDs });
+				if (user === undefined) {
+					alert('Unable to find user');
+					return;
+				} else {
+		
+					const isStaff = this.state.communityStaffID.includes(user._id);
+					const isAdmin = this.state.communityAdminsID.includes(user._id);
+		
+					if (isStaff === true) {
+						let adminIDs = this.state.communityAdminsID;
+						adminIDs.push(user._id);
+						this.setState({ communityAdminsID: adminIDs });
+		
+						let staffIDs = this.state.communityStaffID;
+						const index = staffIDs.indexOf(user._id);
+		
+						if (index > -1) {
+							staffIDs.splice(index, 1);
+							this.setState({ communityStaffID: staffIDs });
+						}
+		
+						Axios
+							.put('http://localhost:9000/api/communities/' + this.props.id, {
+								headers: { Authorization: `JWT ${accessString}` },
+								communityAdminsID: this.state.communityAdminsID,
+								communityStaffID: this.state.communityStaffID,
+							})
+							.then(response => {
+								if (response.data.message === 'Community updated!') {
+									alert(`${user.username} promoted to admin!`);
+								} else {
+									alert(response.data);
+								}
+							})
+					} else if (isAdmin === true) {
+						alert(`${user.username} is already an admin!`);
+					} else {
+						let communityStaff = this.state.communityStaffID;
+						communityStaff.push(user._id);
+						this.setState({ communityStaffID: communityStaff });
+		
+						Axios
+							.put('http://localhost:9000/api/communities/' + this.props.id, {
+								headers: { Authorization: `JWT ${accessString}` },
+								communityStaffID: this.state.communityStaffID,
+							})
+							.then(response => {
+								if (response.data.message === 'Community updated!') {
+									alert(`${user.username} promoted to staff!`);
+								} else {
+									alert(response.data);
+								}
+							})
+					}
 				}
-
-				await Axios
-					.put('http://localhost:9000/api/communities/' + this.props.id, {
-						headers: { Authorization: `JWT ${accessString}` },
-						communityAdminsID: this.state.communityAdminsID,
-					})
-					.then(response => {
-						if (response.data.message === 'Community updated!') {
-							alert(`${user.username} promoted to admin!`);
-						} else {
-							alert(response.data);
-						}
-					})
-			} else if (isAdmin === true) {
-				alert(`${user.username} is already an admin!`);
-			} else {
-				let communityStaff = this.state.communityStaffID;
-				communityStaff.push(user._id);
-				this.setState({ communityStaffID: communityStaff });
-
-				await Axios
-					.put('http://localhost:9000/api/communities/' + this.props.id, {
-						headers: { Authorization: `JWT ${accessString}` },
-						communityStaffID: this.state.communityStaffID,
-					})
-					.then(response => {
-						if (response.data.message === 'Community updated!') {
-							alert(`${user.username} promoted to staff!`);
-						} else {
-							alert(response.data);
-						}
-					})
-			}
-		}
+		}).catch(error => {
+			alert(`Unable to find user`);
+			console.log(error);
+		})
 	}
 
 	async handleDemoteFromSearch() {
@@ -180,8 +167,6 @@ class ManageStaffForm extends React.Component {
 	}
 
 	async handleDemote(username) {
-		const user = this.state.users.find(u => u.username === username);
-
 		let accessString = localStorage.getItem(`JWT`);
 		if (accessString === null) {
 			this.setState({
@@ -193,69 +178,78 @@ class ManageStaffForm extends React.Component {
 			return;
 		}
 
-		if (user === undefined) {
-			alert('Unable to find user');
-			return;
-		} else {
+		await Axios.get(`http://localhost:9000/api/users?username=${username}`, {
+			headers: {Authorization: `JWT ${accessString}`}
+		}).then(response => {
+				const user = response.data.user
 
-			const isStaff = this.state.communityStaffID.includes(user._id);
-			const isAdmin = this.state.communityAdminsID.includes(user._id);
-
-			if (isStaff === true) {
-				// Remove user from staff array
-				let staffIDs = this.state.communityStaffID;
-				const index = staffIDs.indexOf(user._id);
-
-				if (index > -1) {
-					staffIDs.splice(index, 1);
-				}
-
-				await Axios
-					.put('http://localhost:9000/api/communities/' + this.props.id, {
-						headers: { Authorization: `JWT ${accessString}` },
-						communityStaffID: staffIDs,
-					})
-					.then(response => {
-						if (response.data.message === 'Community updated!') {
-							this.setState({ communityStaffID: staffIDs });
-							alert(`${user.username} demoted from staff!`);
-						} else {
-							alert(response.data);
+				if (user === undefined) {
+					alert('Unable to find user');
+					return;
+				} else {
+		
+					const isStaff = this.state.communityStaffID.includes(user._id);
+					const isAdmin = this.state.communityAdminsID.includes(user._id);
+		
+					if (isStaff === true) {
+						// Remove user from staff array
+						let staffIDs = this.state.communityStaffID;
+						const index = staffIDs.indexOf(user._id);
+		
+						if (index > -1) {
+							staffIDs.splice(index, 1);
 						}
-					})
-			} else if (isAdmin === true) {
-				// Remove user from admin array
-				// Add user to staff array
-				let adminIDs= this.state.communityAdminsID;
-				const index = adminIDs.indexOf(user._id);
-
-				if(index > -1)
-				{
-					adminIDs.splice(index, 1);
-				}
-
-				let staffIDs = this.state.communityStaffID;
-				staffIDs.push(user._id);
-
-				await Axios
-					.put('http://localhost:9000/api/communities/' + this.props.id, {
-						headers: { Authorization: `JWT ${accessString}` },
-						communityAdminsID: adminIDs,
-						communityStaffID: staffIDs,
-					})
-					.then(response => {
-						if (response.data.message === 'Community updated!') {
-							this.setState({ communityAdminsID: adminIDs});
-							this.setState({ communityStaffID: staffIDs});	
-							alert(`${user.username} demoted!`)	
-						} else {
-							alert(response.data);
+		
+						Axios
+							.put('http://localhost:9000/api/communities/' + this.props.id, {
+								headers: { Authorization: `JWT ${accessString}` },
+								communityStaffID: staffIDs,
+							})
+							.then(response => {
+								if (response.data.message === 'Community updated!') {
+									this.setState({ communityStaffID: staffIDs });
+									alert(`${user.username} demoted from staff!`);
+								} else {
+									alert(response.data);
+								}
+							})
+					} else if (isAdmin === true) {
+						// Remove user from admin array
+						// Add user to staff array
+						let adminIDs= this.state.communityAdminsID;
+						const index = adminIDs.indexOf(user._id);
+		
+						if(index > -1)
+						{
+							adminIDs.splice(index, 1);
 						}
-					})
-			} else {
-				alert(`${user.username} is not a staff member!`);
-			}
-		}
+		
+						let staffIDs = this.state.communityStaffID;
+						staffIDs.push(user._id);
+		
+						Axios
+							.put('http://localhost:9000/api/communities/' + this.props.id, {
+								headers: { Authorization: `JWT ${accessString}` },
+								communityAdminsID: adminIDs,
+								communityStaffID: staffIDs,
+							})
+							.then(response => {
+								if (response.data.message === 'Community updated!') {
+									this.setState({ communityAdminsID: adminIDs});
+									this.setState({ communityStaffID: staffIDs});	
+									alert(`${user.username} demoted!`)	
+								} else {
+									alert(response.data);
+								}
+							})
+					} else {
+						alert(`${user.username} is not a staff member!`);
+					}
+				}
+		}).catch(error => {
+			console.log(error);
+			alert(`Unable to find user`);
+		})
 	}
 
 	render() {
