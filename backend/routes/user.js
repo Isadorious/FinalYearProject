@@ -13,21 +13,37 @@ router.get(`/`, (req, res) => {
 		{
 			res.json({message: info.message});
 		} else {
-			const query = User.find({});
 
-			query.exec((error, users) => {
-				if(err)
-				{
-					res.send(err);
-				} else {
-					users.forEach((user, index) => {
-						user.password = ``;
-						user.email = ``;
-						user.dateOfBirth = ``;
-					});
-					res.send({message: `found users`, users});
-				}
-			});
+			if(req.query.username !== undefined) {
+				const query = User.findOne({username: req.query.username})
+
+				query.exec((error, user) => {
+					if(error){
+						res.send(error);
+					} else {
+						user.password = '';
+						user.email = '';
+						user.dateOfBirth = '';
+						res.send({message: `Found user`, user});
+					}
+				});
+			} else {
+				const query = User.find({});
+
+				query.exec((error, users) => {
+					if(error)
+					{
+						res.send(error);
+					} else {
+						users.forEach((user, index) => {
+							user.password = ``;
+							user.email = ``;
+							user.dateOfBirth = ``;
+						});
+						res.send({message: `found users`, users});
+					}
+				});
+			}
 		}
 	})(req, res);
 });
