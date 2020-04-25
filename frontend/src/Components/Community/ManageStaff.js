@@ -21,6 +21,7 @@ class ManageStaffForm extends React.Component {
 
 		this.handleInputChange = this.handleInputChange.bind(this);
 		this.handlePromote = this.handlePromote.bind(this);
+		this.handlePromoteFromSearch = this.handlePromoteFromSearch.bind(this);
 
 	}
 
@@ -98,10 +99,13 @@ class ManageStaffForm extends React.Component {
 		});
 	}
 
-	async handlePromote(e) {
-		e.preventDefault();
+	async handlePromoteFromSearch()
+	{
+		await this.handlePromote(this.state.usernameToFind);
+	}
 
-		const user = this.state.users.find(u => u.username === this.state.usernameToFind);
+	async handlePromote(username) {
+		const user = this.state.users.find(u => u.username === username);
 
 		let accessString = localStorage.getItem(`JWT`);
 		if (accessString === null) {
@@ -182,7 +186,7 @@ class ManageStaffForm extends React.Component {
 						<Form.Label>User to promote:</Form.Label>
 						<Form.Control name="usernameToFind" type="text" placeholder="User to promote" value={this.state.usernameToFind} onChange={this.handleInputChange} />
 					</Form.Group>
-					<Button variant="secondary" type="submit" onClick={this.handlePromote}>Find and promote user</Button>
+					<Button variant="primary" type="button" onClick={this.handlePromoteFromSearch}>Find and promote user</Button>
 				</Form>
 			)
 		}
