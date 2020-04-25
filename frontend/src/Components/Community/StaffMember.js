@@ -19,6 +19,10 @@ class StaffMember extends React.Component {
             username: '',
 		}
 
+		this.promoteUser = this.promoteUser.bind(this);
+		this.demoteUser = this.demoteUser.bind(this);
+		this.getStaffMember = this.getStaffMember.bind(this);
+
 	}
 
 	async componentDidMount() {
@@ -46,23 +50,43 @@ class StaffMember extends React.Component {
 			return;
 		}
 
-		await Axios
-			.get('http://localhost:9000/api/users/' + this.props.id, {
-				headers: { Authorization: `JWT ${accessString}` }
-			}).then(response => {
-				let data = response.data;
+		await this.getStaffMember();
 
-				this.setState({
-                    loading: false,
-                    username: data.username,
-				});
-			}).catch(error => {
-				this.setState({
-					error: true,
-					errorMessage: `Unable to retrieve data`,
-					loading: false,
-				});
-			})
+	}
+
+	async getStaffMember() {
+		let accessString = localStorage.getItem(`JWT`);
+		await Axios
+		.get('http://localhost:9000/api/users/' + this.props.id, {
+			headers: { Authorization: `JWT ${accessString}` }
+		}).then(response => {
+			let data = response.data;
+
+			this.setState({
+				loading: false,
+				username: data.user.username,
+			});
+		}).catch(error => {
+			this.setState({
+				error: true,
+				errorMessage: `Unable to retrieve data`,
+				loading: false,
+			});
+		})
+	}
+
+	promoteUser() {
+		this.props.handlePromote(this.state.username);
+	}
+
+	demoteUser() {
+		this.props.handleDemote(this.state.username);
+	}
+
+	async componentDidUpdate() {
+		if(this.state.username === undefined) {
+			await this.getStaffMember();
+		}
 	}
 
 	render() {
@@ -73,21 +97,17 @@ class StaffMember extends React.Component {
 		} else {
 			return (
 				<Container style={{borderTop: "0.1rem", borderStyle: "solid", borderColor: "black", }}>
-					<Col>
-						<Row>
+					<Row>
+						<Col>
                             <p>{this.state.username}</p>
-						</Row>
-					</Col>
-                    <Col>
-                        <Row>
-                            <Button id="promoteStaff" onClick={this.props.handlePromote(this.state.username)} variant="primary">Promote</Button> 
-                        </Row>
-                    </Col>
-                    <Col>
-                        <Row>
-                            <Button id="demoteStaff" onClick={this.props.handleDemote(this.state.username)} variant="danger">Demote</Button> 
-                        </Row>
-                    </Col>
+						</Col>
+						<Col>
+                            <Button id="promoteStaff" onClick={this.promoteUser} variant="primary">Promote</Button> 
+                        </Col>
+						<Col>
+						    <Button id="demoteStaff" onClick={this.demoteUser} variant="danger">Demote</Button> 
+                    	</Col>
+					</Row>
 				</Container>
 			)
 

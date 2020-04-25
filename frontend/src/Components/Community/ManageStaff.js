@@ -4,6 +4,7 @@ import Button from 'react-bootstrap/Button';
 import Loading from '../Utils/Loading';
 import Error from '../Utils/Error';
 import Axios from 'axios';
+import StaffMember from './StaffMember';
 
 class ManageStaffForm extends React.Component {
 	constructor(props) {
@@ -258,6 +259,9 @@ class ManageStaffForm extends React.Component {
 		} else if (this.state.error === true) {
 			return (<Error statusCode={this.state.errorStatusCode} message={this.state.errorMessage} />)
 		} else {
+			const staff = this.state.communityStaffID.map((staffID) =>
+				<StaffMember id={staffID} handlePromote={this.handlePromote} handleDemote={this.handleDemote}/>
+			)
 			return (
 				<Form id="addStaff" className={"modalForm"}>
 					<Form.Group>
@@ -266,6 +270,8 @@ class ManageStaffForm extends React.Component {
 					</Form.Group>
 					<Button variant="primary" type="button" onClick={this.handlePromoteFromSearch}>Find and promote user</Button>
 					<Button variant="danger" type="button" onClick={this.handleDemoteFromSearch}>Find and demote user</Button>
+					<br />
+					{staff}
 				</Form>
 			)
 		}
