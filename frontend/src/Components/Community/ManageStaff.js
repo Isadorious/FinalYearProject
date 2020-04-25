@@ -22,6 +22,8 @@ class ManageStaffForm extends React.Component {
 		this.handleInputChange = this.handleInputChange.bind(this);
 		this.handlePromote = this.handlePromote.bind(this);
 		this.handlePromoteFromSearch = this.handlePromoteFromSearch.bind(this);
+		this.handleDemoteFromSearch = this.handleDemoteFromSearch.bind(this);
+		this.handleDemote = this.handleDemote.bind(this);
 
 	}
 
@@ -99,8 +101,7 @@ class ManageStaffForm extends React.Component {
 		});
 	}
 
-	async handlePromoteFromSearch()
-	{
+	async handlePromoteFromSearch() {
 		await this.handlePromote(this.state.usernameToFind);
 	}
 
@@ -134,9 +135,9 @@ class ManageStaffForm extends React.Component {
 				let staffIDs = this.state.communityStaffID;
 				const index = staffIDs.indexOf(user._id);
 
-				if(index > -1) {
+				if (index > -1) {
 					staffIDs.splice(index, 1);
-					this.setState({communityStaffID: staffIDs});
+					this.setState({ communityStaffID: staffIDs });
 				}
 
 				await Axios
@@ -174,6 +175,89 @@ class ManageStaffForm extends React.Component {
 		}
 	}
 
+	async handleDemoteFromSearch() {
+		this.handleDemote(this.state.usernameToFind);
+	}
+
+	async handleDemote(username) {
+		const user = this.state.users.find(u => u.username === username);
+
+		let accessString = localStorage.getItem(`JWT`);
+		if (accessString === null) {
+			this.setState({
+				error: true,
+				errorMessage: `Unable to load user details from local storage`,
+				errorStatusCode: 401,
+				loading: false,
+			});
+			return;
+		}
+
+		if (user === undefined) {
+			alert('Unable to find user');
+			return;
+		} else {
+
+			const isStaff = this.state.communityStaffID.includes(user._id);
+			const isAdmin = this.state.communityAdminsID.includes(user._id);
+
+			if (isStaff === true) {
+				// Remove user from staff array
+				let staffIDs = this.state.communityStaffID;
+				const index = staffIDs.indexOf(user._id);
+
+				if (index > -1) {
+					staffIDs.splice(index, 1);
+				}
+
+				await Axios
+					.put('http://localhost:9000/api/communities/' + this.props.id, {
+						headers: { Authorization: `JWT ${accessString}` },
+						communityStaffID: staffIDs,
+					})
+					.then(response => {
+						if (response.data.message === 'Community updated!') {
+							this.setState({ communityStaffID: staffIDs });
+							alert(`${user.username} demoted from staff!`);
+						} else {
+							alert(response.data);
+						}
+					})
+			} else if (isAdmin === true) {
+				// Remove user from admin array
+				// Add user to staff array
+				let adminIDs= this.state.communityAdminsID;
+				const index = adminIDs.indexOf(user._id);
+
+				if(index > -1)
+				{
+					adminIDs.splice(index, 1);
+				}
+
+				let staffIDs = this.state.communityStaffID;
+				staffIDs.push(user._id);
+
+				await Axios
+					.put('http://localhost:9000/api/communities/' + this.props.id, {
+						headers: { Authorization: `JWT ${accessString}` },
+						communityAdminsID: adminIDs,
+						communityStaffID: staffIDs,
+					})
+					.then(response => {
+						if (response.data.message === 'Community updated!') {
+							this.setState({ communityAdminsID: adminIDs});
+							this.setState({ communityStaffID: staffIDs});	
+							alert(`${user.username} demoted!`)	
+						} else {
+							alert(response.data);
+						}
+					})
+			} else {
+				alert(`${user.username} is not a staff member!`);
+			}
+		}
+	}
+
 	render() {
 		if (this.state.loading === true) {
 			return (<Loading />)
@@ -187,6 +271,7 @@ class ManageStaffForm extends React.Component {
 						<Form.Control name="usernameToFind" type="text" placeholder="User to promote" value={this.state.usernameToFind} onChange={this.handleInputChange} />
 					</Form.Group>
 					<Button variant="primary" type="button" onClick={this.handlePromoteFromSearch}>Find and promote user</Button>
+					<Button variant="danger" type="button" onClick={this.handleDemoteFromSearch}>Find and demote user</Button>
 				</Form>
 			)
 		}
