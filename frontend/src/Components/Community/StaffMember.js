@@ -80,12 +80,12 @@ class StaffMember extends React.Component {
 					</Col>
                     <Col>
                         <Row>
-                            <Button id="promoteStaff" onClick={this.props.handlePromote} variant="primary">Promote</Button> 
+                            <Button id="promoteStaff" onClick={this.props.handlePromote(this.state.username)} variant="primary">Promote</Button> 
                         </Row>
                     </Col>
                     <Col>
                         <Row>
-                            <Button id="demoteStaff" onClick={this.props.handleDemote} variant="danger">Demote</Button> 
+                            <Button id="demoteStaff" onClick={this.props.handleDemote(this.state.username)} variant="danger">Demote</Button> 
                         </Row>
                     </Col>
 				</Container>
