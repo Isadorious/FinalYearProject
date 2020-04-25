@@ -20,11 +20,13 @@ router.get(`/`, (req, res) => {
 				query.exec((error, user) => {
 					if(error){
 						res.send(error);
-					} else {
+					} else if(user !== null) {
 						user.password = '';
 						user.email = '';
 						user.dateOfBirth = '';
 						res.send({message: `Found user`, user});
+					} else {
+						res.send({message: `Unable to find user`});
 					}
 				});
 			} else {
