@@ -4,15 +4,64 @@ const Calendar = require(`../models/calendar`);
 const Task = require(`../models/task`);
 const Comment = require(`../models/comment`);
 const SubTask = require(`../models/subtask`);
+const Community = require(`../models/community`);
 
 router.get(`/:id`, (req, res) => {
-	const query = Calendar.findById(req.params.id);
-	query.exec((err, calendar) => {
-		if (err) {
+	passport.authenticate(`jwt`, {session: false}, (err, user, info) => {
+		if(err) {
 			res.send(err);
+		} else if(info != undefined) {
+			res.json({message: info.message});
+		} else {
+			const query = Calendar.findById(req.params.id);
+			query.exec((err, calendar) => {
+				if (err) {
+					res.send(err);
+					return;
+				}
+
+				if(calendar === null) {
+					res.status(404).json({message: `Unable to find calendar`});
+					return;
+				}
+
+				if(calendar.visibility === 0) {
+					res.json(calendar);
+					return;
+				}
+
+				if(calendar.visibility > 0) {
+					Community.findById(calendar.communityID, ((err, community) => {
+						let isUserStaff = false;
+						let isUserAdmin = false;
+						let isUserOwner = false;
+
+						if(user._id == community.ownerID)
+						{
+							isUserOwner = true;
+						} else if(community.communityAdminsID.includes(user._id) === true)
+						{
+							isUserAdmin = true;
+						} else if(community.communityStaffID.includes(user._id) === true)
+						{
+							isUserStaff = true;
+						}
+
+						if(calendar.visibility === 1 && (isUserOwner || isUserAdmin || isUserStaff))
+						{
+							res.json(calendar);
+						} else if(calendar.visibility === 2 && (isUserOwner || isUserAdmin))
+						{
+							res.json(calendar);
+						} else {
+							res.status(401).json({message: `Unauthorized`});
+						}
+
+					}));
+				}
+			});
 		}
-		res.json(calendar);
-	});
+	})(req, res);
 });
 
 router.post(`/`, (req, res) => {
