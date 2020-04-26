@@ -581,7 +581,7 @@ router.delete(`/:id/tasks/:taskID/comments/:commentID`, (req, res) => {
 							if (error) {
 								res.send(error);
 							} else {
-								res.json({ message: `Comment successfully deleted!`});
+								res.json({ message: `Comment successfully deleted!` });
 							}
 						});
 					} else {
@@ -598,11 +598,11 @@ router.delete(`/:id/tasks/:taskID/comments/:commentID`, (req, res) => {
 * Subtask associated routes
 */
 router.get(`/:id/tasks/:taskID/subtasks`, (req, res) => {
-	passport.authenticate(`jwt`, {session: false}, (err, user, info) => {
-		if(err) {
+	passport.authenticate(`jwt`, { session: false }, (err, user, info) => {
+		if (err) {
 			res.send(err);
-		} else if(info != undefined) {
-			res.json({message: info.message});
+		} else if (info != undefined) {
+			res.json({ message: info.message });
 		} else {
 			const query = Calendar.findById(req.params.id);
 			query.exec((err, calendar) => {
@@ -610,12 +610,11 @@ router.get(`/:id/tasks/:taskID/subtasks`, (req, res) => {
 					res.send(err);
 				} else {
 					let result = canViewCalendar(calendar._id, user._id);
-					if(result.permission === true)
-					{
+					if (result.permission === true) {
 						const task = calendar.tasks.id(req.params.taskID);
 						res.send(task.subTasks);
 					} else {
-						res.status(result.status).json({message: result.message});
+						res.status(result.status).json({ message: result.message });
 					}
 				}
 			});
@@ -625,15 +624,28 @@ router.get(`/:id/tasks/:taskID/subtasks`, (req, res) => {
 });
 
 router.get(`/:id/tasks/:taskID/subtasks/:subTaskID`, (req, res) => {
-	const query = Calendar.findById(req.params.id);
-	query.exec((err, calendar) => {
+	passport.authenticate(`jwt`, { session: false }, (err, user, info) => {
 		if (err) {
 			res.send(err);
+		} else if (info != undefined) {
+			res.json({ message: info.message });
 		} else {
-			const subtask = calendar.tasks.id(req.params.taskID).subTasks.id(req.params.subTaskID);
-			res.send(subtask);
+			const query = Calendar.findById(req.params.id);
+			query.exec((err, calendar) => {
+				if (err) {
+					res.send(err);
+				} else {
+					let result = canViewCalendar(calendar._id, user._id);
+					if (result.permission === true) {
+						const subtask = calendar.tasks.id(req.params.taskID).subTasks.id(req.params.subTaskID);
+						res.send(subtask);
+					} else {
+						res.status(result.status).json({ message: result.message });
+					}
+				}
+			});
 		}
-	});
+	})(req, res);
 });
 
 router.post(`/:id/tasks/:taskID/subtasks`, (req, res) => {
