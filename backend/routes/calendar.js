@@ -598,15 +598,30 @@ router.delete(`/:id/tasks/:taskID/comments/:commentID`, (req, res) => {
 * Subtask associated routes
 */
 router.get(`/:id/tasks/:taskID/subtasks`, (req, res) => {
-	const query = Calendar.findById(req.params.id);
-	query.exec((err, calendar) => {
-		if (err) {
+	passport.authenticate(`jwt`, {session: false}, (err, user, info) => {
+		if(err) {
 			res.send(err);
+		} else if(info != undefined) {
+			res.json({message: info.message});
 		} else {
-			const task = calendar.tasks.id(req.params.taskID);
-			res.send(task.subTasks);
+			const query = Calendar.findById(req.params.id);
+			query.exec((err, calendar) => {
+				if (err) {
+					res.send(err);
+				} else {
+					let result = canViewCalendar(calendar._id, user._id);
+					if(result.permission === true)
+					{
+						const task = calendar.tasks.id(req.params.taskID);
+						res.send(task.subTasks);
+					} else {
+						res.status(result.status).json({message: result.message});
+					}
+				}
+			});
 		}
-	});
+	})(req, res);
+
 });
 
 router.get(`/:id/tasks/:taskID/subtasks/:subTaskID`, (req, res) => {
