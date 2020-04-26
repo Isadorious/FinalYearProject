@@ -88,8 +88,7 @@ router.post(`/`, (req, res) => {
 					hasPerm = true;
 				}
 
-				if(hasPerm === true)
-				{
+				if (hasPerm === true) {
 					calendar.save((err, calendar) => {
 						if (err) {
 							res.send(err);
@@ -98,17 +97,17 @@ router.post(`/`, (req, res) => {
 							community.calendarsID.push(calendar.id);
 
 							community.save((err, community) => {
-								if(err) {
+								if (err) {
 									res.send(err);
 									return;
 								} else {
-									res.send({message: `Calendar saved!`, calendar});
+									res.send({ message: `Calendar saved!`, calendar });
 								}
 							})
 						}
 					});
 				} else {
-					res.status(401).json({message: `Not authorized to create new calendar`});
+					res.status(401).json({ message: `Not authorized to create new calendar` });
 				}
 
 			}));
@@ -117,18 +116,59 @@ router.post(`/`, (req, res) => {
 });
 
 router.put(`/:id`, (req, res) => {
-	Calendar.findById({ _id: req.params.id }, (err, calendar) => {
+	passport.authenticate(`jwt`, { session: false }, (err, user, info) => {
 		if (err) {
 			res.send(err);
-		}
+		} else if (info != undefined) {
+			res.json({ message: info.message });
+		} else {
 
-		Object.assign(calendar, req.body).save((err, calendar) => {
-			if (err) {
-				res.send(err);
-			}
-			res.json({ message: `Calendar updated!`, calendar });
-		});
-	});
+			Calendar.findById({ _id: req.params.id }, (err, calendar) => {
+				if (err) {
+					res.send(err);
+					return;
+				}
+
+				if (calendar === null) {
+					res.status(404).json({ message: `Unable to find calendar` });
+					return;
+				}
+
+				// Check that user is allowed to modify the calendar for community
+				Community.findById(calendar.communityID, ((err, community) => {
+					if (err) {
+						res.send(err);
+						return;
+					}
+
+					if (community === null) {
+						res.status(404).json({ message: `Unable to find community` });
+						return;
+					}
+
+					// Check if user is owner or admin to allow them to modify the community
+					let hasPerm = false;
+					if (user._id == community.ownerID) {
+						hasPerm = true;
+					} else if (community.communityAdminsID.includes(user._id) === true) {
+						hasPerm = true;
+					}
+
+					if (hasPerm === true) {
+						Object.assign(calendar, req.body).save((err, calendar) => {
+							if (err) {
+								res.send(err);
+							}
+							res.json({ message: `Calendar updated!`, calendar });
+						});
+					} else {
+						res.status(401).json({ message: `Not authorized to create new calendar` });
+					}
+
+				}));
+			});
+		}
+	})(req, res);
 });
 
 router.delete(`/:id`, (req, res) => {
