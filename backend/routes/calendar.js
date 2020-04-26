@@ -282,24 +282,38 @@ router.post(`/:id/tasks`, (req, res) => {
 });
 
 router.put(`/:id/tasks/:taskID`, (req, res) => {
-	const query = Calendar.findById(req.params.id);
-
-	query.exec((err, calendar) => {
-		if (err) {
+	passport.authenticate(`jwt`, {session: false}, (err, user, info) => {
+		if(err) {
 			res.send(err);
+		} else if(info != undefined) {
+			res.json({message: info.message});
 		} else {
-			const task = calendar.tasks.id(req.params.taskID);
-			task.set(req.body);
-
-			calendar.save((error) => {
-				if (error) {
-					res.send(error);
+			const query = Calendar.findById(req.params.id);
+			query.exec((err, calendar) => {
+				if (err) {
+					res.send(err);
 				} else {
-					res.json({ message: `Task updated successfully!`, task });
+					let result = isStaff(calendar.communityID, user._id);
+					if (result.permission === true) {
+						const task = calendar.tasks.id(req.params.taskID);
+						task.set(req.body);
+			
+						calendar.save((error) => {
+							if (error) {
+								res.send(error);
+							} else {
+								res.json({ message: `Task updated successfully!`, task });
+							}
+						});
+					} else if (result.message !== undefined) {
+						res.status(result.status).json({message: result.message});
+					} else {
+						res.status(401).json({message: `Not authorized`});
+					}
 				}
 			});
 		}
-	});
+	})(req, res);
 });
 
 router.delete(`/:id/tasks/:taskID`, (req, res) => {
