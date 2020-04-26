@@ -3,6 +3,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
 import Axios from 'axios';
+import bsCustomFileInput from 'bs-custom-file-input';
 
 
 class ProfilePictureUploader extends React.Component {
@@ -16,6 +17,10 @@ class ProfilePictureUploader extends React.Component {
 
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleFileUpload = this.handleFileUpload.bind(this);
+    }
+
+    componentDidMount() {
+        bsCustomFileInput.init();
     }
 
     handleInputChange(event) {
