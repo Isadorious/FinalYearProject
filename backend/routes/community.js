@@ -64,6 +64,13 @@ router.put(`/:id`, (req, res) => {
 			Community.findById({_id: req.params.id}, (err, community) => {
 				if(err) {
 					res.send(err);
+					return;
+				}
+
+				if(community === null)
+				{
+					res.status(404).json({message: `Unable to find community`});
+					return;
 				}
 				// Check if user is owner or admin to allow them to modify the community
 				let hasPerm = false;
