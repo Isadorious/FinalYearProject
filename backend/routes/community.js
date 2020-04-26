@@ -103,18 +103,26 @@ router.delete(`/:id`, (req, res) => {
 			res.json({ message: info.message });
 		} else {
 			// Check if user is owner to allow delete
-			if (user._id == community.ownerID) {
-				Community.deleteOne({ _id: req.params.id }, (err, result) => {
-					if (err) {
-						res.send(err);
-					}
-	
-					res.json({ message: `Community successfully deleted!`, result });
-				});
-			} else {
-				res.status(401).json({message: `Not authorized to delete this community`});
-			}
-
+			Community.findById({ _id: req.params.id }, (err, community) => {
+				if (err) {
+					res.send(err);
+					return;
+				}
+				if (community === null) {
+					res.status(404).json({ message: `Unable to find community` });
+					return;
+				}
+				if (user._id == community.ownerID) {
+					Community.deleteOne({ _id: req.params.id }, (err, result) => {
+						if (err) {
+							res.send(err);
+						}
+						res.json({ message: `Community successfully deleted!`, result });
+					});
+				} else {
+					res.status(401).json({ message: `Not authorized to delete this community` });
+				}
+			})
 		}
 	})(req, res);
 });
