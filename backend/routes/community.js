@@ -55,18 +55,40 @@ router.post(`/`, (req, res) => {
 });
 
 router.put(`/:id`, (req, res) => {
-	Community.findById({_id: req.params.id}, (err, community) => {
+	passport.authenticate(`jwt`, {session: false}, (err, user, info) => {
 		if(err) {
 			res.send(err);
-		}
+		} else if(info != undefined) {
+			res.json({message: info.message});
+		} else {
+			Community.findById({_id: req.params.id}, (err, community) => {
+				if(err) {
+					res.send(err);
+				}
+				// Check if user is owner or admin to allow them to modify the community
+				let hasPerm = false;
+				if(user._id === community.ownerID) {
+					hasPerm = true;
+				}
+				if(community.communityAdminsID.contains(user._id) === true) {
+					hasPerm = true;
+				}
 
-		Object.assign(community, req.body).save((err, community) => {
-			if(err) {
-				res.send(err);
-			}
-			res.json({message: `Community updated!`, community});
-		});
-	});
+				if(hasPerm === true)
+				{
+					Object.assign(community, req.body).save((err, community) => {
+						if(err) {
+							res.send(err);
+						}
+						res.json({message: `Community updated!`, community});
+					});
+				} else {
+					res.status(401).json({message: `Not authorized to edit this community`});
+				}
+			});
+		}
+	})(req, res);
+
 });
 
 router.delete(`/:id`, (req, res) => {
