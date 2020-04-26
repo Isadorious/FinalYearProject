@@ -507,24 +507,49 @@ router.post(`/:id/tasks/:taskID/comments`, (req, res) => {
 });
 
 router.put(`/:id/tasks/:taskID/comments/:commentID`, (req, res) => {
-	const query = Calendar.findById(req.params.id);
-
-	query.exec((err, calendar) => {
-		if (err) {
+	passport.authenticate(`jwt`, {session: false}, (err, user, info) => {
+		if(err) {
 			res.send(err);
+		} else if(info != undefined) {
+			res.json({message: info.message});
 		} else {
-			const comment = calendar.tasks.id(req.params.taskID).taskComments.id(req.params.commentID);
-			comment.set(req.body);
-
-			calendar.save((error) => {
-				if (error) {
-					res.send(error);
+			const query = Calendar.findById(req.params.id);
+			query.exec((err, calendar) => {
+				if (err) {
+					res.send(err);
 				} else {
-					res.json({ message: `Comment updated successfully!`, comment });
+					const comment = calendar.tasks.id(req.params.taskID).taskComments.id(req.params.commentID);
+
+					let isAuth = false;
+
+					if(comment.authorID == user._id)
+					{
+						isAuth = true;
+					} else {
+						res.status(401).json({message: `Unauthorized`});
+						return;
+					}
+
+					const canSeeCalendar = canViewCalendar(calendar._id, user._id);
+					const canPostComment = isStaff(calendar.communityID, user._id);
+
+					if(canSeeCalendar.permission === true && canPostComment.permission === true && isAuth === true)
+					{
+						comment.set(req.body);
+						calendar.save((error) => {
+							if (error) {
+								res.send(error);
+							} else {
+								res.json({ message: `Comment updated successfully!`, comment });
+							}
+						});
+					} else {
+						res.status(canPostComment.status).json({message: canPostComment.message});
+					}
 				}
 			});
 		}
-	});
+	})(req, res);
 });
 
 router.delete(`/:id/tasks/:taskID/comments/:commentID`, (req, res) => {
