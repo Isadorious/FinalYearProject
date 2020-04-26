@@ -685,24 +685,39 @@ router.post(`/:id/tasks/:taskID/subtasks`, (req, res) => {
 });
 
 router.put(`/:id/tasks/:taskID/subtasks/:subTaskID`, (req, res) => {
-	const query = Calendar.findById(req.params.id);
-
-	query.exec((err, calendar) => {
+	passport.authenticate(`jwt`, { session: false }, (err, user, info) => {
 		if (err) {
 			res.send(err);
+		} else if (info != undefined) {
+			res.json({ message: info.message });
 		} else {
-			const subTask = calendar.tasks.id(req.params.taskID).subTasks.id(req.params.subTaskID);
-			subTask.set(req.body);
-
-			calendar.save((error) => {
-				if (error) {
-					res.send(error);
+			const query = Calendar.findById(req.params.id);
+			query.exec((err, calendar) => {
+				if (err) {
+					res.send(err);
 				} else {
-					res.json({ message: `Subtask updated successfully!`, subTask });
+
+					const canSeeCalendar = canViewCalendar(calendar._id, user._id);
+					const canPostTask = isStaff(calendar.communityID, user._id);
+
+					if (canSeeCalendar.permission === true && canPostTask === true) {
+						const subTask = calendar.tasks.id(req.params.taskID).subTasks.id(req.params.subTaskID);
+						subTask.set(req.body);
+	
+						calendar.save((error) => {
+							if (error) {
+								res.send(error);
+							} else {
+								res.json({ message: `Subtask updated successfully!`, subTask });
+							}
+						});
+					} else {
+						res.status(canPostTask.status).json({ message: canPostTask.message });
+					}
 				}
 			});
 		}
-	});
+	})(req, res);
 });
 
 router.delete(`/:id/tasks/:taskID/subtasks/:subTaskID`, (req, res) => {
