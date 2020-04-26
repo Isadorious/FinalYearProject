@@ -5,17 +5,6 @@ const Task = require(`../models/task`);
 const Comment = require(`../models/comment`);
 const SubTask = require(`../models/subtask`);
 
-router.get(`/`, (req, res) => {
-	const query = Calendar.find({});
-
-	query.exec((err, calendars) => {
-		if (err) {
-			res.send(err);
-		}
-		res.json(calendars);
-	});
-});
-
 router.get(`/:id`, (req, res) => {
 	const query = Calendar.findById(req.params.id);
 	query.exec((err, calendar) => {
