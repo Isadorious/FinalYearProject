@@ -21,6 +21,11 @@ const calendarSchema = new Schema({
 	},
 	tasks: {
 		type: [Task.schema]
+	},
+	visibility: {
+		type: Number,
+		default: 0, // 0 for public, 1 for staff, 2 for admin
+		required: true,
 	}
 });
 
