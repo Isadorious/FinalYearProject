@@ -469,25 +469,24 @@ router.get(`/:id/tasks/:taskID/comments/:commentID`, (req, res) => {
 });
 
 router.post(`/:id/tasks/:taskID/comments`, (req, res) => {
-	passport.authenticate(`jwt`, {session: false}, (err, user, info) => {
-		if(err) {
+	passport.authenticate(`jwt`, { session: false }, (err, user, info) => {
+		if (err) {
 			res.send(err);
-		} else if(info != undefined) {
-			res.json({message: info.message});
+		} else if (info != undefined) {
+			res.json({ message: info.message });
 		} else {
 			const query = Calendar.findById(req.params.id);
 			const comment = new Comment(req.body);
 			const canSeeCalendar = canViewCalendar(calendar._id, user._id);
 			const canPostComment = isStaff(calendar.communityID, user._id);
-			
-			if(canSeeCalendar.permission === true && canPostComment === true)
-			{
+
+			if (canSeeCalendar.permission === true && canPostComment === true) {
 				query.exec((err, calendar) => {
 					if (err) {
 						res.send(err);
 					} else {
 						calendar.tasks.id(req.params.taskID).taskComments.push(comment);
-			
+
 						calendar.save((error) => {
 							if (error) {
 								res.send(error);
@@ -498,7 +497,7 @@ router.post(`/:id/tasks/:taskID/comments`, (req, res) => {
 					}
 				});
 			} else {
-				res.status(canPostComment.status).json({message: canPostComment.message});
+				res.status(canPostComment.status).json({ message: canPostComment.message });
 			}
 		}
 	})(req, res);
@@ -507,11 +506,11 @@ router.post(`/:id/tasks/:taskID/comments`, (req, res) => {
 });
 
 router.put(`/:id/tasks/:taskID/comments/:commentID`, (req, res) => {
-	passport.authenticate(`jwt`, {session: false}, (err, user, info) => {
-		if(err) {
+	passport.authenticate(`jwt`, { session: false }, (err, user, info) => {
+		if (err) {
 			res.send(err);
-		} else if(info != undefined) {
-			res.json({message: info.message});
+		} else if (info != undefined) {
+			res.json({ message: info.message });
 		} else {
 			const query = Calendar.findById(req.params.id);
 			query.exec((err, calendar) => {
@@ -522,19 +521,17 @@ router.put(`/:id/tasks/:taskID/comments/:commentID`, (req, res) => {
 
 					let isAuth = false;
 
-					if(comment.authorID == user._id)
-					{
+					if (comment.authorID == user._id) {
 						isAuth = true;
 					} else {
-						res.status(401).json({message: `Unauthorized`});
+						res.status(401).json({ message: `Unauthorized` });
 						return;
 					}
 
 					const canSeeCalendar = canViewCalendar(calendar._id, user._id);
 					const canPostComment = isStaff(calendar.communityID, user._id);
 
-					if(canSeeCalendar.permission === true && canPostComment.permission === true && isAuth === true)
-					{
+					if (canSeeCalendar.permission === true && canPostComment.permission === true && isAuth === true) {
 						comment.set(req.body);
 						calendar.save((error) => {
 							if (error) {
@@ -544,7 +541,7 @@ router.put(`/:id/tasks/:taskID/comments/:commentID`, (req, res) => {
 							}
 						});
 					} else {
-						res.status(canPostComment.status).json({message: canPostComment.message});
+						res.status(canPostComment.status).json({ message: canPostComment.message });
 					}
 				}
 			});
@@ -553,23 +550,48 @@ router.put(`/:id/tasks/:taskID/comments/:commentID`, (req, res) => {
 });
 
 router.delete(`/:id/tasks/:taskID/comments/:commentID`, (req, res) => {
-	const query = Calendar.findById(req.params.id);
-
-	query.exec((err, calendar) => {
+	passport.authenticate(`jwt`, { session: false }, (err, user, info) => {
 		if (err) {
 			res.send(err);
+		} else if (info != undefined) {
+			res.json({ message: info.message });
 		} else {
-			calendar.tasks.id(req.params.taskID).taskComments.id(req.params.commentID).remove();
-
-			calendar.save((error) => {
+			const query = Calendar.findById(req.params.id);
+			query.exec((err, calendar) => {
 				if (err) {
-					res.send(error);
+					res.send(err);
 				} else {
-					res.json({ message: `Comment successfully deleted!` });
+					const comment = calendar.tasks.id(req.params.taskID).taskComments.id(req.params.commentID);
+
+					let isAuth = false;
+
+					if (comment.authorID == user._id) {
+						isAuth = true;
+					} else {
+						res.status(401).json({ message: `Unauthorized` });
+						return;
+					}
+
+					const canSeeCalendar = canViewCalendar(calendar._id, user._id);
+					const canDeleteComment = isAdmin(calendar.communityID, user._id);
+
+					if (canSeeCalendar.permission === true && canDeleteComment.permission === true && isAuth === true) {
+						calendar.tasks.id(req.params.taskID).taskComments.id(req.params.commentID).remove();
+						calendar.save((error) => {
+							if (error) {
+								res.send(error);
+							} else {
+								res.json({ message: `Comment successfully deleted!`});
+							}
+						});
+					} else {
+						res.status(canDeleteComment.status).json({ message: canDeleteComment.message });
+					}
 				}
 			});
 		}
-	});
+	})(req, res);
+
 });
 
 /*
