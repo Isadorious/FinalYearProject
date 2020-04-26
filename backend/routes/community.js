@@ -6,24 +6,39 @@ const jwt = require(`jsonwebtoken`);
 const User = require(`../models/user`);
 
 router.get(`/`, (req, res) => {
-	const query = Community.find({});
-
-	query.exec((err, communities) => {
-		if (err) {
+	passport.authenticate(`jwt`, {session: false}, (err, user, info) => {
+		if(err) {
 			res.send(err);
+		} else if(info != undefined) {
+			res.json({message: info.message});
+		} else {
+			const query = Community.find({});
+			query.exec((err, communities) => {
+				if (err) {
+					res.send(err);
+				}
+				res.json(communities);
+			});
 		}
-		res.json(communities);
-	});
+	})(req, res);
 });
 
 router.get(`/:id`, (req, res) => {
-	const query = Community.findById(req.params.id);
-	query.exec((err, community) => {
-		if (err) {
+	passport.authenticate(`jwt`, {session: false}, (err, user, info) => {
+		if(err) {
 			res.send(err);
+		} else if(info != undefined) {
+			res.json({message: info.message});
+		} else {
+			const query = Community.findById(req.params.id);
+			query.exec((err, community) => {
+				if (err) {
+					res.send(err);
+				}
+				res.json(community);
+			});
 		}
-		res.json(community);
-	});
+	})(req, res);
 });
 
 router.post(`/`, (req, res) => {
