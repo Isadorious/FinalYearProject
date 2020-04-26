@@ -98,13 +98,27 @@ router.put(`/:id`, (req, res) => {
 });
 
 router.delete(`/:id`, (req, res) => {
-	Community.deleteOne({_id: req.params.id}, (err, result) => {
-		if(err) {
+	passport.authenticate(`jwt`, { session: false }, (err, user, info) => {
+		if (err) {
 			res.send(err);
-		}
+		} else if (info != undefined) {
+			res.json({ message: info.message });
+		} else {
+			// Check if user is owner to allow delete
+			if (user._id == community.ownerID) {
+				Community.deleteOne({ _id: req.params.id }, (err, result) => {
+					if (err) {
+						res.send(err);
+					}
+	
+					res.json({ message: `Community successfully deleted!`, result });
+				});
+			} else {
+				res.status(401).json({message: `Not authorized to delete this community`});
+			}
 
-		res.json({message: `Community successfully deleted!`, result});
-	});
+		}
+	})(req, res);
 });
 
 module.exports = router;
