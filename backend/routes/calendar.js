@@ -239,9 +239,8 @@ router.get(`/:id/tasks`, (req, res) => {
 					res.send(err);
 				}
 
-				if(calendar === null)
-				{
-					res.status(404).status({message: `Unable to find calendar`});
+				if (calendar === null) {
+					res.status(404).status({ message: `Unable to find calendar` });
 					return;
 				}
 
@@ -269,13 +268,44 @@ router.get(`/:id/tasks`, (req, res) => {
 });
 
 router.get(`/:id/tasks/:taskID`, (req, res) => {
-	const query = Calendar.findById(req.params.id);
-	query.exec((err, calendar) => {
+	passport.authenticate(`jwt`, { session: false }, (err, user, info) => {
 		if (err) {
 			res.send(err);
+		} else if (info != undefined) {
+			res.json({ message: info.message });
+		} else {
+			const query = Calendar.findById(req.params.id);
+			query.exec((err, calendar) => {
+				if (err) {
+					res.send(err);
+				}
+
+				if (calendar === null) {
+					res.status(404).status({ message: `Unable to find calendar` });
+					return;
+				}
+
+				if (calendar.visibility === 0) {
+					res.json(calendar.tasks.id(req.params.taskID));
+					return;
+				} else if (calendar.visibility === 1) {
+					const result = isStaff(calendar.communityID, user._id);
+					if (result.permission === true) {
+						res.json(calendar.tasks.id(req.params.taskID));
+					} else {
+						res.status(result.status).json({ message: result.message });
+					}
+				} else if (calendar.visibility === 2) {
+					const result = isAdmin(calendar.communityID, user._id);
+					if (result.permission === true) {
+						res.json(calendar.tasks.id(req.params.taskID));
+					} else {
+						res.status(result.status).json({ message: result.message });
+					}
+				}
+			});
 		}
-		res.json(calendar.tasks.id(req.params.taskID));
-	});
+	})(req, res);
 });
 
 router.post(`/:id/tasks`, (req, res) => {
