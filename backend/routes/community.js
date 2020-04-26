@@ -34,8 +34,14 @@ router.get(`/:id`, (req, res) => {
 			query.exec((err, community) => {
 				if (err) {
 					res.send(err);
+					return;
 				}
-				res.json(community);
+				if(community === null)
+				{
+					res.status(404).json({message: `No community found`});
+				} else {
+					res.json(community);
+				}
 			});
 		}
 	})(req, res);
