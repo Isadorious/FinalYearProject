@@ -113,25 +113,24 @@ class ManageStaffForm extends React.Component {
 					if (isStaff === true) {
 						let adminIDs = this.state.communityAdminsID;
 						adminIDs.push(user._id);
-						this.setState({ communityAdminsID: adminIDs });
 		
 						let staffIDs = this.state.communityStaffID;
 						const index = staffIDs.indexOf(user._id);
 		
 						if (index > -1) {
 							staffIDs.splice(index, 1);
-							this.setState({ communityStaffID: staffIDs });
 						}
 		
 						Axios
 							.put('http://localhost:9000/api/communities/' + this.props.id, {
 								headers: { Authorization: `JWT ${accessString}` },
-								communityAdminsID: this.state.communityAdminsID,
-								communityStaffID: this.state.communityStaffID,
+								communityAdminsID: adminIDs,
+								communityStaffID: staffIDs,
 							})
 							.then(response => {
 								if (response.data.message === 'Community updated!') {
-									alert(`${user.username} promoted to admin!`);
+									this.setState({ communityStaffID: staffIDs });
+									this.setState({ communityAdminsID: adminIDs });
 								} else {
 									alert(response.data);
 								}
@@ -141,16 +140,15 @@ class ManageStaffForm extends React.Component {
 					} else {
 						let communityStaff = this.state.communityStaffID;
 						communityStaff.push(user._id);
-						this.setState({ communityStaffID: communityStaff });
 		
 						Axios
 							.put('http://localhost:9000/api/communities/' + this.props.id, {
 								headers: { Authorization: `JWT ${accessString}` },
-								communityStaffID: this.state.communityStaffID,
+								communityStaffID: communityStaff,
 							})
 							.then(response => {
 								if (response.data.message === 'Community updated!') {
-									alert(`${user.username} promoted to staff!`);
+									this.setState({ communityStaffID: communityStaff });
 								} else {
 									alert(response.data);
 								}
@@ -209,7 +207,6 @@ class ManageStaffForm extends React.Component {
 							.then(response => {
 								if (response.data.message === 'Community updated!') {
 									this.setState({ communityStaffID: staffIDs });
-									alert(`${user.username} demoted from staff!`);
 								} else {
 									alert(response.data);
 								}
@@ -238,7 +235,6 @@ class ManageStaffForm extends React.Component {
 								if (response.data.message === 'Community updated!') {
 									this.setState({ communityAdminsID: adminIDs});
 									this.setState({ communityStaffID: staffIDs});	
-									alert(`${user.username} demoted!`)	
 								} else {
 									alert(response.data);
 								}
