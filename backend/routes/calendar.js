@@ -5,6 +5,7 @@ const Task = require(`../models/task`);
 const Comment = require(`../models/comment`);
 const SubTask = require(`../models/subtask`);
 const Community = require(`../models/community`);
+import {isStaff, isAdmin, isOwner} from '../Utils/community';
 
 router.get(`/:id`, (req, res) => {
 	passport.authenticate(`jwt`, { session: false }, (err, user, info) => {
