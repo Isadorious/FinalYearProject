@@ -575,7 +575,7 @@ router.delete(`/:id/tasks/:taskID/comments/:commentID`, (req, res) => {
 					const canSeeCalendar = canViewCalendar(calendar._id, user._id);
 					const canDeleteComment = isAdmin(calendar.communityID, user._id);
 
-					if (canSeeCalendar.permission === true && canDeleteComment.permission === true && isAuth === true) {
+					if (canSeeCalendar.permission === true && (canDeleteComment.permission === true || isAuth === true)) {
 						calendar.tasks.id(req.params.taskID).taskComments.id(req.params.commentID).remove();
 						calendar.save((error) => {
 							if (error) {
