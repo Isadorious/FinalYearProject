@@ -1,6 +1,6 @@
 const Community = require(`../models/community`);
 
-export async function isOwner(communityID, userID) {
+async function isOwner(communityID, userID) {
 	Community.findById({ _id: req.params.id }, (err, community) => {
 	
 		if(community === null)
@@ -17,7 +17,7 @@ export async function isOwner(communityID, userID) {
 	})
 }
 
-export async function isAdmin(communityID, userID) {
+async function isAdmin(communityID, userID) {
 
     let result = isOwner(communityID, userID);
 
@@ -42,7 +42,7 @@ export async function isAdmin(communityID, userID) {
 	});
 }
 
-export async function isStaff(communityID, userID) {
+async function isStaff(communityID, userID) {
     let result = isAdmin(communityID, userID);
 
     if(result.permission === true)
@@ -65,3 +65,7 @@ export async function isStaff(communityID, userID) {
         }
 	});
 }
+
+exports.isOwner = isOwner;
+exports.isStaff = isStaff;
+exports.isAdmin = isAdmin;

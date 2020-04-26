@@ -1,7 +1,7 @@
 const Calendar = require(`../models/calendar`);
-import {isAdmin, isStaff} from './community';
+const {isAdmin, isStaff} = require('./community');
 
-export async function canViewCalendar(calendarID, userID) {
+async function canViewCalendar(calendarID, userID) {
     Calendar.findById(calendarID, (err, calendar) => {
         if(calendar === null) {
 			let result = {status: 404, message: `Unable to find calendar`, permission: false, }
@@ -11,7 +11,7 @@ export async function canViewCalendar(calendarID, userID) {
         // Check visibility for 0
         if(calendar.visibility === 0)
         {
-            let result = {permission: true},
+            let result = {permission: true};
             return result;
         }
         // Check visibility for 1
@@ -28,3 +28,5 @@ export async function canViewCalendar(calendarID, userID) {
         }
     });
 }
+
+exports.canViewCalendar = canViewCalendar;
