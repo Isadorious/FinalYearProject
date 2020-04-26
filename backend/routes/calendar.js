@@ -5,7 +5,7 @@ const Task = require(`../models/task`);
 const Comment = require(`../models/comment`);
 const SubTask = require(`../models/subtask`);
 const Community = require(`../models/community`);
-import {isStaff, isAdmin, isOwner} from '../Utils/community';
+import { isStaff, isAdmin, isOwner } from '../Utils/community';
 
 router.get(`/:id`, (req, res) => {
 	passport.authenticate(`jwt`, { session: false }, (err, user, info) => {
@@ -247,23 +247,38 @@ router.get(`/:id/tasks/:taskID`, (req, res) => {
 });
 
 router.post(`/:id/tasks`, (req, res) => {
-	const query = Calendar.findById(req.params.id);
-	const task = new Task(req.body);
-	query.exec((err, calendar) => {
+	passport.authenticate(`jwt`, { session: false }, (err, user, info) => {
 		if (err) {
 			res.send(err);
+		} else if (info != undefined) {
+			res.json({ message: info.message });
 		} else {
-			calendar.tasks.push(task);
-
-			calendar.save((error) => {
-				if (error) {
-					res.send(error);
+			const query = Calendar.findById(req.params.id);
+			query.exec((err, calendar) => {
+				if (err) {
+					res.send(err);
 				} else {
-					res.json({ message: `Task added successfully!`, task });
+					let result = isStaff(calendar.communityID, user._id);
+					if (result.permission === true) {
+						const task = new Task(req.body);
+						calendar.tasks.push(task);
+
+						calendar.save((error) => {
+							if (error) {
+								res.send(error);
+							} else {
+								res.json({ message: `Task added successfully!`, task });
+							}
+						});
+					} else if (result.message !== undefined) {
+						res.status(result.status).json({message: result.message});
+					} else {
+						res.status(401).json({message: `Not authorized`});
+					}
 				}
 			});
 		}
-	});
+	})(req, res);
 });
 
 router.put(`/:id/tasks/:taskID`, (req, res) => {
