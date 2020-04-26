@@ -74,10 +74,9 @@ router.put(`/:id`, (req, res) => {
 				}
 				// Check if user is owner or admin to allow them to modify the community
 				let hasPerm = false;
-				if(user._id === community.ownerID) {
+				if(user._id == community.ownerID) {
 					hasPerm = true;
-				}
-				if(community.communityAdminsID.contains(user._id) === true) {
+				} else if(community.communityAdminsID.includes(user._id) === true) {
 					hasPerm = true;
 				}
 
