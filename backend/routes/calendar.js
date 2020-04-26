@@ -172,13 +172,54 @@ router.put(`/:id`, (req, res) => {
 });
 
 router.delete(`/:id`, (req, res) => {
-	Calendar.deleteOne({ _id: req.params.id }, (err, result) => {
+	passport.authenticate(`jwt`, { session: false }, (err, user, info) => {
 		if (err) {
 			res.send(err);
-		}
+		} else if (info != undefined) {
+			res.json({ message: info.message });
+		} else {
+			Calendar.findById({ _id: req.params.id }, (err, calendar) => {
+				if (err) {
+					res.send(err);
+					return;
+				}
+				if (calendar === null) {
+					res.status(404).json({ message: `Unable to find calendar` });
+					return;
+				}
+				// Check if user is owner to allow delete
+				Community.findById({ _id: calendar.communityID }, (err, community) => {
+					if (err) {
+						res.send(err);
+						return;
+					}
+					if (community === null) {
+						res.status(404).json({ message: `Unable to find community` });
+						return;
+					}
+					if (user._id == community.ownerID) {
+						Calendar.deleteOne({ _id: req.params.id }, (err, result) => {
+							if (err) {
+								res.send(err);
+								return;
+							}
+							community.calendarsID.pull(calendar.id);
 
-		res.json({ message: `Calendar successfully deleted!`, result });
-	});
+							community.save((err, community) => {
+								if (err) {
+									res.send(err);
+									return;
+								}
+								res.json({ message: `Calendar successfully deleted!`, result });
+							});
+						});
+					} else {
+						res.status(401).json({ message: `Not authorized to delete this calendar` });
+					}
+				});
+			});
+		}
+	})(req, res);
 });
 
 /*
