@@ -469,23 +469,40 @@ router.get(`/:id/tasks/:taskID/comments/:commentID`, (req, res) => {
 });
 
 router.post(`/:id/tasks/:taskID/comments`, (req, res) => {
-	const query = Calendar.findById(req.params.id);
-	const comment = new Comment(req.body);
-	query.exec((err, calendar) => {
-		if (err) {
+	passport.authenticate(`jwt`, {session: false}, (err, user, info) => {
+		if(err) {
 			res.send(err);
+		} else if(info != undefined) {
+			res.json({message: info.message});
 		} else {
-			calendar.tasks.id(req.params.taskID).taskComments.push(comment);
-
-			calendar.save((error) => {
-				if (error) {
-					res.send(error);
-				} else {
-					res.json({ message: `Comment added successfully!`, comment });
-				}
-			});
+			const query = Calendar.findById(req.params.id);
+			const comment = new Comment(req.body);
+			const canSeeCalendar = canViewCalendar(calendar._id, user._id);
+			const canPostComment = isStaff(calendar.communityID, user._id);
+			
+			if(canSeeCalendar.permission === true && canPostComment === true)
+			{
+				query.exec((err, calendar) => {
+					if (err) {
+						res.send(err);
+					} else {
+						calendar.tasks.id(req.params.taskID).taskComments.push(comment);
+			
+						calendar.save((error) => {
+							if (error) {
+								res.send(error);
+							} else {
+								res.json({ message: `Comment added successfully!`, comment });
+							}
+						});
+					}
+				});
+			} else {
+				res.status(canPostComment.status).json({message: canPostComment.message});
+			}
 		}
-	});
+	})(req, res);
+
 
 });
 
