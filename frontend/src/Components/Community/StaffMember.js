@@ -96,10 +96,10 @@ class StaffMember extends React.Component {
 			return (<Error statusCode={this.state.errorStatusCode} message={this.state.errorMessage} />)
 		} else {
 			return (
-				<Container style={{borderTop: "0.1rem", borderStyle: "solid", borderColor: "black", }}>
+				<Container style={{border: "0.1rem",}}>
 					<Row>
 						<Col>
-                            <p>{this.state.username}</p>
+                            <p style={{textAlign: "center"}}>{this.state.username}</p>
 						</Col>
 						<Col>
                             <Button id="promoteStaff" onClick={this.promoteUser} variant="primary">Promote</Button> 

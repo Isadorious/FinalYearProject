@@ -260,7 +260,10 @@ class ManageStaffForm extends React.Component {
 			return (<Error statusCode={this.state.errorStatusCode} message={this.state.errorMessage} />)
 		} else {
 			const staff = this.state.communityStaffID.map((staffID) =>
-				<StaffMember id={staffID} handlePromote={this.handlePromote} handleDemote={this.handleDemote}/>
+				<><StaffMember id={staffID} handlePromote={this.handlePromote} handleDemote={this.handleDemote}/><hr /></>
+			)
+			const admins = this.state.communityAdminsID.map((adminID) => 
+				<><StaffMember id={adminID} handlePromote={this.handlePromote} handleDemote={this.handleDemote}/><hr /></>
 			)
 			return (
 				<Form id="addStaff" className={"modalForm"}>
@@ -271,7 +274,10 @@ class ManageStaffForm extends React.Component {
 					<Button variant="primary" type="button" onClick={this.handlePromoteFromSearch}>Find and promote user</Button>
 					<Button variant="danger" type="button" onClick={this.handleDemoteFromSearch}>Find and demote user</Button>
 					<br />
+					<h5>Staff</h5>
 					{staff}
+					<h5>Admins</h5>
+					{admins}
 				</Form>
 			)
 		}
