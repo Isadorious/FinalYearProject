@@ -120,18 +120,20 @@ class ManageStaffForm extends React.Component {
 						if (index > -1) {
 							staffIDs.splice(index, 1);
 						}
-		
+
 						Axios
 							.put('http://localhost:9000/api/communities/' + this.props.id, {
-								headers: { Authorization: `JWT ${accessString}` },
-								communityAdminsID: adminIDs,
+								communityAdminsID: adminIDs, 
 								communityStaffID: staffIDs,
+							}, {
+								headers: { Authorization: `JWT ${accessString}` },
 							})
 							.then(response => {
 								if (response.data.message === 'Community updated!') {
 									this.setState({ communityStaffID: staffIDs });
 									this.setState({ communityAdminsID: adminIDs });
 								} else {
+									console.log(response.data);
 									alert(response.data);
 								}
 							})
@@ -143,13 +145,15 @@ class ManageStaffForm extends React.Component {
 		
 						Axios
 							.put('http://localhost:9000/api/communities/' + this.props.id, {
-								headers: { Authorization: `JWT ${accessString}` },
 								communityStaffID: communityStaff,
+							}, {
+								headers: { Authorization: `JWT ${accessString}` },
 							})
 							.then(response => {
 								if (response.data.message === 'Community updated!') {
 									this.setState({ communityStaffID: communityStaff });
 								} else {
+									console.log(response.data);
 									alert(response.data);
 								}
 							})
@@ -201,13 +205,15 @@ class ManageStaffForm extends React.Component {
 		
 						Axios
 							.put('http://localhost:9000/api/communities/' + this.props.id, {
-								headers: { Authorization: `JWT ${accessString}` },
 								communityStaffID: staffIDs,
+							}, {
+								headers: { Authorization: `JWT ${accessString}` },
 							})
 							.then(response => {
 								if (response.data.message === 'Community updated!') {
 									this.setState({ communityStaffID: staffIDs });
 								} else {
+									console.log(response.data);
 									alert(response.data);
 								}
 							})
@@ -227,15 +233,17 @@ class ManageStaffForm extends React.Component {
 		
 						Axios
 							.put('http://localhost:9000/api/communities/' + this.props.id, {
-								headers: { Authorization: `JWT ${accessString}` },
 								communityAdminsID: adminIDs,
 								communityStaffID: staffIDs,
+							}, {
+								headers: { Authorization: `JWT ${accessString}` },
 							})
 							.then(response => {
 								if (response.data.message === 'Community updated!') {
 									this.setState({ communityAdminsID: adminIDs});
 									this.setState({ communityStaffID: staffIDs});	
 								} else {
+									console.log(response.data);
 									alert(response.data);
 								}
 							})
