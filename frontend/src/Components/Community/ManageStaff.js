@@ -264,10 +264,10 @@ class ManageStaffForm extends React.Component {
 			return (<Error statusCode={this.state.errorStatusCode} message={this.state.errorMessage} />)
 		} else {
 			const staff = this.state.communityStaffID.map((staffID) =>
-				<><StaffMember id={staffID} handlePromote={this.handlePromote} handleDemote={this.handleDemote}/><hr /></>
+				<React.Fragment key={staffID}><StaffMember id={staffID} handlePromote={this.handlePromote} handleDemote={this.handleDemote} /><hr /></React.Fragment>
 			)
 			const admins = this.state.communityAdminsID.map((adminID) => 
-				<><StaffMember id={adminID} handlePromote={this.handlePromote} handleDemote={this.handleDemote}/><hr /></>
+				<React.Fragment key={adminID}><StaffMember id={adminID} handlePromote={this.handlePromote} handleDemote={this.handleDemote} /><hr /></React.Fragment>
 			)
 			return (
 				<Form id="addStaff" className={"modalForm"}>
