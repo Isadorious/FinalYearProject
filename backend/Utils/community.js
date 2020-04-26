@@ -41,3 +41,27 @@ export async function isAdmin(communityID, userID) {
         }
 	});
 }
+
+export async function isStaff(communityID, userID) {
+    let result = isAdmin(communityID, userID);
+
+    if(result.permission === true)
+    {
+        return result;
+    }
+
+    Community.findById({ _id: req.params.id }, (err, community) => {
+	
+		if(community === null)
+		{
+			let result = {status: 404, message: `Unable to find community`}
+			return result;
+		} else if(community.communityStaffID.includes(user._id) === true) {
+            let result = {permission: true,}
+            return result;
+		} else {
+            let result = {permission: false,}
+            return result;
+        }
+	});
+}
