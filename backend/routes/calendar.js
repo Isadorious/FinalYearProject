@@ -703,7 +703,7 @@ router.put(`/:id/tasks/:taskID/subtasks/:subTaskID`, (req, res) => {
 					if (canSeeCalendar.permission === true && canPostTask === true) {
 						const subTask = calendar.tasks.id(req.params.taskID).subTasks.id(req.params.subTaskID);
 						subTask.set(req.body);
-	
+
 						calendar.save((error) => {
 							if (error) {
 								res.send(error);
@@ -721,23 +721,38 @@ router.put(`/:id/tasks/:taskID/subtasks/:subTaskID`, (req, res) => {
 });
 
 router.delete(`/:id/tasks/:taskID/subtasks/:subTaskID`, (req, res) => {
-	const query = Calendar.findById(req.params.id);
-
-	query.exec((err, calendar) => {
+	passport.authenticate(`jwt`, { session: false }, (err, user, info) => {
 		if (err) {
 			res.send(err);
+		} else if (info != undefined) {
+			res.json({ message: info.message });
 		} else {
-			calendar.tasks.id(req.params.taskID).subTasks.id(req.params.subTaskID).remove();
-
-			calendar.save((error) => {
+			const query = Calendar.findById(req.params.id);
+			query.exec((err, calendar) => {
 				if (err) {
-					res.send(error);
+					res.send(err);
 				} else {
-					res.json({ message: `Subtask successfully deleted!` });
+
+					const canSeeCalendar = canViewCalendar(calendar._id, user._id);
+					const canPostTask = isStaff(calendar.communityID, user._id);
+
+					if (canSeeCalendar.permission === true && canPostTask === true) {
+						calendar.tasks.id(req.params.taskID).subTasks.id(req.params.subTaskID).remove();
+
+						calendar.save((error) => {
+							if (err) {
+								res.send(error);
+							} else {
+								res.json({ message: `Subtask successfully deleted!` });
+							}
+						});
+					} else {
+						res.status(canPostTask.status).json({ message: canPostTask.message });
+					}
 				}
 			});
 		}
-	});
+	})(req, res);
 });
 
 module.exports = router;
