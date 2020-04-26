@@ -6,6 +6,7 @@ const Comment = require(`../models/comment`);
 const SubTask = require(`../models/subtask`);
 const Community = require(`../models/community`);
 import { isStaff, isAdmin, isOwner } from '../Utils/community';
+import { canViewCalendar } from '../Utils/calendar';
 
 router.get(`/:id`, (req, res) => {
 	passport.authenticate(`jwt`, { session: false }, (err, user, info) => {
@@ -416,15 +417,30 @@ router.delete(`/:id/tasks/:taskID`, (req, res) => {
 * Comment associated routes
 */
 router.get(`/:id/tasks/:taskID/comments`, (req, res) => {
-	const query = Calendar.findById(req.params.id);
-	query.exec((err, calendar) => {
+	passport.authenticate(`jwt`, { session: false }, (err, user, info) => {
 		if (err) {
 			res.send(err);
+		} else if (info != undefined) {
+			res.json({ message: info.message });
 		} else {
-			const task = calendar.tasks.id(req.params.taskID);
-			res.send(task.taskComments);
+			const query = Calendar.findById(req.params.id);
+			query.exec((err, calendar) => {
+				if (err) {
+					res.send(err);
+				} else {
+					const result = canViewCalendar(calendar._id, userID);
+					if(result.permission === true)
+					{
+						const task = calendar.tasks.id(req.params.taskID);
+						res.send(task.taskComments);
+					} else {
+						res.status(result.status).json({message: result.message});
+					}
+				}
+			});
 		}
-	});
+	})(req, res);
+
 });
 
 router.get(`/:id/tasks/:taskID/comments/:commentID`, (req, res) => {
