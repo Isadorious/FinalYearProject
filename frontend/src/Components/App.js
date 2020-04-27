@@ -15,6 +15,7 @@ import EditProfile from "./User/EditProfile";
 import Home from "./Home";
 import Logout from './User/Logout';
 import CommunityDashboard from './Community/Dashboard';
+import CommunityFinder from './Community/CommunityFinder';
 
 class App extends React.Component {
   constructor(props) {
@@ -62,6 +63,7 @@ class App extends React.Component {
               <Route path="/logout">
                 <Logout updateLogin={this.updateLoggedIn} />
               </Route>
+              <Route path="/community/find" component={CommunityFinder} />
               <Route path="/community/:id" component={CommunityDashboard} />
               <Route path="/"> 
                 <Home loggedIn={this.state.loggedIn} updateLogin={this.updateLoggedIn} />
