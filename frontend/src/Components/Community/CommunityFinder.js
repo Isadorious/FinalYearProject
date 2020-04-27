@@ -7,6 +7,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import CommunityCard from './CommunityCard';
+import Form from 'react-bootstrap/Form';
 
 class CommunityFinder extends React.Component {
 	constructor(props) {
@@ -23,6 +24,7 @@ class CommunityFinder extends React.Component {
 		}
 
 		this.handleSearch = this.handleSearch.bind(this);
+		this.handleInputChange = this.handleInputChange.bind(this);
 	}
 
 	async componentDidMount() {
@@ -58,6 +60,7 @@ class CommunityFinder extends React.Component {
 				console.log(response.data);
 				this.setState({
 					communities: response.data,
+					loading: false,
 				});
 			}).catch(error => {
 				this.setState({
@@ -98,7 +101,7 @@ class CommunityFinder extends React.Component {
 				headers: { Authorization: `JWT ${accessString}` }
 			}).then(response => {
 				this.setState({
-					communityID: response.data.communityID,
+					communityID: response.data._id,
 				});
 			}).catch(error => {
 				this.setState({
@@ -108,16 +111,27 @@ class CommunityFinder extends React.Component {
 			})
 	}
 
+	handleInputChange(event) {
+        const target = event.target;
+        const value = target.value;
+        const name = target.name;
+        
+        this.setState({
+            [name] : value
+        });
+    }
+
 	render() {
 		if (this.state.loading === true) {
 			return (<Loading />)
 		} else if (this.state.error === true) {
 			return (<Error statusCode={this.state.errorStatusCode} message={this.state.errorMessage} />)
 		} else {
-			if (this.state.communityID !== undefined) {
-				const cards = <Row key={this.state.communityID}><CommunityCard communityID={this.state.communityID} /></Row>
+			let cards;
+			if (this.state.communityID !== '') {
+				cards = <Row key={this.state.communityID}><CommunityCard communityID={this.state.communityID} /></Row>
 			} else {
-				const cards = this.state.communities.map((community) =>
+				cards = this.state.communities.map((community) =>
 					<Row key={community._id} >
 						<CommunityCard communityID={community._id} />
 					</Row>
@@ -130,7 +144,7 @@ class CommunityFinder extends React.Component {
 							<Form id="searchCommunity">
 								<Form.Group controlId="nameControl">
 									<Form.Label>Community Name:</Form.Label>
-									<Form.Control name="name" type="text" placeholder="Community Name" value={this.state.communityName} />
+									<Form.Control name="communityName" type="text" placeholder="Community Name" value={this.state.communityName} onChange={this.handleInputChange} />
 								</Form.Group>
 								<Button variant="secondary" type="button" onClick={this.handleSearch}>Search Community</Button>
 							</Form>
