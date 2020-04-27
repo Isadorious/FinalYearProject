@@ -31,6 +31,7 @@ class navbar extends React.Component {
 						<Nav className="mr-auto">
 							<Nav.Link href="/">Home</Nav.Link>
 							<Nav.Link href={"/profile/e/" + localStorage.getItem(`UserID`)}>Edit Profile</Nav.Link>
+							<Nav.Link href={"/community/find"}>Find Communities</Nav.Link>
 							<Nav.Link href="/logout">Logout</Nav.Link>
 						</Nav>
 					</Navbar.Collapse>
