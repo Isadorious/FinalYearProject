@@ -12,13 +12,31 @@ router.get(`/`, (req, res) => {
 		} else if(info != undefined) {
 			res.json({message: info.message});
 		} else {
-			const query = Community.find({});
-			query.exec((err, communities) => {
-				if (err) {
-					res.send(err);
-				}
-				res.json(communities);
-			});
+
+			if(req.query.communityName !== undefined) {
+				const query = Community.findOne({communityName: req.query.communityName})
+
+				query.exec((err, community) => {
+					if (err) {
+						res.send(err);
+						return;
+					}
+					if(community === null)
+					{
+						res.status(404).json({message: `No community found`});
+					} else {
+						res.json(community);
+					}
+				});
+			} else {
+				const query = Community.find({});
+				query.exec((err, communities) => {
+					if (err) {
+						res.send(err);
+					}
+					res.json(communities);
+				});
+			}
 		}
 	})(req, res);
 });
