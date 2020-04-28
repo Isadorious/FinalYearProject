@@ -165,6 +165,39 @@ class CommunityDashboard extends React.Component {
 		} else if (this.state.error === true) {
 			return (<Error statusCode={this.state.errorStatusCode} message={this.state.errorMessage} />)
 		} else {
+			let buttons; 
+			if(this.state.userPermission === 3) {
+				buttons = 
+				<>
+					<Button id="communityStaff" className={"dashboardButton"} onClick={this.handleStaffOpen}>Community Staff</Button>
+					<Button id="editCommunity" className={"dashboardButton"} onClick={this.handleEditOpen}>Edit Community</Button>
+					<Button id="deleteCommunity" className={"dashboardButton float-right"} variant={"danger"}>Delete Community</Button>
+				</>
+			}
+
+			if(this.state.userPermission === 2) {
+				buttons = 
+				<>
+					<Button id="communityStaff" className={"dashboardButton"} onClick={this.handleStaffOpen}>Community Staff</Button>
+					<Button id="editCommunity" className={"dashboardButton"} onClick={this.handleEditOpen}>Edit Community</Button>
+					<Button id="followCommunity" className={"dashboardButton float-right"} onClick={this.handleCommunityFollow}>Follow</Button>
+				</>
+			}
+
+			if(this.state.userPermission == 1) {
+				buttons =
+				<>
+					<Button id="followCommunity" className={"dashboardButton"} onClick={this.handleCommunityFollow}>Follow</Button>
+				</>
+			}
+
+			if(this.state.userPermission == 0) {
+				buttons =
+				<>
+					<Button id="followCommunity" className={"dashboardButton"} onClick={this.handleCommunityFollow}>Follow</Button>
+				</>
+			}
+
 			return (
 				<Container>
 					<Modal show={this.state.showStaffModal} onHide={this.handleStaffClose}>
@@ -181,9 +214,7 @@ class CommunityDashboard extends React.Component {
 					</Modal>
 					<Row>
 						<Col>
-							<Button id="communityStaff" className={"dashboardButton"} onClick={this.handleStaffOpen}>Community Staff</Button>
-							<Button id="editCommunity" className={"dashboardButton"} onClick={this.handleEditOpen}>Edit Community</Button>
-							<Button id="followCommunity" className={"dashboardButton float-right"} onClick={this.handleCommunityFollow}>Follow</Button>
+							{buttons}
 						</Col>
 					</Row>
 				</Container>
