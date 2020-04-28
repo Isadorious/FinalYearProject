@@ -28,6 +28,7 @@ class CommunityDashboard extends React.Component {
 			banner: '',
 			showStaffModal: false,
 			showEditModal: false,
+			userPermission: 0,
 		}
 
 		this.handleStaffOpen = this.handleStaffOpen.bind(this);
@@ -77,6 +78,7 @@ class CommunityDashboard extends React.Component {
 					logo: data.logo,
 					banner: data.banner,
 					calendars: data.calendarsID,
+					userPermission: data.permission,
 					loading: false,
 				});
 			}).catch(error => {
