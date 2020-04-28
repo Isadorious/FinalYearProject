@@ -22,40 +22,12 @@ router.get(`/:id`, (req, res) => {
 					return;
 				}
 
-				if (calendar === null) {
-					res.status(404).json({ message: `Unable to find calendar` });
-					return;
-				}
-
-				if (calendar.visibility === 0) {
-					res.json(calendar);
-					return;
-				}
-
-				if (calendar.visibility > 0) {
-					Community.findById(calendar.communityID, ((err, community) => {
-						let isUserStaff = false;
-						let isUserAdmin = false;
-						let isUserOwner = false;
-
-						if (user._id == community.ownerID) {
-							isUserOwner = true;
-						} else if (community.communityAdminsID.includes(user._id) === true) {
-							isUserAdmin = true;
-						} else if (community.communityStaffID.includes(user._id) === true) {
-							isUserStaff = true;
-						}
-
-						if (calendar.visibility === 1 && (isUserOwner || isUserAdmin || isUserStaff)) {
-							res.json(calendar);
-						} else if (calendar.visibility === 2 && (isUserOwner || isUserAdmin)) {
-							res.json(calendar);
-						} else {
-							res.status(401).json({ message: `Unauthorized` });
-						}
-
-					}));
-				}
+				canViewCalendar(req.params.id, user._id)
+					.then((result) => {
+						res.json(calendar);
+					}).catch((result) => {
+						res.status(result.status).json({ message: result.message });
+					});
 			});
 		}
 	})(req, res);
@@ -70,27 +42,8 @@ router.post(`/`, (req, res) => {
 		} else {
 			const calendar = new Calendar(req.body);
 
-			// Check that user is allowed to create a new calendar for community
-			Community.findById(calendar.communityID, ((err, community) => {
-				if (err) {
-					res.send(err);
-					return;
-				}
-
-				if (community === null) {
-					res.status(404).json({ message: `Unable to find community` });
-					return;
-				}
-
-				// Check if user is owner or admin to allow them to modify the community
-				let hasPerm = false;
-				if (user._id == community.ownerID) {
-					hasPerm = true;
-				} else if (community.communityAdminsID.includes(user._id) === true) {
-					hasPerm = true;
-				}
-
-				if (hasPerm === true) {
+			isAdmin(calendar.communityID, user._id)
+				.then((result) => {
 					calendar.save((err, calendar) => {
 						if (err) {
 							res.send(err);
@@ -108,11 +61,9 @@ router.post(`/`, (req, res) => {
 							})
 						}
 					});
-				} else {
-					res.status(401).json({ message: `Not authorized to create new calendar` });
-				}
-
-			}));
+				}).catch((result) => {
+					res.status(result.status).json({ message: result.message });
+				});
 		}
 	})(req, res);
 });
@@ -136,38 +87,17 @@ router.put(`/:id`, (req, res) => {
 					return;
 				}
 
-				// Check that user is allowed to modify the calendar for community
-				Community.findById(calendar.communityID, ((err, community) => {
-					if (err) {
-						res.send(err);
-						return;
-					}
-
-					if (community === null) {
-						res.status(404).json({ message: `Unable to find community` });
-						return;
-					}
-
-					// Check if user is owner or admin to allow them to modify the community
-					let hasPerm = false;
-					if (user._id == community.ownerID) {
-						hasPerm = true;
-					} else if (community.communityAdminsID.includes(user._id) === true) {
-						hasPerm = true;
-					}
-
-					if (hasPerm === true) {
+				isAdmin(calendar.communityID, user._id)
+					.then((result) => {
 						Object.assign(calendar, req.body).save((err, calendar) => {
 							if (err) {
 								res.send(err);
 							}
 							res.json({ message: `Calendar updated!`, calendar });
 						});
-					} else {
-						res.status(401).json({ message: `Not authorized to create new calendar` });
-					}
-
-				}));
+					}).catch((result) => {
+						res.status(result.status).json({ message: result.message });
+					});
 			});
 		}
 	})(req, res);
@@ -190,16 +120,8 @@ router.delete(`/:id`, (req, res) => {
 					return;
 				}
 				// Check if user is owner to allow delete
-				Community.findById({ _id: calendar.communityID }, (err, community) => {
-					if (err) {
-						res.send(err);
-						return;
-					}
-					if (community === null) {
-						res.status(404).json({ message: `Unable to find community` });
-						return;
-					}
-					if (user._id == community.ownerID) {
+				isOwner(calendar.communityID, user._id)
+					.then((result) => {
 						Calendar.deleteOne({ _id: req.params.id }, (err, result) => {
 							if (err) {
 								res.send(err);
@@ -215,10 +137,9 @@ router.delete(`/:id`, (req, res) => {
 								res.json({ message: `Calendar successfully deleted!`, result });
 							});
 						});
-					} else {
-						res.status(401).json({ message: `Not authorized to delete this calendar` });
-					}
-				});
+					}).catch((result) => {
+						res.status(result.status).json({ message: result.message });
+					});
 			});
 		}
 	})(req, res);
