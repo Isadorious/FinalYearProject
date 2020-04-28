@@ -8,6 +8,8 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Modal from 'react-bootstrap/Modal';
+import UploadBanner from './UploadBanner';
+import UploadLogo from './UploadLogo';
 
 class EditCommunityForm extends React.Component {
 	constructor(props) {
@@ -125,6 +127,7 @@ class EditCommunityForm extends React.Component {
 			return (<Error statusCode={this.state.errorStatusCode} message={this.state.errorMessage} />)
 		} else {
 			return (
+				<>
                 <Form id="createCommunity" className={"modalForm"}>
                     <Form.Group controlId="nameControl">
                         <Form.Label>Community Name:</Form.Label>
@@ -138,6 +141,9 @@ class EditCommunityForm extends React.Component {
 
                     <Button variant="secondary" type="button" onClick={this.handleSave}>Update Community</Button>
                 </Form>
+				<UploadBanner id={this.props.id}/>
+				<UploadLogo id={this.props.id}/>
+				</>
 			)
 
 		}
