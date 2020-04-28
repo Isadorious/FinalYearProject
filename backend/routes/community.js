@@ -4,6 +4,7 @@ const Community = require(`../models/community`);
 const passport = require(`passport`);
 const jwt = require(`jsonwebtoken`);
 const User = require(`../models/user`);
+const {isOwner, isAdmin, isStaff} = require(`../Utils/community`);
 
 router.get(`/`, (req, res) => {
 	passport.authenticate(`jwt`, {session: false}, (err, user, info) => {
@@ -61,6 +62,57 @@ router.get(`/:id`, (req, res) => {
 					res.json(community);
 				}
 			});
+		}
+	})(req, res);
+});
+
+router.post(`/uploadBanner/:id`, (req, res) => {
+	passport.authenticate(`jwt`, {session: false}, (err, user, info) => {
+		if(err) {
+			res.status(500).send(err);
+		} else if(info != undefined) {
+			res.json({message: info.message});
+		} else {
+			let canModify = isAdmin(req.params.id, user._id);
+
+			if(canModify.permission === true) {
+				if(!req.files) {
+					res.status(400).send({message: `No file uploaded`});
+					return;
+				} else {
+					let fileLocation;
+					try {
+						let banner = req.files.banner;
+						fileLocation = `uploads/communityData/${req.params.id}/${banner.name}`;
+						banner.mv(`./${fileLocation}`);
+					} catch (err) {
+						console.log(err);
+						res.status(500).send(err);
+						return;
+					}
+
+					Community.findById(req.params.id, (err, community) => {
+						if(err) {
+							res.status(500).send(err);
+						} else if (community === null) {
+							res.status(404).json({message: `Community not found`});
+						} else {
+							community.banner = fileLocation;
+
+							community.save((error, community) => {
+								if(error) {
+									res.status(500).send(error);
+									return;
+								} else {
+									res.json({message: `Banner uploaded!`});
+								}
+							});
+						}
+					});
+				}
+			} else {
+				res.status(canModify.status).json({message: canModify.message});
+			}
 		}
 	})(req, res);
 });
