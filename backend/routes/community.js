@@ -83,7 +83,7 @@ router.post(`/uploadBanner/:id`, (req, res) => {
 					let fileLocation;
 					try {
 						let banner = req.files.banner;
-						fileLocation = `uploads/communityData/${req.params.id}/${banner.name}`;
+						fileLocation = `uploads/communityData/${req.params.id}/banner/${banner.name}`;
 						banner.mv(`./${fileLocation}`);
 					} catch (err) {
 						console.log(err);
