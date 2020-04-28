@@ -90,7 +90,7 @@ class EditCommunityForm extends React.Component {
         });
     }
 
-    handleSave() {
+    async handleSave() {
         let accessString = localStorage.getItem(`JWT`);
 		if (accessString === null) {
 			this.setState({
@@ -131,12 +131,12 @@ class EditCommunityForm extends React.Component {
                 <Form id="createCommunity" className={"modalForm"}>
                     <Form.Group controlId="nameControl">
                         <Form.Label>Community Name:</Form.Label>
-                        <Form.Control name="name" type="text" placeholder="Community Name" value={this.state.name} readOnly />
+                        <Form.Control name="name" type="text" placeholder="Community Name" value={this.state.communityName} readOnly />
                     </Form.Group>
 
                     <Form.Group controlId="descriptionControl">
                         <Form.Label>Community Description:</Form.Label>
-                        <Form.Control name="description" as="textarea" placeholder="Enter a description of your community" value={this.state.description} onChange={this.handleInputChange} />
+                        <Form.Control name="description" as="textarea" placeholder="Enter a description of your community" value={this.state.communityDescription} onChange={this.handleInputChange} />
                     </Form.Group>
 
                     <Button variant="secondary" type="button" onClick={this.handleSave}>Update Community</Button>
