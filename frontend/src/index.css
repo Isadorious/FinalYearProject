@@ -71,3 +71,9 @@ code {
 .modalForm {
   padding: 0.5rem;
 }
+
+.dashboardButton {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  margin-left: 0.3rem;
+}
