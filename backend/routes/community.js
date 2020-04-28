@@ -50,6 +50,7 @@ router.get(`/:id`, (req, res) => {
 			res.json({message: info.message});
 		} else {
 			const query = Community.findById(req.params.id);
+			query.setOptions({ lean: true}); // Query returns a javascript object allowing for modification outside of model
 			query.exec((err, community) => {
 				if (err) {
 					res.send(err);
@@ -59,7 +60,37 @@ router.get(`/:id`, (req, res) => {
 				{
 					res.status(404).json({message: `No community found`});
 				} else {
-					res.json(community);
+					community.permission = 0;
+
+					isOwner(community._id, user._id)
+						.then((result) => {
+							if(result.permission === true) {
+								community.permission = 3;
+								res.json(community);
+								return;
+							} else {
+								isAdmin(community._id, user._id)
+									.then((result) => {
+										if(result.permission === true) {
+											community.permission = 2;
+											res.json(community);
+											return;
+										} else {
+											isStaff(community._id, user._id)
+												.then((result) => {
+													if(result.permission === true) {
+														community.permission = 1;
+														res.json(community);
+														return;
+													} else {
+														res.json(community);
+														return;
+													}
+												});
+										}
+									});
+							}
+						});
 				}
 			});
 		}
