@@ -6,7 +6,7 @@ function canViewCalendar(calendarID, userID) {
         Calendar.findById(calendarID, (err, calendar) => {
             if (calendar === null) {
                 let result = { status: 404, message: `Unable to find calendar`, permission: false, }
-                resolve(result);
+                reject(result);
             }
 
             // Check visibility for 0
@@ -19,6 +19,8 @@ function canViewCalendar(calendarID, userID) {
                 isStaff(calendar.communityID, userID)
                     .then((result) => {
                         resolve(result);
+                    }).catch((result) => {
+                        reject(result);
                     });
             }
             // Check visibility for 2
@@ -26,6 +28,8 @@ function canViewCalendar(calendarID, userID) {
                 isAdmin(calendar.communityID, userID)
                     .then((result) =>{
                         resolve(result);
+                    }).catch((result) => {
+                        reject(result);
                     });
             }
         });
