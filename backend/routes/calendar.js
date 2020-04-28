@@ -319,13 +319,14 @@ router.get(`/:id/tasks/:taskID/comments`, (req, res) => {
 				if (err) {
 					res.send(err);
 				} else {
-					const result = canViewCalendar(calendar._id, user._id);
-					if (result.permission === true) {
-						const task = calendar.tasks.id(req.params.taskID);
-						res.send(task.taskComments);
-					} else {
-						res.status(result.status).json({ message: result.message });
-					}
+					canViewCalendar(calendar._id, user._id)
+						.then((result) => {
+							const task = calendar.tasks.id(req.params.taskID);
+							res.send(task.taskComments);
+						}).catch((result) => {
+							res.status(result.status).json({ message: result.message });
+
+						});
 				}
 			});
 		}
@@ -345,13 +346,14 @@ router.get(`/:id/tasks/:taskID/comments/:commentID`, (req, res) => {
 				if (err) {
 					res.send(err);
 				} else {
-					const result = canViewCalendar(calendar._id, user._id);
-					if (result.permission === true) {
-						const comment = calendar.tasks.id(req.params.taskID).taskComments.id(req.params.commentID);
-						res.send(comment);
-					} else {
-						res.status(result.status).json({ message: result.message });
-					}
+
+					canViewCalendar(calendar._id, user._id)
+						.then((result) => {
+							const comment = calendar.tasks.id(req.params.taskID).taskComments.id(req.params.commentID);
+							res.send(comment);
+						}).catch((result) => {
+							res.status(result.status).json({ message: result.message });
+						});
 				}
 			});
 		}
@@ -368,28 +370,31 @@ router.post(`/:id/tasks/:taskID/comments`, (req, res) => {
 		} else {
 			const query = Calendar.findById(req.params.id);
 			const comment = new Comment(req.body);
-			const canSeeCalendar = canViewCalendar(calendar._id, user._id);
-			const canPostComment = isStaff(calendar.communityID, user._id);
+			canViewCalendar(calendar._id, user._id)
+				.then((result) => {
+					isStaff(calendar.communityID, user._id)
+						.then((result) => {
+							query.exec((err, calendar) => {
+								if (err) {
+									res.send(err);
+								} else {
+									calendar.tasks.id(req.params.taskID).taskComments.push(comment);
 
-			if (canSeeCalendar.permission === true && canPostComment === true) {
-				query.exec((err, calendar) => {
-					if (err) {
-						res.send(err);
-					} else {
-						calendar.tasks.id(req.params.taskID).taskComments.push(comment);
-
-						calendar.save((error) => {
-							if (error) {
-								res.send(error);
-							} else {
-								res.json({ message: `Comment added successfully!`, comment });
-							}
-						});
-					}
+									calendar.save((error) => {
+										if (error) {
+											res.send(error);
+										} else {
+											res.json({ message: `Comment added successfully!`, comment });
+										}
+									});
+								}
+							});
+						}).catch((result) => {
+							res.status(result.status).json({ message: result.message });
+						})
+				}).catch((result) => {
+					res.status(result.status).json({ message: result.message });
 				});
-			} else {
-				res.status(canPostComment.status).json({ message: canPostComment.message });
-			}
 		}
 	})(req, res);
 
@@ -419,21 +424,24 @@ router.put(`/:id/tasks/:taskID/comments/:commentID`, (req, res) => {
 						return;
 					}
 
-					const canSeeCalendar = canViewCalendar(calendar._id, user._id);
-					const canPostComment = isStaff(calendar.communityID, user._id);
-
-					if (canSeeCalendar.permission === true && canPostComment.permission === true && isAuth === true) {
-						comment.set(req.body);
-						calendar.save((error) => {
-							if (error) {
-								res.send(error);
-							} else {
-								res.json({ message: `Comment updated successfully!`, comment });
-							}
+					canViewCalendar(calendar._id, user._id)
+						.then((result) => {
+							isStaff(calendar.communityID, user._id)
+								.then((result) => {
+									comment.set(req.body);
+									calendar.save((error) => {
+										if (error) {
+											res.send(error);
+										} else {
+											res.json({ message: `Comment updated successfully!`, comment });
+										}
+									});
+								}).catch((result) => {
+									res.status(result.status).json({ message: result.message });
+								})
+						}).catch((result) => {
+							res.status(result.status).json({ message: result.message });
 						});
-					} else {
-						res.status(canPostComment.status).json({ message: canPostComment.message });
-					}
 				}
 			});
 		}
@@ -462,22 +470,36 @@ router.delete(`/:id/tasks/:taskID/comments/:commentID`, (req, res) => {
 						res.status(401).json({ message: `Unauthorized` });
 						return;
 					}
-
-					const canSeeCalendar = canViewCalendar(calendar._id, user._id);
-					const canDeleteComment = isAdmin(calendar.communityID, user._id);
-
-					if (canSeeCalendar.permission === true && (canDeleteComment.permission === true || isAuth === true)) {
-						calendar.tasks.id(req.params.taskID).taskComments.id(req.params.commentID).remove();
-						calendar.save((error) => {
-							if (error) {
-								res.send(error);
+					
+					canViewCalendar(calendar._id, user._id)
+						.then((result) => {
+							if (isAuth) {
+								calendar.tasks.id(req.params.taskID).taskComments.id(req.params.commentID).remove();
+								calendar.save((error) => {
+									if (error) {
+										res.send(error);
+									} else {
+										res.json({ message: `Comment successfully deleted!` });
+									}
+								});
 							} else {
-								res.json({ message: `Comment successfully deleted!` });
+								isAdmin(calendar.communityID, user._id)
+									.then((result) => {
+										calendar.tasks.id(req.params.taskID).taskComments.id(req.params.commentID).remove();
+										calendar.save((error) => {
+											if (error) {
+												res.send(error);
+											} else {
+												res.json({ message: `Comment successfully deleted!` });
+											}
+										});
+									}).catch((result) => {
+										res.status(result.status).json({ message: result.message });
+									})
 							}
+						}).catch((result) => {
+							res.status(result.status).json({ message: result.message });
 						});
-					} else {
-						res.status(canDeleteComment.status).json({ message: canDeleteComment.message });
-					}
 				}
 			});
 		}
