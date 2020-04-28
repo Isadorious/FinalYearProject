@@ -1,32 +1,35 @@
 const Calendar = require(`../models/calendar`);
-const {isAdmin, isStaff} = require('./community');
+const { isAdmin, isStaff } = require('./community');
 
-async function canViewCalendar(calendarID, userID) {
-    Calendar.findById(calendarID, (err, calendar) => {
-        if(calendar === null) {
-			let result = {status: 404, message: `Unable to find calendar`, permission: false, }
-			return result;
-        }
+function canViewCalendar(calendarID, userID) {
+    return new Promise((resolve, reject) => {
+        Calendar.findById(calendarID, (err, calendar) => {
+            if (calendar === null) {
+                let result = { status: 404, message: `Unable to find calendar`, permission: false, }
+                resolve(result);
+            }
 
-        // Check visibility for 0
-        if(calendar.visibility === 0)
-        {
-            let result = {permission: true};
-            return result;
-        }
-        // Check visibility for 1
-        if(calendar.visibility === 1)
-        {
-           let result = isStaff(calendar.communityID, userID);
-           return result;
-        }
-        // Check visibility for 2
-        if(calendar.visibility === 2)
-        {
-            let result = isAdmin(calendar.communityID, userID);
-            return result;
-        }
-    });
+            // Check visibility for 0
+            if (calendar.visibility === 0) {
+                let result = { permission: true };
+                resolve(result);
+            }
+            // Check visibility for 1
+            if (calendar.visibility === 1) {
+                isStaff(calendar.communityID, userID)
+                    .then((result) => {
+                        resolve(result);
+                    });
+            }
+            // Check visibility for 2
+            if (calendar.visibility === 2) {
+                isAdmin(calendar.communityID, userID)
+                    .then((result) =>{
+                        resolve(result);
+                    });
+            }
+        });
+    })
 }
 
 exports.canViewCalendar = canViewCalendar;
