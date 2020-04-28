@@ -8,6 +8,7 @@ import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import ManageStaff from './ManageStaff';
+import EditCommunity from './EditCommunity';
 
 class CommunityDashboard extends React.Component {
 	constructor(props) {
@@ -26,11 +27,14 @@ class CommunityDashboard extends React.Component {
 			logo: '',
 			banner: '',
 			showStaffModal: false,
+			showEditModal: false,
 		}
 
 		this.handleStaffOpen = this.handleStaffOpen.bind(this);
 		this.handleStaffClose = this.handleStaffClose.bind(this);
 		this.handleCommunityFollow = this.handleCommunityFollow.bind(this);
+		this.handleEditOpen = this.handleEditOpen.bind(this);
+		this.handleEditClose = this.handleEditClose.bind(this);
 	}
 
 	async componentDidMount() {
@@ -90,6 +94,14 @@ class CommunityDashboard extends React.Component {
 
 	handleStaffClose() {
 		this.setState({ showStaffModal: false });
+	}
+
+	handleEditOpen() {
+		this.setState({showEditModal: true});
+	}
+
+	handleEditClose() {
+		this.setState({showEditModal: false});
 	}
 
 	async handleCommunityFollow() {
@@ -159,12 +171,19 @@ class CommunityDashboard extends React.Component {
 						</Modal.Header>
 						<ManageStaff id={this.props.match.params.id}/>
 					</Modal>
-					<Col>
-						<Row>
+					<Modal show={this.state.showEditModal} onHide={this.handleEditClose}>
+						<Modal.Header closeButton>
+							<Modal.Title>Edit Community</Modal.Title>
+						</Modal.Header>
+						<EditCommunity id={this.props.match.params.id}/>
+					</Modal>
+					<Row>
+						<Col>
 							<Button id="communityStaff" onClick={this.handleStaffOpen}>Community Staff</Button>
 							<Button id="followCommunity" onClick={this.handleCommunityFollow}>Follow</Button>
-						</Row>
-					</Col>
+							<Button id="editCommunity" onClick={this.handleEditOpen}>Edit Community</Button>
+						</Col>
+					</Row>
 				</Container>
 			)
 
