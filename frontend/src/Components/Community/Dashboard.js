@@ -9,6 +9,7 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import ManageStaff from './ManageStaff';
 import EditCommunity from './EditCommunity';
+import CreateCalendar from '../Calendar/CreateCalendar';
 
 class CommunityDashboard extends React.Component {
 	constructor(props) {
@@ -36,6 +37,8 @@ class CommunityDashboard extends React.Component {
 		this.handleCommunityFollow = this.handleCommunityFollow.bind(this);
 		this.handleEditOpen = this.handleEditOpen.bind(this);
 		this.handleEditClose = this.handleEditClose.bind(this);
+		this.handleCreateOpen = this.handleCreateOpen.bind(this);
+		this.handleCreateClose = this.handleCreateClose.bind(this);
 	}
 
 	async componentDidMount() {
@@ -106,6 +109,14 @@ class CommunityDashboard extends React.Component {
 		this.setState({showEditModal: false});
 	}
 
+	handleCreateOpen() {
+		this.setState({showCreateModal: true});
+	}
+
+	handleCreateClose() {
+		this.setState({showCreateModal: false});
+	}
+
 	async handleCommunityFollow() {
 				//Check the user is logged in
 				let accessString = localStorage.getItem(`JWT`);
@@ -171,6 +182,7 @@ class CommunityDashboard extends React.Component {
 				<>
 					<Button id="communityStaff" className={"dashboardButton"} onClick={this.handleStaffOpen}>Community Staff</Button>
 					<Button id="editCommunity" className={"dashboardButton"} onClick={this.handleEditOpen}>Edit Community</Button>
+					<Button id="createCalendar" className={"dashboardButton"} onClick={this.handleCreateOpen}>Create Calendar</Button>
 					<Button id="deleteCommunity" className={"dashboardButton float-right"} variant={"danger"}>Delete Community</Button>
 				</>
 			}
@@ -180,6 +192,7 @@ class CommunityDashboard extends React.Component {
 				<>
 					<Button id="communityStaff" className={"dashboardButton"} onClick={this.handleStaffOpen}>Community Staff</Button>
 					<Button id="editCommunity" className={"dashboardButton"} onClick={this.handleEditOpen}>Edit Community</Button>
+					<Button id="createCalendar" className={"dashboardButton"} onClick={this.handleCreateOpen}>Create Calendar</Button>
 					<Button id="followCommunity" className={"dashboardButton float-right"} onClick={this.handleCommunityFollow}>Follow</Button>
 				</>
 			}
@@ -211,6 +224,12 @@ class CommunityDashboard extends React.Component {
 							<Modal.Title>Edit Community</Modal.Title>
 						</Modal.Header>
 						<EditCommunity id={this.props.match.params.id}/>
+					</Modal>
+					<Modal show={this.state.showCreateModal} onHide={this.handleCreateClose}>
+						<Modal.Header closeButton>
+							<Modal.Title>Create Calendar</Modal.Title>
+						</Modal.Header>
+						<CreateCalendar communityID={this.props.match.params.id}/>
 					</Modal>
 					<Row>
 						<Col>
