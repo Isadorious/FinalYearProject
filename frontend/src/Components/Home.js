@@ -33,6 +33,7 @@ class Home extends React.Component {
 
 	async componentDidMount() {
 		document.title = "Home - GCOrg";
+		this.fetchCommunites();
 	}
 
 	componentDidUpdate() {
