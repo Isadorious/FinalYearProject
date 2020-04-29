@@ -26,6 +26,10 @@ const calendarSchema = new Schema({
 		type: Number,
 		default: 0, // 0 for public, 1 for staff, 2 for admin
 		required: true,
+	},
+	communityID: {
+		type: `String`,
+		required: true,
 	}
 });
 
