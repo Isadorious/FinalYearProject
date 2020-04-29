@@ -7,6 +7,8 @@ const SubTask = require(`../models/subtask`);
 const Community = require(`../models/community`);
 const { isStaff, isAdmin, isOwner } = require('../Utils/community');
 const { canViewCalendar } = require('../Utils/calendar');
+const passport = require(`passport`);
+const jwt = require(`jsonwebtoken`);
 
 router.get(`/:id`, (req, res) => {
 	passport.authenticate(`jwt`, { session: false }, (err, user, info) => {
@@ -49,16 +51,18 @@ router.post(`/`, (req, res) => {
 							res.send(err);
 							return;
 						} else {
-							community.calendarsID.push(calendar.id);
+							Community.findById(calendar.communityID, (err, community) => {
+								community.calendarsID.push(calendar.id);
 
-							community.save((err, community) => {
-								if (err) {
-									res.send(err);
-									return;
-								} else {
-									res.send({ message: `Calendar saved!`, calendar });
-								}
-							})
+								community.save((err, community) => {
+									if (err) {
+										res.send(err);
+										return;
+									} else {
+										res.send({ message: `Calendar added successfully!`, calendar });
+									}
+								});
+							});
 						}
 					});
 				}).catch((result) => {
