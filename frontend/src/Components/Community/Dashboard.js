@@ -10,6 +10,7 @@ import Modal from 'react-bootstrap/Modal';
 import ManageStaff from './ManageStaff';
 import EditCommunity from './EditCommunity';
 import CreateCalendar from '../Calendar/CreateCalendar';
+import CalendarCard from '../Calendar/CalendarCard';
 
 class CommunityDashboard extends React.Component {
 	constructor(props) {
@@ -102,72 +103,72 @@ class CommunityDashboard extends React.Component {
 	}
 
 	handleEditOpen() {
-		this.setState({showEditModal: true});
+		this.setState({ showEditModal: true });
 	}
 
 	handleEditClose() {
-		this.setState({showEditModal: false});
+		this.setState({ showEditModal: false });
 	}
 
 	handleCreateOpen() {
-		this.setState({showCreateModal: true});
+		this.setState({ showCreateModal: true });
 	}
 
 	handleCreateClose() {
-		this.setState({showCreateModal: false});
+		this.setState({ showCreateModal: false });
 	}
 
 	async handleCommunityFollow() {
-				//Check the user is logged in
-				let accessString = localStorage.getItem(`JWT`);
-				if (accessString === null) {
-					this.setState({
-						error: true,
-						errorMessage: `Unable to load user details from local storage`,
-						errorStatusCode: 401,
-						loading: false,
-					});
-					return;
+		//Check the user is logged in
+		let accessString = localStorage.getItem(`JWT`);
+		if (accessString === null) {
+			this.setState({
+				error: true,
+				errorMessage: `Unable to load user details from local storage`,
+				errorStatusCode: 401,
+				loading: false,
+			});
+			return;
+		}
+
+		let uID = localStorage.getItem(`UserID`);
+		if (uID === null) {
+			this.setState({
+				error: true,
+				errorMessage: `Unable to load user details from local storage`,
+				errorStatusCode: 401,
+				loading: false,
+			});
+			return;
+		}
+
+		// Get the user object
+		await Axios
+			.get(`http://localhost:9000/api/users/${uID}`, {
+				headers: { Authorization: `JWT ${accessString}` }
+			}).then(response => {
+				let communities = response.data.user.communities;
+				communities.push(this.props.match.params.id);
+				return Axios.put(`http://localhost:9000/api/users/${uID}`, {
+					headers: { Authorization: `JWT ${accessString}` },
+					communities,
+				});
+			})
+			.then(response => {
+				if (response.data.message === 'User updated!') {
+					alert(`Now following!`);
 				}
-		
-				let uID = localStorage.getItem(`UserID`);
-				if (uID === null) {
-					this.setState({
-						error: true,
-						errorMessage: `Unable to load user details from local storage`,
-						errorStatusCode: 401,
-						loading: false,
-					});
-					return;
+				else {
+					alert(`Failed to follow community`)
 				}
-				
-				// Get the user object
-				await Axios
-					.get(`http://localhost:9000/api/users/${uID}`, {
-						headers: { Authorization: `JWT ${accessString}` }
-					}).then(response => {
-						let communities = response.data.user.communities;
-						communities.push(this.props.match.params.id);
-						return Axios.put(`http://localhost:9000/api/users/${uID}`, {
-							headers: {Authorization: `JWT ${accessString}`},
-							communities,
-						});
-					})
-					.then(response => {
-						if (response.data.message === 'User updated!') {
-							alert(`Now following!`);
-						}
-						else {
-							alert(`Failed to follow community`)
-						}
-					})
-					.catch(error => {
-						this.setState({
-							error: true,
-							errorMessage: `Unable to retrieve data`,
-							loading: false,
-						});
-					})		
+			})
+			.catch(error => {
+				this.setState({
+					error: true,
+					errorMessage: `Unable to retrieve data`,
+					loading: false,
+				});
+			})
 	}
 
 	render() {
@@ -176,39 +177,49 @@ class CommunityDashboard extends React.Component {
 		} else if (this.state.error === true) {
 			return (<Error statusCode={this.state.errorStatusCode} message={this.state.errorMessage} />)
 		} else {
-			let buttons; 
-			if(this.state.userPermission === 3) {
-				buttons = 
-				<>
-					<Button id="communityStaff" className={"dashboardButton"} onClick={this.handleStaffOpen}>Community Staff</Button>
-					<Button id="editCommunity" className={"dashboardButton"} onClick={this.handleEditOpen}>Edit Community</Button>
-					<Button id="createCalendar" className={"dashboardButton"} onClick={this.handleCreateOpen}>Create Calendar</Button>
-					<Button id="deleteCommunity" className={"dashboardButton float-right"} variant={"danger"}>Delete Community</Button>
-				</>
-			}
-
-			if(this.state.userPermission === 2) {
-				buttons = 
-				<>
-					<Button id="communityStaff" className={"dashboardButton"} onClick={this.handleStaffOpen}>Community Staff</Button>
-					<Button id="editCommunity" className={"dashboardButton"} onClick={this.handleEditOpen}>Edit Community</Button>
-					<Button id="createCalendar" className={"dashboardButton"} onClick={this.handleCreateOpen}>Create Calendar</Button>
-					<Button id="followCommunity" className={"dashboardButton float-right"} onClick={this.handleCommunityFollow}>Follow</Button>
-				</>
-			}
-
-			if(this.state.userPermission == 1) {
+			let buttons;
+			if (this.state.userPermission === 3) {
 				buttons =
-				<>
-					<Button id="followCommunity" className={"dashboardButton"} onClick={this.handleCommunityFollow}>Follow</Button>
-				</>
+					<>
+						<Button id="communityStaff" className={"dashboardButton"} onClick={this.handleStaffOpen}>Community Staff</Button>
+						<Button id="editCommunity" className={"dashboardButton"} onClick={this.handleEditOpen}>Edit Community</Button>
+						<Button id="createCalendar" className={"dashboardButton"} onClick={this.handleCreateOpen}>Create Calendar</Button>
+						<Button id="deleteCommunity" className={"dashboardButton float-right"} variant={"danger"}>Delete Community</Button>
+					</>
 			}
 
-			if(this.state.userPermission == 0) {
+			if (this.state.userPermission === 2) {
 				buttons =
-				<>
-					<Button id="followCommunity" className={"dashboardButton"} onClick={this.handleCommunityFollow}>Follow</Button>
-				</>
+					<>
+						<Button id="communityStaff" className={"dashboardButton"} onClick={this.handleStaffOpen}>Community Staff</Button>
+						<Button id="editCommunity" className={"dashboardButton"} onClick={this.handleEditOpen}>Edit Community</Button>
+						<Button id="createCalendar" className={"dashboardButton"} onClick={this.handleCreateOpen}>Create Calendar</Button>
+						<Button id="followCommunity" className={"dashboardButton float-right"} onClick={this.handleCommunityFollow}>Follow</Button>
+					</>
+			}
+
+			if (this.state.userPermission == 1) {
+				buttons =
+					<>
+						<Button id="followCommunity" className={"dashboardButton"} onClick={this.handleCommunityFollow}>Follow</Button>
+					</>
+			}
+
+			if (this.state.userPermission == 0) {
+				buttons =
+					<>
+						<Button id="followCommunity" className={"dashboardButton"} onClick={this.handleCommunityFollow}>Follow</Button>
+					</>
+			}
+
+			let cards = <></>
+
+			if (this.state.calendars.length > 0) {
+				cards = this.state.calendars.map((calendarID) =>
+					<Row key={calendarID} >
+						<CalendarCard calendarID={calendarID} />
+					</Row>
+				);
 			}
 
 			return (
@@ -217,25 +228,26 @@ class CommunityDashboard extends React.Component {
 						<Modal.Header closeButton>
 							<Modal.Title>Edit Community Staff</Modal.Title>
 						</Modal.Header>
-						<ManageStaff id={this.props.match.params.id}/>
+						<ManageStaff id={this.props.match.params.id} />
 					</Modal>
 					<Modal show={this.state.showEditModal} onHide={this.handleEditClose}>
 						<Modal.Header closeButton>
 							<Modal.Title>Edit Community</Modal.Title>
 						</Modal.Header>
-						<EditCommunity id={this.props.match.params.id}/>
+						<EditCommunity id={this.props.match.params.id} />
 					</Modal>
 					<Modal show={this.state.showCreateModal} onHide={this.handleCreateClose}>
 						<Modal.Header closeButton>
 							<Modal.Title>Create Calendar</Modal.Title>
 						</Modal.Header>
-						<CreateCalendar communityID={this.props.match.params.id}/>
+						<CreateCalendar communityID={this.props.match.params.id} />
 					</Modal>
 					<Row>
 						<Col>
 							{buttons}
 						</Col>
 					</Row>
+					{cards}
 				</Container>
 			)
 
