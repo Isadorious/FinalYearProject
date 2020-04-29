@@ -40,6 +40,7 @@ class CommunityDashboard extends React.Component {
 		this.handleEditClose = this.handleEditClose.bind(this);
 		this.handleCreateOpen = this.handleCreateOpen.bind(this);
 		this.handleCreateClose = this.handleCreateClose.bind(this);
+		this.handleCommunityDelete = this.handleCommunityDelete.bind(this);
 	}
 
 	async componentDidMount() {
@@ -171,6 +172,53 @@ class CommunityDashboard extends React.Component {
 			})
 	}
 
+	async handleCommunityDelete() {
+		let accessString = localStorage.getItem(`JWT`);
+		if (accessString === null) {
+			this.setState({
+				error: true,
+				errorMessage: `Unable to load user details from local storage`,
+				errorStatusCode: 401,
+				loading: false,
+			});
+			return;
+		}
+
+		let uID = localStorage.getItem(`UserID`);
+		if (uID === null) {
+			this.setState({
+				error: true,
+				errorMessage: `Unable to load user details from local storage`,
+				errorStatusCode: 401,
+				loading: false,
+			});
+			return;
+		}
+
+		await Axios
+			.delete(`http://localhost:9000/api/communities/${this.props.match.params.id}`, {
+				headers: { Authorization: `JWT ${accessString}` }
+			}).then((response) => {
+				console.log(response.status);
+				console.log(response.data);
+				if (response.status == 401) {
+					this.setState({
+						error: true,
+						errorMessage: `Unable to delete community`,
+						loading: false,
+					});
+				} else if (response.status == 200) {
+					this.props.history.push(`/`);
+				}
+			}).catch((error) => {
+				this.setState({
+					error: true,
+					errorMessage: `Unable to delete community`,
+					loading: false,
+				});
+			})
+	}
+
 	render() {
 		if (this.state.loading === true) {
 			return (<Loading />)
@@ -184,7 +232,7 @@ class CommunityDashboard extends React.Component {
 						<Button id="communityStaff" className={"dashboardButton"} onClick={this.handleStaffOpen}>Community Staff</Button>
 						<Button id="editCommunity" className={"dashboardButton"} onClick={this.handleEditOpen}>Edit Community</Button>
 						<Button id="createCalendar" className={"dashboardButton"} onClick={this.handleCreateOpen}>Create Calendar</Button>
-						<Button id="deleteCommunity" className={"dashboardButton float-right"} variant={"danger"}>Delete Community</Button>
+						<Button id="deleteCommunity" className={"dashboardButton float-right"} variant={"danger"} onClick={this.handleCommunityDelete}>Delete Community</Button>
 					</>
 			}
 
