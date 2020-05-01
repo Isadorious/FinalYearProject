@@ -65,7 +65,7 @@ class Home extends React.Component {
 		}
 
 		await Axios
-			.get('http://localhost:9000/api/users/' + uID, {
+			.get(`${process.env.REACT_APP_API_URL}/api/users/` + uID, {
 				headers: { Authorization: `JWT ${accessString}` }
 			})
 			.then(response => {
