@@ -70,7 +70,7 @@ class CommunityDashboard extends React.Component {
 		}
 
 		await Axios
-			.get('http://localhost:9000/api/communities/' + this.props.match.params.id, {
+			.get(`${process.env.REACT_APP_API_URL}/api/communities/` + this.props.match.params.id, {
 				headers: { Authorization: `JWT ${accessString}` }
 			}).then(response => {
 				let data = response.data;
@@ -145,12 +145,12 @@ class CommunityDashboard extends React.Component {
 
 		// Get the user object
 		await Axios
-			.get(`http://localhost:9000/api/users/${uID}`, {
+			.get(`${process.env.REACT_APP_API_URL}/api/users/${uID}`, {
 				headers: { Authorization: `JWT ${accessString}` }
 			}).then(response => {
 				let communities = response.data.user.communities;
 				communities.push(this.props.match.params.id);
-				return Axios.put(`http://localhost:9000/api/users/${uID}`, {
+				return Axios.put(`${process.env.REACT_APP_API_URL}/api/users/${uID}`, {
 					headers: { Authorization: `JWT ${accessString}` },
 					communities,
 				});
@@ -196,7 +196,7 @@ class CommunityDashboard extends React.Component {
 		}
 
 		await Axios
-			.delete(`http://localhost:9000/api/communities/${this.props.match.params.id}`, {
+			.delete(`${process.env.REACT_APP_API_URL}/api/communities/${this.props.match.params.id}`, {
 				headers: { Authorization: `JWT ${accessString}` }
 			}).then((response) => {
 				console.log(response.status);

@@ -57,7 +57,7 @@ class StaffMember extends React.Component {
 	async getStaffMember() {
 		let accessString = localStorage.getItem(`JWT`);
 		await Axios
-		.get('http://localhost:9000/api/users/' + this.props.id, {
+		.get(`${process.env.REACT_APP_API_URL}/api/users/` + this.props.id, {
 			headers: { Authorization: `JWT ${accessString}` }
 		}).then(response => {
 			let data = response.data;

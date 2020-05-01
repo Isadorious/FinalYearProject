@@ -52,7 +52,7 @@ class EditCommunityForm extends React.Component {
 		}
 
 		await Axios
-			.get('http://localhost:9000/api/communities/' + this.props.id, {
+			.get(`${process.env.REACT_APP_API_URL}/api/communities/` + this.props.id, {
 				headers: { Authorization: `JWT ${accessString}` }
 			}).then(response => {
 				let data = response.data;
@@ -107,7 +107,7 @@ class EditCommunityForm extends React.Component {
         }
 
         await Axios
-            .put(`http://localhost:9000/api/communities/${this.props.id}`, data, {
+            .put(`${process.env.REACT_APP_API_URL}/api/communities/${this.props.id}`, data, {
                 headers: {Authorization: `JWT ${accessString}`},
             })
             .then(response => {

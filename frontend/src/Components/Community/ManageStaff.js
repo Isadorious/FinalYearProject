@@ -51,7 +51,7 @@ class ManageStaffForm extends React.Component {
 		}
 
 		await Axios
-			.get('http://localhost:9000/api/communities/' + this.props.id, {
+			.get(`${process.env.REACT_APP_API_URL}/api/communities/` + this.props.id, {
 				headers: { Authorization: `JWT ${accessString}` }
 			}).then(response => {
 				let data = response.data;
@@ -97,7 +97,7 @@ class ManageStaffForm extends React.Component {
 			return;
 		}
 
-		await Axios.get(`http://localhost:9000/api/users?username=${username}`, {
+		await Axios.get(`${process.env.REACT_APP_API_URL}/api/users?username=${username}`, {
 			headers: {Authorization: `JWT ${accessString}`}
 		}).then(response => {
 				const user = response.data.user
@@ -122,7 +122,7 @@ class ManageStaffForm extends React.Component {
 						}
 
 						Axios
-							.put('http://localhost:9000/api/communities/' + this.props.id, {
+							.put(`${process.env.REACT_APP_API_URL}/api/communities/` + this.props.id, {
 								communityAdminsID: adminIDs, 
 								communityStaffID: staffIDs,
 							}, {
@@ -144,7 +144,7 @@ class ManageStaffForm extends React.Component {
 						communityStaff.push(user._id);
 		
 						Axios
-							.put('http://localhost:9000/api/communities/' + this.props.id, {
+							.put(`${process.env.REACT_APP_API_URL}/api/communities/` + this.props.id, {
 								communityStaffID: communityStaff,
 							}, {
 								headers: { Authorization: `JWT ${accessString}` },
@@ -181,7 +181,7 @@ class ManageStaffForm extends React.Component {
 			return;
 		}
 
-		await Axios.get(`http://localhost:9000/api/users?username=${username}`, {
+		await Axios.get(`${process.env.REACT_APP_API_URL}/api/users?username=${username}`, {
 			headers: {Authorization: `JWT ${accessString}`}
 		}).then(response => {
 				const user = response.data.user
@@ -204,7 +204,7 @@ class ManageStaffForm extends React.Component {
 						}
 		
 						Axios
-							.put('http://localhost:9000/api/communities/' + this.props.id, {
+							.put(`${process.env.REACT_APP_API_URL}/api/communities/` + this.props.id, {
 								communityStaffID: staffIDs,
 							}, {
 								headers: { Authorization: `JWT ${accessString}` },
@@ -232,7 +232,7 @@ class ManageStaffForm extends React.Component {
 						staffIDs.push(user._id);
 		
 						Axios
-							.put('http://localhost:9000/api/communities/' + this.props.id, {
+							.put(`${process.env.REACT_APP_API_URL}/api/communities/` + this.props.id, {
 								communityAdminsID: adminIDs,
 								communityStaffID: staffIDs,
 							}, {

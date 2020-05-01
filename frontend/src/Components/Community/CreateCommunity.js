@@ -80,7 +80,7 @@ class CreateCommunityForm extends React.Component {
         }
 
         await Axios
-            .post(`http://localhost:9000/api/communities`, data, {
+            .post(`${process.env.REACT_APP_API_URL}/api/communities`, data, {
                 headers: {Authorization: `JWT ${accessString}`},
             })
             .then(response => {

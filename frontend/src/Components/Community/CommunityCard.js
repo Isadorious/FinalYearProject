@@ -60,7 +60,7 @@ class CommunityCard extends React.Component {
 		}
 
 		await Axios
-			.get('http://localhost:9000/api/communities/' + this.props.communityID, {
+			.get(`${process.env.REACT_APP_API_URL}/api/communities/` + this.props.communityID, {
 				headers: { Authorization: `JWT ${accessString}` }
 			}).then(response => {
 				let data = response.data;
@@ -110,7 +110,7 @@ class CommunityCard extends React.Component {
 		} else {
 			return (
 				<Card id={this.props.communityID} className={"infoCard"}>
-					<Card.Img variant="top" src={'http://localhost:9000/' + this.banner} />
+					<Card.Img variant="top" src={`${process.env.REACT_APP_API_URL}/` + this.state.banner} />
 					<Card.Body>
 						<Card.Title>{this.state.name}</Card.Title>
 						<Card.Text>{this.state.description}</Card.Text>

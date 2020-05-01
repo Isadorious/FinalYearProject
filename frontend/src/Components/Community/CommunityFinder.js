@@ -54,7 +54,7 @@ class CommunityFinder extends React.Component {
 		}
 
 		await Axios
-			.get('http://localhost:9000/api/communities/', {
+			.get(`${process.env.REACT_APP_API_URL}/api/communities/`, {
 				headers: { Authorization: `JWT ${accessString}` }
 			}).then(response => {
 				console.log(response.data);
@@ -97,7 +97,7 @@ class CommunityFinder extends React.Component {
 		}
 
 		await Axios
-			.get(`http://localhost:9000/api/communities/?communityName=${this.state.communityName}`, {
+			.get(`${process.env.REACT_APP_API_URL}/api/communities/?communityName=${this.state.communityName}`, {
 				headers: { Authorization: `JWT ${accessString}` }
 			}).then(response => {
 				this.setState({
