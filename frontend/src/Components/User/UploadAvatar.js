@@ -48,7 +48,7 @@ class ProfilePictureUploader extends React.Component {
 			});
 		}
         
-        Axios.post(`http://localhost:9000/api/users/uploadProfilePicture/${uID}`, data, {
+        Axios.post(`${process.env.REACT_APP_API_URL}/api/users/uploadProfilePicture/${uID}`, data, {
             headers: {Authorization: `JWT ${accessString}`},
         })
         .then(response => {

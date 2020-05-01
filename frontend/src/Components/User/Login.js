@@ -41,7 +41,7 @@ class LoginForm extends React.Component {
         const pword = this.state.password;
 
         await axios
-            .post('http://localhost:9000/api/users/login', {
+            .post(`${process.env.REACT_APP_API_URL}/api/users/login`, {
                     username: uname,
                     password: pword
             })

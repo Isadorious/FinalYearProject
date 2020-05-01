@@ -46,7 +46,7 @@ class RegisterForm extends React.Component {
         }
 
         await Axios
-            .post('http://localhost:9000/api/users', {
+            .post(`${process.env.REACT_APP_API_URL}/api/users`, {
                 username: this.state.username,
                 password: this.state.password,
                 email: this.state.email,

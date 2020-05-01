@@ -82,7 +82,7 @@ class ProfileForm extends React.Component {
 		}
 
 		await Axios
-			.get('http://localhost:9000/api/users/' + uID, {
+			.get(`${process.env.REACT_APP_API_URL}/api/users/` + uID, {
 				headers: { Authorization: `JWT ${accessString}` }
 			})
 			.then(response => {
@@ -132,7 +132,7 @@ class ProfileForm extends React.Component {
 			return;
 		}
 		await Axios
-			.put('http://localhost:9000/api/users/' + uID, {
+			.put(`${process.env.REACT_APP_API_URL}/api/users/` + uID, {
 				headers: { Authorization: `JWT ${accessString}` },
 				nickname: this.state.nickname,
 				profilePicture: this.state.profilePicture,
@@ -160,7 +160,7 @@ class ProfileForm extends React.Component {
 					<Container>
 						<Row>
 							<Col>
-								<Avatar avatar={'http://localhost:9000/' +this.state.profilePicture} />					
+								<Avatar avatar={`${process.env.REACT_APP_API_URL}/` + this.state.profilePicture} />					
 							</Col>
 						</Row>
 						<Row>
