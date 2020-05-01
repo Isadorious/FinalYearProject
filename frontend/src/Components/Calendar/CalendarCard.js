@@ -54,7 +54,7 @@ class CalendarCard extends React.Component {
 		}
 
 		await Axios
-			.get('http://localhost:9000/api/calendars/' + this.props.calendarID, {
+			.get(`${process.env.REACT_APP_API_URL}/api/calendars/` + this.props.calendarID, {
 				headers: { Authorization: `JWT ${accessString}` }
 			}).then(response => {
 				let data = response.data;
@@ -108,7 +108,7 @@ class CalendarCard extends React.Component {
 		} else {
 			return (
 				<Card id={this.props.communityID} className={"infoCard"}>
-					<Card.Img variant="top" src={'http://localhost:9000/' + this.background} />
+					<Card.Img variant="top" src={`${process.env.REACT_APP_API_URL}/` + this.state.background} />
 					<Card.Body>
 						<Card.Title>{this.state.name}</Card.Title>
 						<Card.Text>{this.state.description}</Card.Text>

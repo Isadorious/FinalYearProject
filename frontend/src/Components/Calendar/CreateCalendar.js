@@ -94,7 +94,7 @@ class CreateCalendarForm extends React.Component {
 		}
 
         await Axios
-            .post(`http://localhost:9000/api/calendars`, data, {
+            .post(`${process.env.REACT_APP_API_URL}/api/calendars`, data, {
                 headers: {Authorization: `JWT ${accessString}`},
             })
             .then(response => {
