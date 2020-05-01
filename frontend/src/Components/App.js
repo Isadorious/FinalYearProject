@@ -16,6 +16,7 @@ import Home from "./Home";
 import Logout from './User/Logout';
 import CommunityDashboard from './Community/Dashboard';
 import CommunityFinder from './Community/CommunityFinder';
+import CalendarDashboard from './Calendar/Dashboard';
 
 class App extends React.Component {
   constructor(props) {
@@ -65,6 +66,7 @@ class App extends React.Component {
               </Route>
               <Route path="/community/find" component={CommunityFinder} />
               <Route path="/community/:id" component={CommunityDashboard} />
+              <Route path="/calendar/:id" component={CalendarDashboard} />
               <Route path="/"> 
                 <Home loggedIn={this.state.loggedIn} updateLogin={this.updateLoggedIn} />
               </Route>
