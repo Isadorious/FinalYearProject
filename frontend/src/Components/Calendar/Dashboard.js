@@ -7,10 +7,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import ManageStaff from './ManageStaff';
-import EditCommunity from './EditCommunity';
-import CreateCalendar from '../Calendar/CreateCalendar';
-import CalendarCard from '../Calendar/CalendarCard';
+import Info from './Info';
 
 class CalendarDashboard extends React.Component {
     constructor(props) {
@@ -26,7 +23,12 @@ class CalendarDashboard extends React.Component {
             description: '',
             background: '',
             visibility: '',
+            showInfoModal: false,
         }
+
+        this.handleCalendarDelete = this.handleCalendarDelete.bind(this);
+        this.handleInfoOpen = this.handleInfoOpen.bind(this);
+        this.handleInfoClose = this.handleInfoClose.bind(this);
     }
 
     async componentDidMount() {
@@ -134,6 +136,14 @@ class CalendarDashboard extends React.Component {
             })
     }
 
+    handleInfoOpen() {
+        this.setState({showInfoModal: true});
+    }
+
+    handleInfoClose() {
+        this.setState({showInfoModal: false});
+    }
+
     render() {
         if (this.state.loading === true) {
             return (<Loading />)
@@ -144,17 +154,17 @@ class CalendarDashboard extends React.Component {
             if (this.props.userPermission === 3) {
                 buttons =
                     <>
-                        <Button id="calendarInfo" className={"dashboardButton"}>Calendar Info</Button>
+                        <Button id="calendarInfo" className={"dashboardButton"} onClick={this.handleInfoOpen}>Calendar Info</Button>
                         <Button id="editCalendar" className={"dashboardButton"}>Edit Calendar</Button>
                         <Button id="createTask" className={"dashboardButton"}>Create Task</Button>
-                        <Button id="deleteCommunity" className={"dashboardButton float-right"} variant={"danger"} onClick={this.handleCalendarDelete}>Delete Calendar</Button>
+                        <Button id="deleteCalendar" className={"dashboardButton float-right"} variant={"danger"} onClick={this.handleCalendarDelete}>Delete Calendar</Button>
                     </>
             }
 
             if (this.props.userPermission === 2) {
                 buttons =
                     <>
-                        <Button id="calendarInfo" className={"dashboardButton"}>Calendar Info</Button>
+                        <Button id="calendarInfo" className={"dashboardButton"} onClick={this.handleInfoOpen}>Calendar Info</Button>
                         <Button id="editCalendar" className={"dashboardButton"}>Edit Calendar</Button>
                         <Button id="createTask" className={"dashboardButton"}>Create Task</Button>
                     </>
@@ -163,7 +173,7 @@ class CalendarDashboard extends React.Component {
             if (this.props.userPermission == 1) {
                 buttons =
                     <>
-                        <Button id="calendarInfo" className={"dashboardButton"}>Calendar Info</Button>
+                        <Button id="calendarInfo" className={"dashboardButton"} onClick={this.handleInfoOpen}>Calendar Info</Button>
                         <Button id="createTask" className={"dashboardButton"}>Create Task</Button>
                     </>
             }
@@ -171,7 +181,7 @@ class CalendarDashboard extends React.Component {
             if (this.props.userPermission == 0) {
                 buttons =
                     <>
-                        <Button id="calendarInfo" className={"dashboardButton"}>Calendar Info</Button>
+                        <Button id="calendarInfo" className={"dashboardButton"} onClick={this.handleInfoOpen}>Calendar Info</Button>
                     </>
             }
 
@@ -186,6 +196,12 @@ class CalendarDashboard extends React.Component {
 
             return (
                 <Container>
+                    <Modal show={this.state.showInfoModal} onHide={this.handleInfoClose}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Calendar Info</Modal.Title>
+                        </Modal.Header>
+                        <Info name={this.state.name} description={this.state.description} />
+                    </Modal>
                     <Row>
                         <Col>
                             {buttons}

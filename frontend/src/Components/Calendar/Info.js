@@ -12,9 +12,11 @@ class CalendarInfo extends React.Component {
     render() {
         return (
             <>
-                <h2>{this.props.name}</h2>
-                <hr />
-                <p>{this.props.description}</p>
+                <div style={{marginTop: "1.25rem", marginLeft: "1.0rem", marginRight: "1.0rem",}}>
+                    <h2>{this.props.name}</h2>
+                    <br />
+                    <p>{this.props.description}</p>
+                </div>
             </>
         )
     }
