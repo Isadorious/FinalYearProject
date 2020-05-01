@@ -48,7 +48,7 @@ class BannerUploader extends React.Component {
 			});
 		}
         
-        Axios.post(`${process.env.REACT_APP_API_URL}/api/community/uploadBanner/${this.props.id}`, data, {
+        Axios.post(`${process.env.REACT_APP_API_URL}/api/communities/uploadLogo/${this.props.id}`, data, {
             headers: {Authorization: `JWT ${accessString}`},
         })
         .then(response => {
