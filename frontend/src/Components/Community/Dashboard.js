@@ -31,8 +31,10 @@ class CommunityDashboard extends React.Component {
 			showStaffModal: false,
 			showEditModal: false,
 			userPermission: 0,
+			hasFetched: 0,
 		}
 
+		this.fetchCalendars = this.fetchCalendars.bind(this);
 		this.handleStaffOpen = this.handleStaffOpen.bind(this);
 		this.handleStaffClose = this.handleStaffClose.bind(this);
 		this.handleCommunityFollow = this.handleCommunityFollow.bind(this);
@@ -85,6 +87,51 @@ class CommunityDashboard extends React.Component {
 					calendars: data.calendarsID,
 					userPermission: data.permission,
 					loading: false,
+				});
+			}).catch(error => {
+				this.setState({
+					error: true,
+					errorMessage: `Unable to retrieve community data`,
+					loading: false,
+				});
+			})
+	}
+
+	async componentDidUpdate() {
+		if(this.state.calendars.length <= 0 && this.state.hasFetched === false) {
+			await this.fetchCalendars();
+		}
+	}
+
+	async fetchCalendars() {
+		this.setState({hasFetched: true}); // Stops API spam when community has 0 calendars
+
+		if (accessString === null) {
+			this.setState({
+				error: true,
+				errorMessage: `Unable to load user details from local storage`,
+				errorStatusCode: 401,
+			});
+			return;
+		}
+
+		let uID = localStorage.getItem(`UserID`);
+		if (uID === null) {
+			this.setState({
+				error: true,
+				errorMessage: `Unable to load user details from local storage`,
+				errorStatusCode: 401,
+			});
+			return;
+		}
+
+		await Axios
+			.get(`${process.env.REACT_APP_API_URL}/api/communities/` + this.props.match.params.id, {
+				headers: { Authorization: `JWT ${accessString}` }
+			}).then(response => {
+				let data = response.data;
+				this.setState({
+					calendars: data.calendarsID,
 				});
 			}).catch(error => {
 				this.setState({
