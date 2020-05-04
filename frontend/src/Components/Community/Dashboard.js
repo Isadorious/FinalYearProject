@@ -107,6 +107,7 @@ class CommunityDashboard extends React.Component {
 	async fetchCalendars() {
 		this.setState({hasFetched: true}); // Stops API spam when community has 0 calendars
 
+		let accessString = localStorage.getItem(`JWT`);
 		if (accessString === null) {
 			this.setState({
 				error: true,
