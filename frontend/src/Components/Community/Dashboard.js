@@ -341,7 +341,7 @@ class CommunityDashboard extends React.Component {
 						<Modal.Header closeButton>
 							<Modal.Title>Create Calendar</Modal.Title>
 						</Modal.Header>
-						<CreateCalendar communityID={this.props.match.params.id} onCreate={this.handleCalendarCreate} />
+						<CreateCalendar communityID={this.props.match.params.id} onComplete={this.handleCalendarCreate} />
 					</Modal>
 					<Row>
 						<Col>
