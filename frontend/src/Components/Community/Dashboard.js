@@ -43,6 +43,7 @@ class CommunityDashboard extends React.Component {
 		this.handleCreateOpen = this.handleCreateOpen.bind(this);
 		this.handleCreateClose = this.handleCreateClose.bind(this);
 		this.handleCommunityDelete = this.handleCommunityDelete.bind(this);
+		this.handleCalendarCreate = this.handleCalendarCreate.bind(this);
 	}
 
 	async componentDidMount() {
@@ -266,6 +267,11 @@ class CommunityDashboard extends React.Component {
 			})
 	}
 
+	async handleCalendarCreate() {
+		this.handleCreateClose();
+		await this.fetchCalendars();
+	}
+
 	render() {
 		if (this.state.loading === true) {
 			return (<Loading />)
@@ -335,7 +341,7 @@ class CommunityDashboard extends React.Component {
 						<Modal.Header closeButton>
 							<Modal.Title>Create Calendar</Modal.Title>
 						</Modal.Header>
-						<CreateCalendar communityID={this.props.match.params.id} />
+						<CreateCalendar communityID={this.props.match.params.id} onCreate={this.handleCalendarCreate} />
 					</Modal>
 					<Row>
 						<Col>
