@@ -64,4 +64,25 @@ userSchema.methods.isValidPassword = async function(password){
 	return compare;
 };
 
+userSchema.path(`email`).validate((email) => {
+	const emailRegex = /\S+@\S+\.\S+/; // Checks it is of the form String@String.String
+	return emailRegex.test(String(email).toLowerCase());
+}, `Email must be user@website.tld`);
+
+userSchema.path(`dateOfBirth`).validate((dateOfBirth) => {
+	const now = new Date();
+	let age = now.getFullYear() - dateOfBirth.getFullYear();
+	const month = now.getMonth() - dateOfBirth.getMonth();
+
+	if(month < 0 || (month === 0 && now.getDate() < dateOfBirth.getDate())) {
+		age--;
+	}
+
+	if(age >= 13) {
+		return true;
+	} else {
+		return false;
+	}
+}, `User must be at least 13 years old`);
+
 module.exports = mongoose.model(`User`, userSchema);
