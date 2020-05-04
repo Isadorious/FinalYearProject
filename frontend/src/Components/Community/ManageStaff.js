@@ -275,12 +275,12 @@ class ManageStaffForm extends React.Component {
 						<Form.Label>User to promote:</Form.Label>
 						<Form.Control name="usernameToFind" type="text" placeholder="User to promote" value={this.state.usernameToFind} onChange={this.handleInputChange} />
 					</Form.Group>
-					<Button variant="primary" type="button" onClick={this.handlePromoteFromSearch}>Find and promote user</Button>
-					<Button variant="danger" type="button" onClick={this.handleDemoteFromSearch}>Find and demote user</Button>
+					<Button variant="primary" type="button" className={"dashboardButton"} onClick={this.handlePromoteFromSearch}>Find and promote user</Button>
+					<Button variant="danger" type="button" className={"dashboardButton"} onClick={this.handleDemoteFromSearch}>Find and demote user</Button>
 					<br />
-					<h5>Staff</h5>
+					<h5>Staff</h5> <hr />
 					{staff}
-					<h5>Admins</h5>
+					<h5>Admins</h5> <hr />
 					{admins}
 				</Form>
 			)
