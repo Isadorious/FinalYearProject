@@ -17,6 +17,11 @@ const customSchema = new Schema({
 	},
 	content: {
 		type: [Schema.Types.Mixed]
+	}, 
+	date: {
+		type: Date,
+		required: true,
+		default: Date.now,
 	}
 });
 
