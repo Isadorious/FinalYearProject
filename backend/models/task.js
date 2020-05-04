@@ -27,7 +27,11 @@ const taskSchema = new Schema ({
 	},
 	subTasks: {
 		type: [SubTask.schema]
-	}
+	},
+	complete: {
+		type: Boolean,
+		default: false,
+	},
 });
 
 module.exports = mongoose.model(`Task`, taskSchema);

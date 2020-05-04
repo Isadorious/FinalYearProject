@@ -16,7 +16,11 @@ const subTaskSchema = new Schema ({
 	},
 	subTaskDue: {
 		type: Date
-	}
+	},
+	complete: {
+		type: Boolean,
+		default: false,
+	},
 });
 
 module.exports = mongoose.model(`SubTask`, subTaskSchema);
