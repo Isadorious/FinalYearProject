@@ -18,6 +18,7 @@ router.get(`/:id`, (req, res) => {
 			res.json({ message: info.message });
 		} else {
 			const query = Calendar.findById(req.params.id);
+			query.setOptions({ lean: true }); // Query returns a javascript object allowing for modification outside of model
 			query.exec((err, calendar) => {
 				if (err) {
 					res.send(err);
@@ -26,7 +27,29 @@ router.get(`/:id`, (req, res) => {
 
 				canViewCalendar(req.params.id, user._id)
 					.then((result) => {
-						res.json(calendar);
+						isOwner(calendar.communityID, user._id)
+							.then((result) => {
+								calendar.permission = 3;
+								res.json(calendar);
+								return;
+							}).catch((result) => {
+								isAdmin(calendar.communityID, user._id)
+									.then((result) => {
+										calendar.permission = 2;
+										res.json(calendar);
+										return;
+									}).catch((result) => {
+										isStaff(calendar.communityID, user._id)
+											.then((result) => {
+												calendar.permission = 1;
+												res.json(calendar);
+												return;
+											}).catch((result) => {
+												res.json(calendar);
+												return;
+											});
+									});
+							});
 					}).catch((result) => {
 						res.status(result.status).json({ message: result.message });
 					});
