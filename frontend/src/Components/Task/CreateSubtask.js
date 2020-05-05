@@ -45,7 +45,7 @@ class CreateSubtask extends React.Component {
 						<Form.Check type="switch" name="completed" label="Completed?" value={this.props.subTask.complete} onChange={this.handleInputChange} />
 					</Form.Group>
 					<Form.Group as={Col} controlId="dueDateControl">
-						<Form.Control name="taskDue" type="date" value={this.props.subTask.subTaskDue} onChange={this.handleInputChange} />
+						<Form.Control name="subTaskDue" type="date" value={this.props.subTask.subTaskDue} onChange={this.handleInputChange} />
 					</Form.Group>
                     </Form.Row>
 				</Form>
