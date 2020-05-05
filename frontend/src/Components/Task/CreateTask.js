@@ -90,24 +90,30 @@ class CreateTaskForm extends React.Component {
 						<Form.Label>Task Description</Form.Label>
 						<Form.Control name="taskDescription" as="textarea" value={this.state.taskDescription} onChange={this.handleInputChange} />
 					</Form.Group>
+					<hr />
 					<Form.Group controlId="assignedUsersControl">
 						<Form.Label>Assigned Users</Form.Label>
 						<StaffSelect ownerID={this.props.OwnerID} staffID={this.props.StaffID} AdminID={this.props.AdminID} updateSelectedStaff={this.updateAssignedStaff} />
 					</Form.Group>
+					<hr />
 					<Form.Group controlId="subTasksControl">
 						<Row>
 							<Col><Form.Label>Subtasks</Form.Label></Col>
-							<Col><Button variant="secondary" onClick={this.addSubTask}>Add subtasks</Button></Col>
+							<Col><Button variant="secondary" onClick={this.addSubTask} className={"float-right"}>Add subtasks</Button></Col>
 						</Row>
+						<hr />
 						{subtasks}
 					</Form.Group>
+					<hr />
 					<Form.Group as={Col} controlId="completedControl">
-						<Form.Check type="switch" name="completed" label="Task Completed?" onChange={this.handleInputChange} />
+						<Form.Check type="switch" name="completed" label="Task Completed?" onChange={this.handleInputChange} disabled/>
 					</Form.Group>
+					<hr />
 					<Form.Group as={Col} controlId="dueDateControl">
 						<Form.Label>Due Date:</Form.Label>
 						<Form.Control name="taskDue" type="date" value={this.state.taskDue} onChange={this.handleInputChange} />
 					</Form.Group>
+					<hr />
 
 					<Button variant="success">Save</Button>
 					<Button variant="danger">Cancel</Button>

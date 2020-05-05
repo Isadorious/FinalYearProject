@@ -12,10 +12,10 @@ class CreateSubtask extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-            loading: true,
-            error: false,
-            errorMessage: 'Unable to create task',
-            errorStatus: 500,
+			loading: true,
+			error: false,
+			errorMessage: 'Unable to create task',
+			errorStatus: 500,
 		}
 
 		this.handleInputChange = this.handleInputChange.bind(this);
@@ -23,30 +23,30 @@ class CreateSubtask extends React.Component {
 	}
 
 	handleInputChange(event) {
-        this.props.onChange(event, this.props.index);
+		this.props.onChange(event, this.props.index);
 	}
 
 	updateAssignedStaff(staff) {
-        this.props.updateAssignedStaff(staff, this.props.index);
+		this.props.updateAssignedStaff(staff, this.props.index);
 	}
-	
+
 	render() {
-		return(
+		return (
 			<Container fluid>
-                    <Form.Row>
+				<Form.Row>
 					<Form.Group as={Col} controlId="subTaskNameControl">
-						<Form.Control name="subTaskName" type="text" placeholder="Task Name" value={this.props.subTask.subTaskName} onChange={this.handleInputChange}/>
+						<Form.Control name="subTaskName" type="text" placeholder="Subtask Name" value={this.props.subTask.subTaskName} onChange={this.handleInputChange} />
 					</Form.Group>
 					<Form.Group as={Col} controlId="assignedUsersControl">
-						<StaffSelect ownerID={this.props.OwnerID} staffID={this.props.StaffID} AdminID={this.props.AdminID} updateSelectedStaff={this.updateAssignedStaff}/>
+						<StaffSelect ownerID={this.props.OwnerID} staffID={this.props.StaffID} AdminID={this.props.AdminID} updateSelectedStaff={this.updateAssignedStaff} placeholder="" />
 					</Form.Group>
 					<Form.Group as={Col} controlId="completedControl">
-						<Form.Check type="switch" name="completed" label="Completed?" value={this.props.subTask.complete} onChange={this.handleInputChange} />
+						<Form.Check type="switch" name="completed" label="Completed?" value={this.props.subTask.complete} onChange={this.handleInputChange} disabled/>
 					</Form.Group>
 					<Form.Group as={Col} controlId="dueDateControl">
 						<Form.Control name="subTaskDue" type="date" value={this.props.subTask.subTaskDue} onChange={this.handleInputChange} />
 					</Form.Group>
-                    </Form.Row>
+				</Form.Row>
 			</Container>
 		)
 	}
@@ -55,11 +55,11 @@ class CreateSubtask extends React.Component {
 CreateSubtask.defaultProps = {
 	OwnerID: undefined,
 	StaffID: undefined,
-    AdminID: undefined,
-    subTask: {},
-    index: undefined,
-    onChange: undefined,
-    updateAssignedStaff: undefined,
+	AdminID: undefined,
+	subTask: {},
+	index: undefined,
+	onChange: undefined,
+	updateAssignedStaff: undefined,
 }
 
 export default CreateSubtask;
