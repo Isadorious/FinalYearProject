@@ -27,29 +27,42 @@ router.get(`/:id`, (req, res) => {
 
 				canViewCalendar(req.params.id, user._id)
 					.then((result) => {
-						isOwner(calendar.communityID, user._id)
-							.then((result) => {
-								calendar.permission = 3;
-								res.json(calendar);
+						Community.findById(calendar.communityID, (err, community) => {
+							if (err) {
+								res.send(err);
 								return;
-							}).catch((result) => {
-								isAdmin(calendar.communityID, user._id)
-									.then((result) => {
-										calendar.permission = 2;
-										res.json(calendar);
-										return;
-									}).catch((result) => {
-										isStaff(calendar.communityID, user._id)
-											.then((result) => {
-												calendar.permission = 1;
-												res.json(calendar);
-												return;
-											}).catch((result) => {
-												res.json(calendar);
-												return;
-											});
-									});
-							});
+							}
+
+							if (community !== null) {
+								calendar.communityStaffID = community.communityStaffID;
+								calendar.communityAdminsID = community.communityAdminsID;
+								calendar.ownerID = community.ownerID;
+							}
+
+							isOwner(calendar.communityID, user._id)
+								.then((result) => {
+									calendar.permission = 3;
+									res.json(calendar);
+									return;
+								}).catch((result) => {
+									isAdmin(calendar.communityID, user._id)
+										.then((result) => {
+											calendar.permission = 2;
+											res.json(calendar);
+											return;
+										}).catch((result) => {
+											isStaff(calendar.communityID, user._id)
+												.then((result) => {
+													calendar.permission = 1;
+													res.json(calendar);
+													return;
+												}).catch((result) => {
+													res.json(calendar);
+													return;
+												});
+										});
+								});
+						});
 					}).catch((result) => {
 						res.status(result.status).json({ message: result.message });
 					});
