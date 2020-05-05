@@ -43,6 +43,22 @@ class CreateTaskForm extends React.Component {
 	updateAssignedStaff(staff) {
 		this.setState({ taskAssignedUser : staff });
 	}
+
+	updateSubtask(event, index) {
+		let subtasks = this.state.subTasks;
+		const target = event.target;
+        const value = target.value;
+		const name = target.name;
+		let subtasks = this.state.subTasks;
+		subTasks[index][name] = value;
+		this.setState({subTasks: subtasks});
+	}
+
+	updateSubtaskAssignedStaff(staff, index) {
+		let subtasks = this.state.subTasks;
+		subTasks[index].subTaskAssignedUsers = staff;
+		this.setState({subTasks: subtasks});
+	}
 	
 	render() {
 		return(
