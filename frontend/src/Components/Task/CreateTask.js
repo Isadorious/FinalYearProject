@@ -6,6 +6,7 @@ import Error from '../Utils/Error';
 import Axios from 'axios';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
+import StaffSelect from './StaffSelect';
 
 class CreateTaskForm extends React.Component {
 	constructor(props) {
@@ -21,11 +22,12 @@ class CreateTaskForm extends React.Component {
 			complete: false,
             loading: true,
             error: false,
-            errorMessage: 'Unable to create community',
+            errorMessage: 'Unable to create task',
             errorStatus: 500,
 		}
 
 		this.handleInputChange = this.handleInputChange.bind(this);
+		this.updateAssignedStaff = this.updateAssignedStaff.bind(this);
 	}
 
 	handleInputChange(event) {
@@ -36,6 +38,10 @@ class CreateTaskForm extends React.Component {
         this.setState({
             [name] : value
         });
+	}
+
+	updateAssignedStaff(staff) {
+		this.setState({ taskAssignedUser : staff });
 	}
 	
 	render() {
@@ -50,9 +56,9 @@ class CreateTaskForm extends React.Component {
 						<Form.Label>Task Description</Form.Label>
 						<Form.Control name="taskDescription" as="textarea" value={this.state.taskDescription} onChange={this.handleInputChange} />
 					</Form.Group>
-					<Form.Group controlId="assignedUsersPlaceholder">
+					<Form.Group controlId="assignedUsersControl">
 						<Form.Label>Assigned Users</Form.Label>
-						<Form.Control name="assignedUsers" type="text" placeholder="assigned staff placeholder element"/>
+						<StaffSelect ownerID={this.props.OwnerID} staffID={this.props.StaffID} AdminID={this.props.AdminID} updateSelectedStaff={this.updateAssignedStaff}/>
 					</Form.Group>
 					<Form.Group as={Col} controlId="completedControl">
 						<Form.Check type="switch" name="completed" label="Task Completed?" onChange={this.handleInputChange} />
@@ -73,6 +79,9 @@ class CreateTaskForm extends React.Component {
 CreateTaskForm.defaultProps = {
 	onComplete: undefined,
 	categories: undefined,
+	OwnerID: undefined,
+	StaffID: undefined,
+	AdminID: undefined,
 }
 
 export default CreateTaskForm;
