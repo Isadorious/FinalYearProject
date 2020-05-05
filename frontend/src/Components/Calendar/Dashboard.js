@@ -25,7 +25,7 @@ class CalendarDashboard extends React.Component {
             background: '',
             visibility: '',
             showInfoModal: false,
-            permission: 0,
+            userPermission: 0,
             communityStaffID: [],
             communityAdminsID: [],
             ownerID: [],
@@ -35,6 +35,8 @@ class CalendarDashboard extends React.Component {
         this.handleCalendarDelete = this.handleCalendarDelete.bind(this);
         this.handleInfoOpen = this.handleInfoOpen.bind(this);
         this.handleInfoClose = this.handleInfoClose.bind(this);
+        this.handleCreateOpen = this.handleCreateOpen.bind(this);
+        this.handleCreateClose = this.handleCreateClose.bind(this);
     }
 
     async componentDidMount() {
@@ -76,7 +78,7 @@ class CalendarDashboard extends React.Component {
                     background: data.background,
                     categories: data.categories,
                     tasks: data.tasks,
-                    permission: data.permission,
+                    userPermission: data.permission,
                     communityStaffID: data.communityStaffID,
                     communityAdminsID: data.communityAdminsID,
                     ownerID: data.ownerID,        
@@ -169,30 +171,30 @@ class CalendarDashboard extends React.Component {
             return (<Error statusCode={this.state.errorStatusCode} message={this.state.errorMessage} />)
         } else {
             let buttons;
-            if (this.props.userPermission === 3) {
+            if (this.state.userPermission === 3) {
                 buttons =
                     <>
                         <Button id="calendarInfo" className={"dashboardButton"} variant="info" onClick={this.handleInfoOpen}>Calendar Info</Button>
                         <Button id="editCalendar" className={"dashboardButton"}>Edit Calendar</Button>
-                        <Button id="createTask" className={"dashboardButton"}>Create Task</Button>
+                        <Button id="createTask" className={"dashboardButton"} onClick={this.handleCreateOpen}>Create Task</Button>
                         <Button id="deleteCalendar" className={"dashboardButton float-right"} variant={"danger"} onClick={this.handleCalendarDelete}>Delete Calendar</Button>
                     </>
             }
 
-            if (this.props.userPermission === 2) {
+            if (this.state.userPermission === 2) {
                 buttons =
                     <>
                         <Button id="calendarInfo" className={"dashboardButton"} variant="info" onClick={this.handleInfoOpen}>Calendar Info</Button>
-                        <Button id="editCalendar" className={"dashboardButton"}>Edit Calendar</Button>
-                        <Button id="createTask" className={"dashboardButton"}>Create Task</Button>
+                        <Button id="editCalendar" className={"dashboardButton"} onClick={this.handleCreateOpen}>Edit Calendar</Button>
+                        <Button id="createTask" className={"dashboardButton"} onClick={this.handleCreateOpen}>Create Task</Button>
                     </>
             }
 
-            if (this.props.userPermission == 1) {
+            if (this.state.userPermission == 1) {
                 buttons =
                     <>
                         <Button id="calendarInfo" className={"dashboardButton"} variant="info" onClick={this.handleInfoOpen}>Calendar Info</Button>
-                        <Button id="createTask" className={"dashboardButton"}>Create Task</Button>
+                        <Button id="createTask" className={"dashboardButton"} onClick={this.handleCreateOpen}>Create Task</Button>
                     </>
             }
 
@@ -238,10 +240,6 @@ class CalendarDashboard extends React.Component {
         }
     }
 
-}
-
-CalendarDashboard.defaultProps = {
-    userPermission: 0,
 }
 
 export default CalendarDashboard;
