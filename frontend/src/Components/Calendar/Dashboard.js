@@ -222,7 +222,7 @@ class CalendarDashboard extends React.Component {
                         </Modal.Header>
                         <Info name={this.state.name} description={this.state.description} />
                     </Modal>
-                    <Modal show={this.state.showCreateModal} onHide={this.handleCreateClose}>
+                    <Modal show={this.state.showCreateModal} onHide={this.handleCreateClose} size="lg">
                         <Modal.Header closeButton>
                             <Modal.Title>Create Task</Modal.Title>
                         </Modal.Header>
