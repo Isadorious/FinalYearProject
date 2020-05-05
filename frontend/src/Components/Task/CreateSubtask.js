@@ -23,17 +23,16 @@ class CreateSubtask extends React.Component {
 	}
 
 	handleInputChange(event) {
-        this.props.onChange(event, index);
+        this.props.onChange(event, this.props.index);
 	}
 
 	updateAssignedStaff(staff) {
-        this.props.updateAssignedStaff(staff, index);
+        this.props.updateAssignedStaff(staff, this.props.index);
 	}
 	
 	render() {
 		return(
 			<Container fluid>
-				<Form id="createTask" className={"modalForm"} style={{display: "inline-block"}}>
                     <Form.Row>
 					<Form.Group as={Col} controlId="subTaskNameControl">
 						<Form.Control name="subTaskName" type="text" placeholder="Task Name" value={this.props.subTask.subTaskName} onChange={this.handleInputChange}/>
@@ -48,7 +47,6 @@ class CreateSubtask extends React.Component {
 						<Form.Control name="subTaskDue" type="date" value={this.props.subTask.subTaskDue} onChange={this.handleInputChange} />
 					</Form.Group>
                     </Form.Row>
-				</Form>
 			</Container>
 		)
 	}
