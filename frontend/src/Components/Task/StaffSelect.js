@@ -22,18 +22,20 @@ class StaffSelect extends React.Component {
 	handleSelectionChanged(options) {
 		let selectedStaff = [];
 
-		options.map((option) =>{
-			selectedStaff.push(option.id);
-		});
+		if(options !== undefined) {
+			options.map((option) =>{
+				selectedStaff.push(option.id);
+			});
+		}
 
 		this.props.updateSelectedStaff(selectedStaff);
 	}
 
-	async componentDidMount() {
-		await this.generateDataSource();
+	componentDidMount() {
+		this.generateDataSource();
 	}
 
-	async generateDataSource() {
+	generateDataSource() {
 		let staffData = [];
 
 		let accessString = localStorage.getItem(`JWT`);
@@ -47,65 +49,77 @@ class StaffSelect extends React.Component {
 			return;
 		}
 
-		await Axios
-		.get(`${process.env.REACT_APP_API_URL}/api/users/` + this.props.ownerID, {
-			headers: { Authorization: `JWT ${accessString}` }
-		})
-		.then(response => {
-			let data = response.data;
-			if (data.message === "Found user successfully!") {
-				let dataItem = {
-					id: data.user._id,
-					name: data.user.username,
-					size: Medium,
-				}
-				staffData.push(dataItem);
-			}
-		});
-
-		this.props.AdminID.map((adminID) => {
-			await Axios
-			.get(`${process.env.REACT_APP_API_URL}/api/users/` + adminID, {
+		if(this.props.ownerID !== undefined) {
+			Axios
+			.get(`${process.env.REACT_APP_API_URL}/api/users/` + this.props.ownerID, {
 				headers: { Authorization: `JWT ${accessString}` }
 			})
 			.then(response => {
 				let data = response.data;
 				if (data.message === "Found user successfully!") {
 					let dataItem = {
-						id: data.user._id,
-						name: data.user.username,
-						size: Medium,
+						"id": data.user._id,
+						"name": data.user.username,
+						"size": "Medium",
 					}
 					staffData.push(dataItem);
 				}
 			});
-		});
+		}
 
-		this.props.StaffID.map((staffID) => {
-			await Axios
-			.get(`${process.env.REACT_APP_API_URL}/api/users/` + staffID, {
-				headers: { Authorization: `JWT ${accessString}` }
-			})
-			.then(response => {
-				let data = response.data;
-				if (data.message === "Found user successfully!") {
-					let dataItem = {
-						id: data.user._id,
-						name: data.user.username,
-						size: Medium,
+		if(this.props.AdminID !== undefined) {
+			this.props.AdminID.map((adminID) => {
+				Axios
+				.get(`${process.env.REACT_APP_API_URL}/api/users/` + adminID, {
+					headers: { Authorization: `JWT ${accessString}` }
+				})
+				.then(response => {
+					let data = response.data;
+					if (data.message === "Found user successfully!") {
+						let dataItem = {
+							"id": data.user._id,
+							"name": data.user.username,
+							"size": "Medium",
+						}
+						staffData.push(dataItem);
 					}
-					staffData.push(dataItem);
-				}
+				});
 			});
-		});
+		}
+
+		if(this.props.StaffID !== undefined) {
+			this.props.StaffID.map((staffID) => {
+				Axios
+				.get(`${process.env.REACT_APP_API_URL}/api/users/` + staffID, {
+					headers: { Authorization: `JWT ${accessString}` }
+				})
+				.then(response => {
+					let data = response.data;
+					if (data.message === "Found user successfully!") {
+						let dataItem = {
+							"id": data.user._id,
+							"name": data.user.username,
+							"size": "Medium",
+						}
+						staffData.push(dataItem);
+					}
+				});
+			});
+		}
 
 		this.setState({dataSource: staffData});
 	}
 	
 	render() {
-		return(
-			<ReactSuperSelect multiple={true} onChange={this.handleSelectionChanged} dataSource={this.state.dataSource} keepOpenOnSelection={true} />
-		)
+		if(this.state.dataSource.length > 0) {
+			return(
+				<ReactSuperSelect multiple={true} onChange={this.handleSelectionChanged} dataSource={this.state.dataSource} keepOpenOnSelection={true} />
+			)
+		} else {
+			return (
+				<></>
+			)
+		} 
 	}
 }
 
