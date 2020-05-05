@@ -226,7 +226,7 @@ class CalendarDashboard extends React.Component {
                         <Modal.Header closeButton>
                             <Modal.Title>Create Task</Modal.Title>
                         </Modal.Header>
-                        <CreateTask OwnerID={this.state.ownerID} StaffID={this.state.StaffID} AdminID={this.state.AdminID}/>
+                        <CreateTask OwnerID={this.state.ownerID} StaffID={this.state.communityStaffID} AdminID={this.state.communityAdminsID}/>
                     </Modal>
                     <Row>
                         <Col>
