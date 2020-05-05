@@ -15,7 +15,8 @@ class StaffSelect extends React.Component {
             errorStatus: 500,
 		}
 
-		this.handleInputChange = this.handleInputChange.bind(this);
+		this.handleSelectionChanged = this.handleSelectionChanged.bind(this);
+		this.generateDataSource = this.generateDataSource.bind(this);
 	}
 
 	handleSelectionChanged(options) {
