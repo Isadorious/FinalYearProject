@@ -9,6 +9,7 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Info from './Info';
 import CreateTask from '../Task/CreateTask';
+import TaskCard from '../Task/TaskCard';
 
 class CalendarDashboard extends React.Component {
     constructor(props) {
@@ -209,7 +210,8 @@ class CalendarDashboard extends React.Component {
 
             if (this.state.tasks.length > 0) {
                 cards = this.state.tasks.map((task) =>
-                    <Row key={task._id} >
+                    <Row key={task._id}>
+                        <TaskCard task={task} />
                     </Row>
                 );
             }
