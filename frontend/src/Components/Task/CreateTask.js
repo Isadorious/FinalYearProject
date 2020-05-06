@@ -33,6 +33,7 @@ class CreateTaskForm extends React.Component {
 		this.updateSubtask = this.updateSubtask.bind(this);
 		this.updateSubtaskAssignedStaff = this.updateSubtaskAssignedStaff.bind(this);
 		this.addSubTask = this.addSubTask.bind(this);
+		this.createTask = this.createTask.bind(this);
 	}
 
 	handleInputChange(event) {
@@ -70,6 +71,50 @@ class CreateTaskForm extends React.Component {
 
 		subtasks.push(subtask);
 		this.setState({subTasks: subtasks});
+	}
+
+	async createTask() {
+		// Post task /:id/tasks
+		let accessString = localStorage.getItem(`JWT`);
+		if (accessString === null) {
+			this.setState({
+				error: true,
+				errorMessage: `Unable to load user details from local storage`,
+				errorStatusCode: 401,
+				loading: false,
+			});
+			return;
+		}
+
+		let data = {
+			taskName: this.state.taskName,
+			taskDescription: this.state.taskDescription,
+			taskAssignedUsers: this.state.taskAssignedUser,
+			taskDue: this.state.taskDue,
+			subTasks: this.state.subTasks,
+		}
+
+		await Axios
+			.post(`${process.env.REACT_APP_API_URL}/api/calendars/${this.props.calendarID}/tasks`, data, {
+				headers: {Authorization: `JWT ${accessString}`},
+			})
+			.then(response => {
+				if(response.data.message === `Task added successfully!`) {
+					if(this.props.onComplete !== undefined) {
+						this.props.onComplete();
+						return;
+					}
+
+					alert(`Task created`);
+				} else {
+					console.log(response);
+                    this.setState({error: true, errorMessage: response.data});
+				}
+			})
+			.catch(error => {
+				console.log(error);
+				this.setState({error: true, errorMessage: error.data});
+			});
 	}
 
 	render() {
@@ -115,8 +160,8 @@ class CreateTaskForm extends React.Component {
 					</Form.Group>
 					<hr />
 
-					<Button variant="success">Save</Button>
-					<Button variant="danger">Cancel</Button>
+					<Button variant="danger" className={"float-right dashboardButton"} onClick={this.props.onCancel}>Cancel</Button>
+					<Button variant="success" className={"float-right dashboardButton"} onClick={this.createTask}>Save</Button>
 				</Form>
 			</Container>
 		)
@@ -129,6 +174,8 @@ CreateTaskForm.defaultProps = {
 	OwnerID: undefined,
 	StaffID: undefined,
 	AdminID: undefined,
+	onCancel: undefined,
+	calendarID: undefined,
 }
 
 export default CreateTaskForm;
