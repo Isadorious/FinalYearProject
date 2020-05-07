@@ -34,6 +34,7 @@ class CreateTaskForm extends React.Component {
 		this.updateSubtaskAssignedStaff = this.updateSubtaskAssignedStaff.bind(this);
 		this.addSubTask = this.addSubTask.bind(this);
 		this.createTask = this.createTask.bind(this);
+		this.removeSubtask = this.removeSubtask.bind(this);
 	}
 
 	handleInputChange(event) {
@@ -62,6 +63,12 @@ class CreateTaskForm extends React.Component {
 	updateSubtaskAssignedStaff(staff, index) {
 		let subtasks = this.state.subTasks;
 		subtasks[index].subTaskAssignedUsers = staff;
+		this.setState({ subTasks: subtasks });
+	}
+
+	removeSubtask(index) {
+		let subtasks = this.state.subTasks;
+		subtasks.splice(index, 1);
 		this.setState({ subTasks: subtasks });
 	}
 
@@ -121,7 +128,7 @@ class CreateTaskForm extends React.Component {
 		let subtasks;
 		if (this.state.subTasks.length > 0) {
 			subtasks = this.state.subTasks.map((subtask, index) =>
-				<React.Fragment key={index}><Row><CreateSubtask OwnerID={this.props.OwnerID} StaffID={this.props.StaffID} AdminID={this.props.AdminID} updateAssignedStaff={this.updateSubtaskAssignedStaff} onChange={this.updateSubtask} subTask={subtask} index={index}/></Row></React.Fragment>
+				<React.Fragment key={index}><Row><CreateSubtask OwnerID={this.props.OwnerID} StaffID={this.props.StaffID} AdminID={this.props.AdminID} updateAssignedStaff={this.updateSubtaskAssignedStaff} onChange={this.updateSubtask} subTask={subtask} index={index} handleRemove={this.removeSubtask}/></Row></React.Fragment>
 			);
 		}
 		return (

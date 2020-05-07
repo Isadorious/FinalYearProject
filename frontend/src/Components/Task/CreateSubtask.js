@@ -20,6 +20,7 @@ class CreateSubtask extends React.Component {
 
 		this.handleInputChange = this.handleInputChange.bind(this);
 		this.updateAssignedStaff = this.updateAssignedStaff.bind(this);
+		this.handleRemove = this.handleRemove.bind(this);
 	}
 
 	handleInputChange(event) {
@@ -28,6 +29,10 @@ class CreateSubtask extends React.Component {
 
 	updateAssignedStaff(staff) {
 		this.props.updateAssignedStaff(staff, this.props.index);
+	}
+
+	handleRemove() {
+		this.props.handleRemove(this.props.index);
 	}
 
 	render() {
@@ -45,6 +50,9 @@ class CreateSubtask extends React.Component {
 					</Form.Group>
 					<Form.Group as={Col} controlId="dueDateControl">
 						<Form.Control name="subTaskDue" type="date" value={this.props.subTask.subTaskDue} onChange={this.handleInputChange} />
+					</Form.Group>
+					<Form.Group as={Col} controlId="removeControl">
+						<Button className={"float-right"} variant="danger" onClick={this.handleRemove}>Delete</Button>
 					</Form.Group>
 				</Form.Row>
 			</Container>
