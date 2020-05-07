@@ -10,6 +10,7 @@ import Modal from 'react-bootstrap/Modal';
 import Info from './Info';
 import CreateTask from '../Task/CreateTask';
 import TaskCard from '../Task/TaskCard';
+import ViewEditTask from '../Task/ViewEditTask';
 
 class CalendarDashboard extends React.Component {
     constructor(props) {
@@ -31,6 +32,8 @@ class CalendarDashboard extends React.Component {
             communityAdminsID: [],
             ownerID: [],
             showCreateModal: false,
+            showTaskModal: false,
+            shownTaskID: '',
         }
 
         this.handleCalendarDelete = this.handleCalendarDelete.bind(this);
@@ -38,6 +41,8 @@ class CalendarDashboard extends React.Component {
         this.handleInfoClose = this.handleInfoClose.bind(this);
         this.handleCreateOpen = this.handleCreateOpen.bind(this);
         this.handleCreateClose = this.handleCreateClose.bind(this);
+        this.handleShowTask = this.handleShowTask.bind(this);
+        this.handleHideTask = this.handleHideTask.bind(this);
     }
 
     async componentDidMount() {
@@ -165,6 +170,14 @@ class CalendarDashboard extends React.Component {
         this.setState({showCreateModal: false});
     }
 
+    handleShowTask(id) {
+        this.setState({shownTaskID: id, showTaskModal: true });
+    }
+
+    handleHideTask() {
+        this.setState({showTaskModal: false});
+    }
+
     render() {
         if (this.state.loading === true) {
             return (<Loading />)
@@ -211,7 +224,7 @@ class CalendarDashboard extends React.Component {
             if (this.state.tasks.length > 0) {
                 cards = this.state.tasks.map((task) =>
                     <Row key={task._id}>
-                        <TaskCard task={task} />
+                        <TaskCard task={task}  showTask={this.handleShowTask}/>
                     </Row>
                 );
             }
@@ -229,6 +242,10 @@ class CalendarDashboard extends React.Component {
                             <Modal.Title>Create Task</Modal.Title>
                         </Modal.Header>
                         <CreateTask OwnerID={this.state.ownerID} StaffID={this.state.communityStaffID} AdminID={this.state.communityAdminsID} onCancel={this.handleCreateClose} calendarID={this.props.match.params.id}/>
+                    </Modal>
+                    <Modal show={this.state.showTaskModal} onHide={this.handleHideTask} size="lg">
+                        <Modal.Header closeButton />
+                        <ViewEditTask OwnerID={this.state.ownerID} StaffID={this.state.communityStaffID} AdminID={this.state.communityAdminsID} calendarID={this.props.match.params.id} id={this.state.shownTaskID} userPermission = {this.state.userPermission} />
                     </Modal>
                     <Row>
                         <Col>

@@ -10,6 +10,14 @@ import UserListItem from '../User/ListItem';
 class TaskCard extends React.Component {
 	constructor(props) {
 		super(props);
+
+		this.handleShow = this.handleShow.bind(this);
+	}
+
+	handleShow() {
+		if(this.props.showTask) {
+			this.props.showTask(this.props.task._id);
+		}
 	}
 
 	render() {
@@ -21,9 +29,8 @@ class TaskCard extends React.Component {
 			);
 		}
 
-		console.log(this.props.task.complete);
 		return (
-			<Card id={this.props.task._id} style={{width: "15rem"}}>
+			<Card id={this.props.task._id} style={{width: "15rem"}} onClick={this.handleShow}>
 				<Card.Body>
 					<Card.Title style={{textAlign: "center"}}>{this.props.task.taskName}</Card.Title>
 					<ListGroup variant="flush">
@@ -39,6 +46,7 @@ class TaskCard extends React.Component {
 
 TaskCard.defaultProps = {
 	task: undefined,
+	showTask: false,
 }
 
 export default TaskCard;
