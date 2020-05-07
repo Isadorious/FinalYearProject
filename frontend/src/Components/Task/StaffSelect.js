@@ -107,17 +107,15 @@ class StaffSelect extends React.Component {
 			});
 		}
 
-		this.setState({dataSource: staffData});
+		this.setState({dataSource: staffData, loading: false});
 	}
 	
 	render() {
-		if(this.state.dataSource.length > 0) {
+		if(this.state.loading === true) {
+			return (<Loading />)
+		} else {
 			return(
 				<ReactSuperSelect multiple={true} onChange={this.handleSelectionChanged} dataSource={this.state.dataSource} keepOpenOnSelection={true} />
-			)
-		} else {
-			return (
-				<></>
 			)
 		} 
 	}
