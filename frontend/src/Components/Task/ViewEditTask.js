@@ -41,6 +41,10 @@ class ViewEditTask extends React.Component {
 
 	}
 
+	async componentDidMount() {
+		await this.getTask();
+	}
+
 	handleInputChange(event) {
 		const target = event.target;
 		const value = target.value;
@@ -263,7 +267,7 @@ class ViewEditTask extends React.Component {
 						</Form.Group>
 						<hr />
 						<Form.Group as={Col} controlId="completedControl">
-							<p>{this.props.task.complete ? `Complete` : `Incomplete`}</p>
+							<p>{this.state.complete ? `Complete` : `Incomplete`}</p>
 						</Form.Group>
 						<hr />
 						<Form.Group as={Col} controlId="dueDateControl">
