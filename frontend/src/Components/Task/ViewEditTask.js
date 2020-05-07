@@ -212,7 +212,7 @@ class ViewEditTask extends React.Component {
 						<hr />
 						<Form.Group controlId="assignedUsersControl">
 							<Form.Label>Assigned Users</Form.Label>
-							<StaffSelect ownerID={this.props.OwnerID} staffID={this.props.StaffID} AdminID={this.props.AdminID} updateSelectedStaff={this.updateAssignedStaff} initialStaffID={this.state.taskAssignedUser}/>
+							<StaffSelect ownerID={this.props.OwnerID} StaffID={this.props.StaffID} AdminID={this.props.AdminID} updateSelectedStaff={this.updateAssignedStaff} initialStaffID={this.state.taskAssignedUser}/>
 						</Form.Group>
 						<hr />
 						<Form.Group controlId="subTasksControl">
@@ -260,7 +260,7 @@ class ViewEditTask extends React.Component {
 						<hr />
 						<Form.Group controlId="assignedUsersControl">
 							<Form.Label>Assigned Users</Form.Label>
-							<StaffSelect ownerID={this.props.OwnerID} staffID={this.props.StaffID} AdminID={this.props.AdminID} updateSelectedStaff={this.updateAssignedStaff} disabled initialStaffID={this.state.taskAssignedUser}/>
+							<StaffSelect ownerID={this.props.OwnerID} StaffID={this.props.StaffID} AdminID={this.props.AdminID} updateSelectedStaff={this.updateAssignedStaff} disabled initialStaffID={this.state.taskAssignedUser}/>
 						</Form.Group>
 						<hr />
 						<Form.Group controlId="subTasksControl">
