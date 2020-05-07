@@ -5,6 +5,7 @@ import Loading from '../Utils/Loading';
 import Error from '../Utils/Error';
 import { Link } from 'react-router-dom';
 import ListGroup from 'react-bootstrap/ListGroup';
+import UserListItem from '../User/ListItem';
 
 class TaskCard extends React.Component {
 	constructor(props) {
@@ -16,7 +17,7 @@ class TaskCard extends React.Component {
 
 		if (Array.isArray(this.props.task.taskAssignedUsers)) {
 			assignedUsers = this.props.task.taskAssignedUsers.map((userID, index) =>
-				<ListGroup.Item key={userID}>{userID}</ListGroup.Item>
+				<UserListItem key={userID} id={userID}/>
 			);
 		}
 
