@@ -21,6 +21,7 @@ class ViewEditTask extends React.Component {
 			taskDue: '',
 			taskComments: [],
 			subTasks: [],
+			hideButton: true,
 			editMode: false,
 			complete: false,
 			loading: true,
@@ -122,6 +123,10 @@ class ViewEditTask extends React.Component {
 						subTasks: data.subTasks,
 						loading: false,
 					})
+
+					if(this.props.userPermission > 0) {
+						this.setState({hideButton: false});
+					}
 				} else {
 					this.setState({
 						error: true,
@@ -194,7 +199,7 @@ class ViewEditTask extends React.Component {
 			}
 			return (
 				<Container fluid>
-					<Button className={"float-right"} onClick={this.toggleEditMode}>Toggle Edit Mode</Button>
+					{!this.state.hideButton && <div><Button className={"dashboardButton float-right"} onClick={this.toggleEditMode}>Toggle Edit Mode</Button> <br/></div>}
 					<Form id="createTask" className={"modalForm"}>
 						<Form.Group controlId="taskNameControl">
 							<Form.Control name="taskName" type="text" placeholder="Task Name" value={this.state.taskName} onChange={this.handleInputChange} />
@@ -242,7 +247,7 @@ class ViewEditTask extends React.Component {
 			}
 			return (
 				<Container fluid>
-					<Button className={"float-right"} onClick={this.toggleEditMode}>Toggle Edit Mode</Button>
+					{!this.state.hideButton && <div><Button className={"dashboardButton float-right"} onClick={this.toggleEditMode}>Toggle Edit Mode</Button> <br/></div>}
 					<Form id="createTask" className={"modalForm"}>
 						<Form.Group controlId="taskNameControl">
 							<h2>{this.state.taskName}</h2>
