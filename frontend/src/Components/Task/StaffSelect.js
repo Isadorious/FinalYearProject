@@ -34,9 +34,19 @@ class StaffSelect extends React.Component {
 
 	componentDidMount() {
 		this.generateDataSource();
+
+		if(this.props.initialStaffID) {
+			let selection = [];
+			this.props.initialStaffID.map((id) => {
+				const option = this.state.dataSource.find((option => option.id == id));
+			});
+
+			this.setState({initialSelection: selection});
+		}
 	}
 
 	generateDataSource() {
+		let staffIDs = [];
 		let staffData = [];
 
 		let accessString = localStorage.getItem(`JWT`);
@@ -51,8 +61,20 @@ class StaffSelect extends React.Component {
 		}
 
 		if(this.props.ownerID !== undefined) {
+			staffIDs.push(this.props.ownerID);
+		}
+
+		if(this.props.AdminID !== undefined) {
+			staffIDs = staffIDs.concat(this.props.AdminID);
+		}
+
+		if(this.props.StaffID !== undefined) {
+			staffIDs = staffIDs.concat(this.props.StaffID);
+		}
+
+		staffIDs.forEach((staffID) => {
 			Axios
-			.get(`${process.env.REACT_APP_API_URL}/api/users/` + this.props.ownerID, {
+			.get(`${process.env.REACT_APP_API_URL}/api/users/` + staffID, {
 				headers: { Authorization: `JWT ${accessString}` }
 			})
 			.then(response => {
@@ -66,60 +88,9 @@ class StaffSelect extends React.Component {
 					staffData.push(dataItem);
 				}
 			});
-		}
-
-		if(this.props.AdminID !== undefined) {
-			this.props.AdminID.map((adminID) => {
-				Axios
-				.get(`${process.env.REACT_APP_API_URL}/api/users/` + adminID, {
-					headers: { Authorization: `JWT ${accessString}` }
-				})
-				.then(response => {
-					let data = response.data;
-					if (data.message === "Found user successfully!") {
-						let dataItem = {
-							"id": data.user._id,
-							"name": data.user.username,
-							"size": "Medium",
-						}
-						staffData.push(dataItem);
-					}
-				});
-			});
-		}
-
-		if(this.props.StaffID !== undefined) {
-			this.props.StaffID.map((staffID) => {
-				Axios
-				.get(`${process.env.REACT_APP_API_URL}/api/users/` + staffID, {
-					headers: { Authorization: `JWT ${accessString}` }
-				})
-				.then(response => {
-					let data = response.data;
-					if (data.message === "Found user successfully!") {
-						let dataItem = {
-							"id": data.user._id,
-							"name": data.user.username,
-							"size": "Medium",
-						}
-						staffData.push(dataItem);
-					}
-				});
-			});
-		}
+		});
 
 		this.setState({dataSource: staffData, loading: false});
-
-		if(this.props.initialStaffID) {
-			let selection = [];
-			this.props.initialStaffID.map((id) => {
-				const option = this.state.dataSource.find((option => option.id == id));
-				console.log(this.state.dataSource);
-				console.log(option);
-			});
-
-			this.setState({initialSelection: selection});
-		}
 	}
 	
 	render() {
