@@ -30,7 +30,7 @@ class TaskCard extends React.Component {
 		}
 
 		return (
-			<Card id={this.props.task._id} style={{width: "15rem"}} onClick={this.handleShow}>
+			<Card id={this.props.task._id} style={{width: "15rem", cursor: "pointer"}} onClick={this.handleShow}>
 				<Card.Body>
 					<Card.Title style={{textAlign: "center"}}>{this.props.task.taskName}</Card.Title>
 					<ListGroup variant="flush">
