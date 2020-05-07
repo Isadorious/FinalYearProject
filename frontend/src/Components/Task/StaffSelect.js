@@ -18,6 +18,7 @@ class StaffSelect extends React.Component {
 
 		this.handleSelectionChanged = this.handleSelectionChanged.bind(this);
 		this.generateDataSource = this.generateDataSource.bind(this);
+		this.generateInitialData = this.generateInitialData.bind(this);
 	}
 
 	handleSelectionChanged(options) {
@@ -36,12 +37,7 @@ class StaffSelect extends React.Component {
 		this.generateDataSource();
 
 		if(this.props.initialStaffID) {
-			let selection = [];
-			this.props.initialStaffID.map((id) => {
-				const option = this.state.dataSource.find((option => option.id == id));
-			});
-
-			this.setState({initialSelection: selection});
+			this.generateInitialData();
 		}
 	}
 
@@ -90,7 +86,31 @@ class StaffSelect extends React.Component {
 			});
 		});
 
-		this.setState({dataSource: staffData, loading: false});
+		this.setState({dataSource: staffData, loading: this.props.initialStaffID ? false : true});
+	}
+
+	generateInitialData() {
+		let selection = [];
+		let accessString = localStorage.getItem(`JWT`);
+		this.props.initialStaffID.forEach((staffID) => {
+			Axios
+			.get(`${process.env.REACT_APP_API_URL}/api/users/` + staffID, {
+				headers: { Authorization: `JWT ${accessString}` }
+			})
+			.then(response => {
+				let data = response.data;
+				if (data.message === "Found user successfully!") {
+					let dataItem = {
+						"id": data.user._id,
+						"name": data.user.username,
+						"size": "Medium",
+					}
+					selection.push(dataItem);
+				}
+			});
+		});
+
+		this.setState({initialSelection: selection, loading: false});
 	}
 	
 	render() {
@@ -98,7 +118,7 @@ class StaffSelect extends React.Component {
 			return (<Loading />)
 		} else {
 			return(
-				<ReactSuperSelect multiple={true} onChange={this.handleSelectionChanged} dataSource={this.state.dataSource} keepOpenOnSelection={true} disabled={this.props.disabled} />
+				<ReactSuperSelect multiple={true} onChange={this.handleSelectionChanged} dataSource={this.state.dataSource} keepOpenOnSelection={true} disabled={this.props.disabled} initialValue={this.props.initialStaffID ? this.state.initialSelection : null} />
 			)
 		} 
 	}
