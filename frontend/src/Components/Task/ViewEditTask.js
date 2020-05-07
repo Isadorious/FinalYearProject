@@ -180,7 +180,7 @@ class ViewEditTask extends React.Component {
 		if (this.state.loading === true) {
 			return ( <Loading />)
 		} else if (this.state.error === true) {
-			<Error statusCode={this.state.errorStatus} message={this.state.errorMessage}/>
+			return (<Error statusCode={this.state.errorStatus} message={this.state.errorMessage}/>)
 		} else if(this.state.editMode === true) {
 			let subtasks;
 			if (this.state.subTasks.length > 0) {
