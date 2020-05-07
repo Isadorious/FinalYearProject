@@ -9,6 +9,7 @@ class StaffSelect extends React.Component {
 		super(props);
 		this.state = {
 			dataSource: [],
+			initialSelection: [],
             loading: true,
             error: false,
             errorMessage: 'Unable to get staff',
@@ -108,6 +109,17 @@ class StaffSelect extends React.Component {
 		}
 
 		this.setState({dataSource: staffData, loading: false});
+
+		if(this.props.initialStaffID) {
+			let selection = [];
+			this.props.initialStaffID.map((id) => {
+				const option = this.state.dataSource.find((option => option.id == id));
+				console.log(this.state.dataSource);
+				console.log(option);
+			});
+
+			this.setState({initialSelection: selection});
+		}
 	}
 	
 	render() {
@@ -115,7 +127,7 @@ class StaffSelect extends React.Component {
 			return (<Loading />)
 		} else {
 			return(
-				<ReactSuperSelect multiple={true} onChange={this.handleSelectionChanged} dataSource={this.state.dataSource} keepOpenOnSelection={true} />
+				<ReactSuperSelect multiple={true} onChange={this.handleSelectionChanged} dataSource={this.state.dataSource} keepOpenOnSelection={true} disabled={this.props.disabled} />
 			)
 		} 
 	}
@@ -126,6 +138,7 @@ StaffSelect.defaultProps = {
 	StaffID: undefined,
 	AdminID: undefined,
 	updateSelectedStaff: undefined,
+	initialStaffID: false,
 }
 
 export default StaffSelect;
