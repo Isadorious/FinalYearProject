@@ -23,13 +23,13 @@ class TaskCard extends React.Component {
 
 		console.log(this.props.task.complete);
 		return (
-			<Card id={this.props.task._id}>
+			<Card id={this.props.task._id} style={{width: "15rem"}}>
 				<Card.Body>
 					<Card.Title style={{textAlign: "center"}}>{this.props.task.taskName}</Card.Title>
 					<ListGroup variant="flush">
 						{assignedUsers}
-						<ListGroup.Item>{this.props.task.taskDue}</ListGroup.Item>
-						<ListGroup.Item>{String(this.props.task.complete)}</ListGroup.Item>
+						<ListGroup.Item>{new Date(this.props.task.taskDue).toLocaleDateString('en-CA')}</ListGroup.Item>
+						<ListGroup.Item>{this.props.task.complete ? `Complete` : `Incomplete`}</ListGroup.Item>
 					</ListGroup>
 					</Card.Body>
 			</Card>
