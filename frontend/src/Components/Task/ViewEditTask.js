@@ -7,7 +7,7 @@ import Axios from 'axios';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import StaffSelect from './StaffSelect';
-import CreateSubtask from './CreateSubtask';
+import ViewEditSubtask from './ViewEditSubtask';
 import Row from 'react-bootstrap/Row';
 
 class ViewEditTask extends React.Component {
@@ -124,8 +124,8 @@ class ViewEditTask extends React.Component {
 						loading: false,
 					})
 
-					if(this.props.userPermission > 0) {
-						this.setState({hideButton: false});
+					if (this.props.userPermission > 0) {
+						this.setState({ hideButton: false });
 					}
 				} else {
 					this.setState({
@@ -187,19 +187,19 @@ class ViewEditTask extends React.Component {
 	render() {
 
 		if (this.state.loading === true) {
-			return ( <Loading />)
+			return (<Loading />)
 		} else if (this.state.error === true) {
-			return (<Error statusCode={this.state.errorStatus} message={this.state.errorMessage}/>)
-		} else if(this.state.editMode === true) {
+			return (<Error statusCode={this.state.errorStatus} message={this.state.errorMessage} />)
+		} else if (this.state.editMode === true) {
 			let subtasks;
 			if (this.state.subTasks.length > 0) {
 				subtasks = this.state.subTasks.map((subtask, index) =>
-					<React.Fragment key={index}><Row><CreateSubtask OwnerID={this.props.OwnerID} StaffID={this.props.StaffID} AdminID={this.props.AdminID} updateAssignedStaff={this.updateSubtaskAssignedStaff} onChange={this.updateSubtask} subTask={subtask} index={index} handleRemove={this.removeSubtask} /></Row></React.Fragment>
+					<React.Fragment key={index}><Row><ViewEditSubtask OwnerID={this.props.OwnerID} StaffID={this.props.StaffID} AdminID={this.props.AdminID} updateAssignedStaff={this.updateSubtaskAssignedStaff} onChange={this.updateSubtask} subTask={subtask} index={index} handleRemove={this.removeSubtask} editMode={this.state.editMode} /></Row></React.Fragment>
 				);
 			}
 			return (
 				<Container fluid>
-					{!this.state.hideButton && <div><Button className={"dashboardButton float-right"} onClick={this.toggleEditMode}>Toggle Edit Mode</Button> <br/></div>}
+					{!this.state.hideButton && <div><Button className={"dashboardButton float-right"} onClick={this.toggleEditMode}>Toggle Edit Mode</Button> <br /></div>}
 					<Form id="createTask" className={"modalForm"}>
 						<Form.Group controlId="taskNameControl">
 							<Form.Control name="taskName" type="text" placeholder="Task Name" value={this.state.taskName} onChange={this.handleInputChange} />
@@ -212,7 +212,7 @@ class ViewEditTask extends React.Component {
 						<hr />
 						<Form.Group controlId="assignedUsersControl">
 							<Form.Label>Assigned Users</Form.Label>
-							<StaffSelect ownerID={this.props.OwnerID} StaffID={this.props.StaffID} AdminID={this.props.AdminID} updateSelectedStaff={this.updateAssignedStaff} initialStaffID={this.state.taskAssignedUser}/>
+							<StaffSelect ownerID={this.props.OwnerID} StaffID={this.props.StaffID} AdminID={this.props.AdminID} updateSelectedStaff={this.updateAssignedStaff} initialStaffID={this.state.taskAssignedUser} />
 						</Form.Group>
 						<hr />
 						<Form.Group controlId="subTasksControl">
@@ -242,12 +242,12 @@ class ViewEditTask extends React.Component {
 			let subtasks;
 			if (this.state.subTasks.length > 0) {
 				subtasks = this.state.subTasks.map((subtask, index) =>
-					<React.Fragment key={index}><Row><CreateSubtask OwnerID={this.props.OwnerID} StaffID={this.props.StaffID} AdminID={this.props.AdminID} updateAssignedStaff={this.updateSubtaskAssignedStaff} onChange={this.updateSubtask} subTask={subtask} index={index} handleRemove={this.removeSubtask} /></Row></React.Fragment>
+					<React.Fragment key={index}><Row><ViewEditSubtask OwnerID={this.props.OwnerID} StaffID={this.props.StaffID} AdminID={this.props.AdminID} updateAssignedStaff={this.updateSubtaskAssignedStaff} onChange={this.updateSubtask} subTask={subtask} index={index} handleRemove={this.removeSubtask} editMode={this.state.editMode} /></Row></React.Fragment>
 				);
 			}
 			return (
 				<Container fluid>
-					{!this.state.hideButton && <div><Button className={"dashboardButton float-right"} onClick={this.toggleEditMode}>Toggle Edit Mode</Button> <br/></div>}
+					{!this.state.hideButton && <div><Button className={"dashboardButton float-right"} onClick={this.toggleEditMode}>Toggle Edit Mode</Button> <br /></div>}
 					<Form id="createTask" className={"modalForm"}>
 						<Form.Group controlId="taskNameControl">
 							<h2>{this.state.taskName}</h2>
@@ -260,7 +260,7 @@ class ViewEditTask extends React.Component {
 						<hr />
 						<Form.Group controlId="assignedUsersControl">
 							<Form.Label>Assigned Users</Form.Label>
-							<StaffSelect ownerID={this.props.OwnerID} StaffID={this.props.StaffID} AdminID={this.props.AdminID} updateSelectedStaff={this.updateAssignedStaff} disabled initialStaffID={this.state.taskAssignedUser}/>
+							<StaffSelect ownerID={this.props.OwnerID} StaffID={this.props.StaffID} AdminID={this.props.AdminID} updateSelectedStaff={this.updateAssignedStaff} disabled initialStaffID={this.state.taskAssignedUser} />
 						</Form.Group>
 						<hr />
 						<Form.Group controlId="subTasksControl">
