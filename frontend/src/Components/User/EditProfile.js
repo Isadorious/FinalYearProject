@@ -96,7 +96,7 @@ class ProfileForm extends React.Component {
 						email: data.user.email,
 						nickname: data.user.nickname,
 						description: data.user.description,
-						dateOfBirth: data.user.dateOfBirth,
+						dateOfBirth: new Date(data.user.dateOfBirth),
 						profilePicture: data.user.profilePicture,
 						loading: false,
 					});
@@ -155,6 +155,7 @@ class ProfileForm extends React.Component {
 		} else if(this.state.error === true) {
 			return (<Error statusCode={this.state.errorStatusCode} message={this.state.errorMessage}/>)
 		} else {
+			console.log(typeof(this.state.dateOfBirth));
 			return (
 				< >
 					<Container>
@@ -176,7 +177,7 @@ class ProfileForm extends React.Component {
 
 									<Form.Group controlId="dateOfBirthControl">
 										<Form.Label>Date of Birth:</Form.Label>
-										<Form.Control readOnly name="dateOfBirth" type="date" placeholder="Date of Birth" value={this.state.dateOfBirth} onChange={this.handleInputChange} />
+										<Form.Control readOnly name="dateOfBirth" type="date" placeholder="Date of Birth" value={this.state.dateOfBirth.toLocaleDateString('en-CA')} onChange={this.handleInputChange} />
 									</Form.Group>
 
 									<Form.Group controlId="nicknameControl">
