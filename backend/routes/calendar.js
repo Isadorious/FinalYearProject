@@ -5,6 +5,7 @@ const Task = require(`../models/task`);
 const Comment = require(`../models/comment`);
 const SubTask = require(`../models/subtask`);
 const Community = require(`../models/community`);
+const Category = require(`../models/category`);
 const { isStaff, isAdmin, isOwner } = require('../Utils/community');
 const { canViewCalendar } = require('../Utils/calendar');
 const passport = require(`passport`);
@@ -702,6 +703,149 @@ router.delete(`/:id/tasks/:taskID/subtasks/:subTaskID`, (req, res) => {
 								}).catch((result) => {
 									res.status(result.status).json({ message: result.message });
 								});
+						}).catch((result) => {
+							res.status(result.status).json({ message: result.message });
+						});
+				}
+			});
+		}
+	})(req, res);
+});
+
+/*
+* Category routes
+*/
+
+router.get(`/:id/category/:categoryID`, (req, res) => {
+	passport.authenticate(`jwt`, { session: false }, (err, user, info) => {
+		if (err) {
+			res.send(err);
+		} else if (info != undefined) {
+			res.json({ message: info.message });
+		} else {
+			const query = Calendar.findById(req.params.id);
+			query.exec((err, calendar) => {
+				if (err) {
+					res.send(err);
+				}
+
+				if (calendar === null) {
+					res.status(404).status({ message: `Unable to find calendar` });
+					return;
+				}
+
+				canViewCalendar(req.params.id, user._id)
+					.then((result) => {
+						res.json(calendar.categories.id(req.params.categoryID));
+					}).catch((result) => {
+						res.status(result.status).json({ message: result.message });
+					});
+			});
+		}
+	})(req, res);
+});
+
+router.post(`/:id/category`, (req, res) => {
+	passport.authenticate(`jwt`, { session: false }, (err, user, info) => {
+		if (err) {
+			res.send(err);
+		} else if (info != undefined) {
+			res.json({ message: info.message });
+		} else {
+			const query = Calendar.findById(req.params.id);
+			query.exec((err, calendar) => {
+				if (err) {
+					res.send(err);
+				} else {
+					isStaff(calendar.communityID, user._id)
+						.then((result) => {
+							const category = new Category(req.body);
+							calendar.categories.push(category);
+
+							calendar.save((error) => {
+								if (error) {
+									res.send(error);
+								} else {
+									res.json({ message: `Category added successfully!`, category });
+								}
+							});
+						}).catch((result) => {
+							res.status(result.status).json({ message: result.message });
+						});
+				}
+			});
+		}
+	})(req, res);
+});
+
+router.put(`/:id/category/:categoryID`, (req, res) => {
+	passport.authenticate(`jwt`, { session: false }, (err, user, info) => {
+		if (err) {
+			res.send(err);
+		} else if (info != undefined) {
+			res.json({ message: info.message });
+		} else {
+			const query = Calendar.findById(req.params.id);
+			query.exec((err, calendar) => {
+				if (err) {
+					res.send(err);
+				} else {
+					isStaff(calendar.communityID, user._id)
+						.then((result) => {
+							const category = calendar.categories.id(req.params.categoryID);
+							category.set(req.body);
+
+							calendar.save((error) => {
+								if (error) {
+									res.send(error);
+								} else {
+									res.json({ message: `Category updated successfully!`, category });
+								}
+							});
+						}).catch((result) => {
+							res.status(result.status).json({ message: result.message });
+						});
+				}
+			});
+		}
+	})(req, res);
+});
+
+router.delete(`/:id/category/:categoryID`, (req, res) => {
+	passport.authenticate(`jwt`, { session: false }, (err, user, info) => {
+		if (err) {
+			res.send(err);
+		} else if (info != undefined) {
+			res.json({ message: info.message });
+		} else {
+			const query = Calendar.findById(req.params.id);
+			query.exec((err, calendar) => {
+				if (err) {
+					res.send(err);
+				} else {
+					isStaff(calendar.communityID, user._id)
+						.then((result) => {
+							calendar.categories.id(req.params.categoryID).remove();
+
+							// Remove category IDs from tasks
+							const tasksToUpdate = calendars.tasks.filter(function(task) {
+								return task.taskCategory == req.params.categoryID; 
+							});
+
+							tasksToUpdate.forEach(function(modifiedTask) {
+								modifiedTask.taskCategory = '';
+								const task = calendar.tasks.id(modifiedTask._id);
+								task.set(modifiedTask);
+							});
+
+							// Save the calendar
+							calendar.save((error) => {
+								if (err) {
+									res.send(error);
+								} else {
+									res.json({ message: `Category successfully deleted!` });
+								}
+							});
 						}).catch((result) => {
 							res.status(result.status).json({ message: result.message });
 						});
