@@ -45,7 +45,7 @@ class CreateSubtask extends React.Component {
 					<Form.Group as={Col} controlId="assignedUsersControl">
 						<StaffSelect ownerID={this.props.OwnerID} staffID={this.props.StaffID} AdminID={this.props.AdminID} updateSelectedStaff={this.updateAssignedStaff} placeholder="" />
 					</Form.Group>
-					<Form.Group as={Col} controlId="completedControl">
+					<Form.Group as={Col} controlId={`completedSubtaskControl${this.props.index}`}>
 						<Form.Check type="switch" name="completed" label="Completed?" value={this.props.subTask.complete} onChange={this.handleInputChange} disabled/>
 					</Form.Group>
 					<Form.Group as={Col} controlId="dueDateControl">

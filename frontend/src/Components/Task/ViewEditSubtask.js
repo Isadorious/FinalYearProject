@@ -46,7 +46,7 @@ class ViewEditSubtask extends React.Component {
                         <Form.Group as={Col} controlId="assignedUsersControl">
                             <StaffSelect ownerID={this.props.OwnerID} staffID={this.props.StaffID} AdminID={this.props.AdminID} updateSelectedStaff={this.updateAssignedStaff} initialStaffID={this.props.subTask.subTaskAssignedUsers} />
                         </Form.Group>
-                        <Form.Group as={Col} controlId="completedControl">
+                        <Form.Group as={Col} controlId={`completedSubtaskControl${this.props.index}`}>
                             <Form.Check type="switch" name="completed" label="Completed?" value={this.props.subTask.complete} onChange={this.handleInputChange} />
                         </Form.Group>
                         <Form.Group as={Col} controlId="dueDateControl">
@@ -68,7 +68,7 @@ class ViewEditSubtask extends React.Component {
                         <Form.Group as={Col} controlId="assignedUsersControl">
                             <StaffSelect ownerID={this.props.OwnerID} staffID={this.props.StaffID} AdminID={this.props.AdminID} updateSelectedStaff={this.updateAssignedStaff} initialStaffID={this.props.subTask.subTaskAssignedUsers} disabled />
                         </Form.Group>
-                        <Form.Group as={Col} controlId="completedControl">
+                        <Form.Group as={Col} controlId={`completedSubtaskControl${this.props.index}`}>
                             <p>{this.state.complete ? `Complete` : `Incomplete`}</p>
                         </Form.Group>
                         <Form.Group as={Col} controlId="dueDateControl">
