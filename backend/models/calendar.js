@@ -2,6 +2,7 @@ const mongoose = require(`mongoose`);
 
 const Schema = mongoose.Schema;
 const Task = require(`./task`);
+const Category = require(`./category`);
 
 const calendarSchema = new Schema({
 	calendarName: {
@@ -17,7 +18,7 @@ const calendarSchema = new Schema({
 		type: `String`
 	},
 	categories: {
-		type: [`String`]
+		type: [Category.Schema]
 	},
 	tasks: {
 		type: [Task.schema]
