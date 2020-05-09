@@ -77,6 +77,7 @@ class CategoryManager extends React.Component {
 
     removeCategory(index) {
         let category = this.props.categories[index];
+        let accessString = localStorage.getItem(`JWT`);
 
         Axios
             .delete(`${process.env.REACT_APP_API_URL}/api/calendars/${this.props.calendarID}/categories/${category._id}`, {
@@ -94,9 +95,9 @@ class CategoryManager extends React.Component {
     }
 
     render() {
-        const categories = this.props.categories.map((category, index) => {
+        const categories = this.props.categories.map((category, index) =>
             <React.Fragment key={category._id}><ViewEditCategory category={category} index={index} editCategory={this.updateCategory} removeCategory={this.removeCategory} /><hr /></React.Fragment>
-        })
+        );
         return (
             <Form id="categoryManager" className={"modalForm"}>
                 <Alert variant={this.state.alertVariant} show={this.state.alertShown}>

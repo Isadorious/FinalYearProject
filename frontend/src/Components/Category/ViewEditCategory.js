@@ -40,7 +40,7 @@ class ViewEditCategory extends React.Component {
     }
 
     handleRemove() { 
-        this.props.removeCategory(index);
+        this.props.removeCategory(this.props.index);
     }
 
     render() {
