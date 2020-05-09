@@ -11,6 +11,7 @@ import Info from './Info';
 import CreateTask from '../Task/CreateTask';
 import TaskCard from '../Task/TaskCard';
 import ViewEditTask from '../Task/ViewEditTask';
+import CategoryManager from '../Category/CategoryManager';
 
 class CalendarDashboard extends React.Component {
     constructor(props) {
@@ -34,6 +35,7 @@ class CalendarDashboard extends React.Component {
             showCreateModal: false,
             showTaskModal: false,
             shownTaskID: '',
+            showCategoryManager: false,
         }
 
         this.handleCalendarDelete = this.handleCalendarDelete.bind(this);
@@ -44,6 +46,8 @@ class CalendarDashboard extends React.Component {
         this.handleShowTask = this.handleShowTask.bind(this);
         this.handleHideTask = this.handleHideTask.bind(this);
         this.handleCategoriesUpdate = this.handleCategoriesUpdate.bind(this);
+        this.handleCategoryManagerOpen = this.handleCategoryManagerOpen.bind(this);
+        this.handleCategoryManagerClose = this.handleCategoryManagerClose.bind(this);
     }
 
     async componentDidMount() {
@@ -183,6 +187,14 @@ class CalendarDashboard extends React.Component {
         this.state.categories = categories;
     }
 
+    handleCategoryManagerOpen() {
+        this.setState({showCategoryManager: true});
+    }
+
+    handleCategoryManagerClose() {
+        this.setState({showCategoryManager: false});
+    }
+
     render() {
         if (this.state.loading === true) {
             return (<Loading />)
@@ -196,6 +208,7 @@ class CalendarDashboard extends React.Component {
                         <Button id="calendarInfo" className={"dashboardButton"} variant="info" onClick={this.handleInfoOpen}>Calendar Info</Button>
                         <Button id="editCalendar" className={"dashboardButton"}>Edit Calendar</Button>
                         <Button id="createTask" className={"dashboardButton"} onClick={this.handleCreateOpen}>Create Task</Button>
+                        <Button id="manageCategories" className={"dashboardButton"} onClick={this.handleCategoryManagerOpen}>Manage Categories</Button>
                         <Button id="deleteCalendar" className={"dashboardButton float-right"} variant={"danger"} onClick={this.handleCalendarDelete}>Delete Calendar</Button>
                     </>
             }
@@ -206,6 +219,7 @@ class CalendarDashboard extends React.Component {
                         <Button id="calendarInfo" className={"dashboardButton"} variant="info" onClick={this.handleInfoOpen}>Calendar Info</Button>
                         <Button id="editCalendar" className={"dashboardButton"} onClick={this.handleCreateOpen}>Edit Calendar</Button>
                         <Button id="createTask" className={"dashboardButton"} onClick={this.handleCreateOpen}>Create Task</Button>
+                        <Button id="manageCategories" className={"dashboardButton"} onClick={this.handleCategoryManagerOpen}>Manage Categories</Button>
                     </>
             }
 
@@ -251,6 +265,12 @@ class CalendarDashboard extends React.Component {
                     <Modal show={this.state.showTaskModal} onHide={this.handleHideTask} size="lg">
                         <Modal.Header closeButton />
                         <ViewEditTask OwnerID={this.state.ownerID} StaffID={this.state.communityStaffID} AdminID={this.state.communityAdminsID} calendarID={this.props.match.params.id} id={this.state.shownTaskID} userPermission = {this.state.userPermission} />
+                    </Modal>
+                    <Modal show={this.state.showCategoryManager} onHide={this.handleCategoryManagerClose}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Category Manager</Modal.Title>
+                        </Modal.Header>
+                        <CategoryManager categories={this.state.categories} updateCategories={this.handleCategoriesUpdate} calendarID={this.props.match.params.id}/>
                     </Modal>
                     <Row>
                         <Col>
