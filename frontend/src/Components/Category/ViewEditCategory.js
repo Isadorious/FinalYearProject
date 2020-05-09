@@ -37,6 +37,7 @@ class ViewEditCategory extends React.Component {
 
     handleSave() {
         this.props.editCategory(this.state.categoryName, this.props.index);
+        this.setState({ editMode: !this.state.editMode});
     }
 
     handleRemove() {

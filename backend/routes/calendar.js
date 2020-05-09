@@ -829,7 +829,7 @@ router.delete(`/:id/category/:categoryID`, (req, res) => {
 							calendar.categories.id(req.params.categoryID).remove();
 
 							// Remove category IDs from tasks
-							const tasksToUpdate = calendars.tasks.filter(function(task) {
+							const tasksToUpdate = calendar.tasks.filter(function(task) {
 								return task.taskCategory == req.params.categoryID; 
 							});
 

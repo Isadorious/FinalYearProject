@@ -2,7 +2,17 @@ const mongoose = require(`mongoose`);
 
 const Schema = mongoose.Schema;
 const Task = require(`./task`);
-const Category = require(`./category`);
+//const Category = require(`./category`);
+
+
+// This schema works, mongoose didn't like importing it from file
+const categorySchema = new Schema({
+    categoryName: {
+        type: `String`,
+        required: true,
+        trim: true,
+    },
+});
 
 const calendarSchema = new Schema({
 	calendarName: {
@@ -18,7 +28,7 @@ const calendarSchema = new Schema({
 		type: `String`
 	},
 	categories: {
-		type: [Category.Schema]
+		type: [categorySchema]
 	},
 	tasks: {
 		type: [Task.schema]
