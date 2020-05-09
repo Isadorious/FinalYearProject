@@ -9,6 +9,7 @@ import Container from 'react-bootstrap/Container';
 import StaffSelect from './StaffSelect';
 import CreateSubtask from './CreateSubtask';
 import Row from 'react-bootstrap/Row';
+import CategorySelect from '../Category/CategorySelect';
 
 class CreateTaskForm extends React.Component {
 	constructor(props) {
@@ -35,6 +36,7 @@ class CreateTaskForm extends React.Component {
 		this.addSubTask = this.addSubTask.bind(this);
 		this.createTask = this.createTask.bind(this);
 		this.removeSubtask = this.removeSubtask.bind(this);
+		this.updateCategory = this.updateCategory.bind(this);
 	}
 
 	handleInputChange(event) {
@@ -80,6 +82,10 @@ class CreateTaskForm extends React.Component {
 		this.setState({subTasks: subtasks});
 	}
 
+	updateCategory(categoryID) {
+		this.setState({taskCategory: categoryID});
+	}
+
 	async createTask() {
 		// Post task /:id/tasks
 		let accessString = localStorage.getItem(`JWT`);
@@ -99,6 +105,7 @@ class CreateTaskForm extends React.Component {
 			taskAssignedUsers: this.state.taskAssignedUser,
 			taskDue: this.state.taskDue,
 			subTasks: this.state.subTasks,
+			taskCategory: this.state.taskCategory,
 		}
 
 		await Axios
@@ -166,6 +173,11 @@ class CreateTaskForm extends React.Component {
 						<Form.Control name="taskDue" type="date" value={this.state.taskDue} onChange={this.handleInputChange} />
 					</Form.Group>
 					<hr />
+					<Form.Group controlId="categorySelect">
+						<Form.Label>Category:</Form.Label>
+						<CategorySelect categories={this.props.categories} updateCategory={this.updateCategory}/>
+					</Form.Group>
+					<hr />
 
 					<Button variant="danger" className={"float-right dashboardButton"} onClick={this.props.onCancel}>Cancel</Button>
 					<Button variant="success" className={"float-right dashboardButton"} onClick={this.createTask}>Save</Button>
@@ -183,6 +195,7 @@ CreateTaskForm.defaultProps = {
 	AdminID: undefined,
 	onCancel: undefined,
 	calendarID: undefined,
+	categories: false,
 }
 
 export default CreateTaskForm;

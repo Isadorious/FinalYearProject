@@ -118,7 +118,7 @@ class StaffSelect extends React.Component {
 			return (<Loading />)
 		} else {
 			return(
-				<ReactSuperSelect multiple={true} onChange={this.handleSelectionChanged} dataSource={this.state.dataSource} keepOpenOnSelection={true} disabled={this.props.disabled} initialValue={this.props.initialStaffID ? this.state.initialSelection : false} placeholder="Staff Assigned" />
+				<ReactSuperSelect multiple={true} onChange={this.handleSelectionChanged} dataSource={this.state.dataSource} keepOpenOnSelection={true} disabled={this.props.disabled} initialValue={this.props.initialStaffID ? this.state.initialSelection : null} placeholder="Staff Assigned" />
 			)
 		} 
 	}
