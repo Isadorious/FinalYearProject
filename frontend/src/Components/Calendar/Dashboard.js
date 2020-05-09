@@ -43,6 +43,7 @@ class CalendarDashboard extends React.Component {
         this.handleCreateClose = this.handleCreateClose.bind(this);
         this.handleShowTask = this.handleShowTask.bind(this);
         this.handleHideTask = this.handleHideTask.bind(this);
+        this.handleCategoriesUpdate = this.handleCategoriesUpdate.bind(this);
     }
 
     async componentDidMount() {
@@ -176,6 +177,10 @@ class CalendarDashboard extends React.Component {
 
     handleHideTask() {
         this.setState({showTaskModal: false});
+    }
+
+    handleCategoriesUpdate(categories) {
+        this.state.categories = categories;
     }
 
     render() {
