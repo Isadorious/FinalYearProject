@@ -36,7 +36,7 @@ class CategorySelect extends React.Component {
     }
 
     generateDataSource() {
-        let categoryOptions = {};
+        let categoryOptions = [];
 
         this.props.categories.forEach((category) => {
             let dataItem = {
