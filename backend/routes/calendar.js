@@ -803,6 +803,7 @@ router.put(`/:id/category/:categoryID`, (req, res) => {
 								}
 							});
 						}).catch((result) => {
+							console.log(result);
 							res.status(result.status).json({ message: result.message });
 						});
 				}
@@ -847,6 +848,7 @@ router.delete(`/:id/category/:categoryID`, (req, res) => {
 								}
 							});
 						}).catch((result) => {
+							console.log(result);
 							res.status(result.status).json({ message: result.message });
 						});
 				}

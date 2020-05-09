@@ -4,7 +4,7 @@ const { isAdmin, isStaff } = require('./community');
 function canViewCalendar(calendarID, userID) {
     return new Promise((resolve, reject) => {
         Calendar.findById(calendarID, (err, calendar) => {
-            if (calendar === null) {
+            if (calendar == null) {
                 let result = { status: 404, message: `Unable to find calendar`, permission: false, }
                 reject(result);
             }

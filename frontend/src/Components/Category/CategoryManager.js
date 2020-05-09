@@ -41,10 +41,11 @@ class CategoryManager extends React.Component {
         }
 
         Axios
-            .post(`${process.env.REACT_APP_API_URL}/api/calendars/${this.props.calendarID}/categories`, data, {
+            .post(`${process.env.REACT_APP_API_URL}/api/calendars/${this.props.calendarID}/category`, data, {
                 headers: { Authorization: `JWT ${accessString}` }
             }).then((response) => {
-                if (response.data.message === `Category added successfully!`) {
+                console.log(response.data);
+                if (response.data.message == `Category added successfully!`) {
                     let category = response.data.category;
                     let categories = this.props.categories;
                     categories.push(category);
@@ -52,7 +53,7 @@ class CategoryManager extends React.Component {
                     this.setState({ alertVariant: "success", alertShown: true, alertMessage: `Category added` });
                 }
             }).catch((error) => {
-                this.setState({ alertVariant: "error", alertShown: true, alertMessage: 'Unable to add category' });
+                this.setState({ alertVariant: "danger", alertShown: true, alertMessage: 'Unable to add category' });
             })
     }
 
@@ -61,17 +62,17 @@ class CategoryManager extends React.Component {
         let category = this.props.categories[index];
         category.categoryName = categoryName;
 
-        Axios.put(`${process.env.REACT_APP_API_URL}/api/calendars/${this.props.calendarID}/categories/${category._id}`, category, {
+        Axios.put(`${process.env.REACT_APP_API_URL}/api/calendars/${this.props.calendarID}/category/${category._id}`, category, {
             headers: { Authorization: `JWT ${accessString}` }
         }).then(response => {
-            if (response.data.message === `Category updated successfully!`) {
+            if (response.data.message == `Category updated successfully!`) {
                 let categories = this.props.categories;
                 categories[index] = category;
                 this.props.updateCategories(categories);
                 this.setState({ alertVariant: "success", alertShown: true, alertMessage: `Category updated` });
             }
         }).catch((error) => {
-            this.setState({ alertVariant: "error", alertShown: true, alertMessage: 'Unable to update category' });
+            this.setState({ alertVariant: "danger", alertShown: true, alertMessage: 'Unable to update category' });
         })
     }
 
@@ -80,17 +81,17 @@ class CategoryManager extends React.Component {
         let accessString = localStorage.getItem(`JWT`);
 
         Axios
-            .delete(`${process.env.REACT_APP_API_URL}/api/calendars/${this.props.calendarID}/categories/${category._id}`, {
+            .delete(`${process.env.REACT_APP_API_URL}/api/calendars/${this.props.calendarID}/category/${category._id}`, {
                 headers: { Authorization: `JWT ${accessString}` },
             }).then((response) => {
-                if(response.data.message === `Category successfully deleted!`) {
+                if(response.data.message == `Category successfully deleted!`) {
                     let categories = this.props.categories;
                     categories.splice(index, 1);
                     this.props.updateCategories(categories);
                     this.setState({alertVariant: "success", alertShown: true, alertMessage: `Category deleted`});
                 }
             }).catch((error) => {
-                this.setState({ alertVariant: "error", alertShown: true, alertMessage: 'Unable to delete category' });
+                this.setState({ alertVariant: "danger", alertShown: true, alertMessage: 'Unable to delete category' });
             })
     }
 
@@ -105,7 +106,6 @@ class CategoryManager extends React.Component {
                 </Alert>
                 <Form.Row>
                     <Form.Group as={Col}>
-                        <Form.Label>Add Category</Form.Label>
                         <Form.Control name="categoryName" type="text" placeholder="Category Name" value={this.state.categoryName} onChange={this.handleInputChange} />
                     </Form.Group>
                     <Form.Group as={Col}>

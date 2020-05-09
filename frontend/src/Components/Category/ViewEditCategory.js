@@ -18,18 +18,18 @@ class ViewEditCategory extends React.Component {
     }
 
     componentDidMount() {
-        this.setState({ categoryName: this.props.categoryName});
+        this.setState({ categoryName: this.props.category.categoryName });
     }
 
     handleInputChange(event) {
-		const target = event.target;
-		const value = target.value;
-		const name = target.name;
+        const target = event.target;
+        const value = target.value;
+        const name = target.name;
 
-		this.setState({
-			[name]: value
-		});
-	}
+        this.setState({
+            [name]: value
+        });
+    }
 
     toggleEditMode() {
         this.setState({ editMode: !this.state.editMode });
@@ -39,7 +39,7 @@ class ViewEditCategory extends React.Component {
         this.props.editCategory(this.state.categoryName, this.props.index);
     }
 
-    handleRemove() { 
+    handleRemove() {
         this.props.removeCategory(this.props.index);
     }
 
