@@ -41,8 +41,8 @@ class CalendarDashboard extends React.Component {
             showEditModal: false,
             hideCompletedTasks: true,
             onlyAssigned: false,
-            onlyShowInCategory: false,
-            categoryToSearch: '',
+            filterCategories: false,
+            categoryToFilter: '',
         }
 
         this.handleCalendarDelete = this.handleCalendarDelete.bind(this);
@@ -283,7 +283,7 @@ class CalendarDashboard extends React.Component {
 
             if (this.state.tasks.length > 0) {
                 cards = this.state.tasks.map((task) =>
-                    <TaskCard key={task._id} task={task} showTask={this.handleShowTask} hideComplete={this.state.hideCompletedTasks} onlyAssigned={this.state.onlyAssigned} categories={this.state.categories}/>
+                    <TaskCard key={task._id} task={task} showTask={this.handleShowTask} hideComplete={this.state.hideCompletedTasks} onlyAssigned={this.state.onlyAssigned} categories={this.state.categories} filterCategories={this.state.filterCategories} categoryToFilter={this.state.categoryToFilter}/>
                 );
             }
 

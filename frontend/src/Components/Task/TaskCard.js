@@ -38,6 +38,14 @@ class TaskCard extends React.Component {
 				this.setState({category: cat.categoryName});
 			}
 		}
+
+		if(this.props.filterCategories) {
+			if(categoryToFilter) {
+				if(this.state.category !== categoryToFilter) {
+					this.setState({visible: false});
+				}
+			}
+		}
 	}
 
 	handleShow() {
@@ -74,6 +82,8 @@ TaskCard.defaultProps = {
 	hideComplete: false,
 	onlyAssigned: false,
 	categories: false,
+	filterCategories: false,
+	categoryToFilter: false,
 }
 
 export default TaskCard;
