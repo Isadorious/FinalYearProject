@@ -88,6 +88,11 @@ class CalendarDashboard extends React.Component {
             }).then(response => {
                 let data = response.data;
 
+
+                if(Array.isArray(data.tasks)) {
+                    data.tasks.sort((a,b)=>new Date(a.taskDue).getTime() - new Date(b.taskDue).getTime());
+                }
+
                 document.title = `${data.calendarName} - GCOrg`;
                 this.setState({
                     name: data.calendarName,
@@ -217,7 +222,11 @@ class CalendarDashboard extends React.Component {
                 headers: { Authorization: `JWT ${accessString}` }
             })
             .then((response) => {
-                this.setState({ tasks: response.data.tasks });
+                let data = response.data;
+                if(Array.isArray(data)) {
+                    data.sort((a,b)=>new Date(a.taskDue).getTime() - new Date(b.taskDue).getTime());
+                }
+                this.setState({ tasks: data});
             }).catch((error) => {
                 this.setState({ error: true, errorStatusCode: 500, errorMessage: `Unable to fetch tasks` });
             })
