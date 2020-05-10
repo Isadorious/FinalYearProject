@@ -12,6 +12,7 @@ import CreateTask from '../Task/CreateTask';
 import TaskCard from '../Task/TaskCard';
 import ViewEditTask from '../Task/ViewEditTask';
 import CategoryManager from '../Category/CategoryManager';
+import EditCalendar from './EditCalendar';
 
 class CalendarDashboard extends React.Component {
     constructor(props) {
@@ -36,6 +37,7 @@ class CalendarDashboard extends React.Component {
             showTaskModal: false,
             shownTaskID: '',
             showCategoryManager: false,
+            showEditModal: false,
         }
 
         this.handleCalendarDelete = this.handleCalendarDelete.bind(this);
@@ -48,6 +50,8 @@ class CalendarDashboard extends React.Component {
         this.handleCategoriesUpdate = this.handleCategoriesUpdate.bind(this);
         this.handleCategoryManagerOpen = this.handleCategoryManagerOpen.bind(this);
         this.handleCategoryManagerClose = this.handleCategoryManagerClose.bind(this);
+        this.handleEditOpen = this.handleEditOpen.bind(this);
+        this.handleEditClose = this.handleEditClose.bind(this);
     }
 
     async componentDidMount() {
@@ -196,6 +200,14 @@ class CalendarDashboard extends React.Component {
         this.setState({showCategoryManager: false});
     }
 
+    handleEditOpen() {
+        this.setState({showEditModal: true});
+    }
+    
+    handleEditClose() {
+        this.setState({showEditModal: false});
+    }
+
     render() {
         if (this.state.loading === true) {
             return (<Loading />)
@@ -207,7 +219,7 @@ class CalendarDashboard extends React.Component {
                 buttons =
                     <>
                         <Button id="calendarInfo" className={"dashboardButton"} variant="info" onClick={this.handleInfoOpen}>Calendar Info</Button>
-                        <Button id="editCalendar" className={"dashboardButton"}>Edit Calendar</Button>
+                        <Button id="editCalendar" className={"dashboardButton"} onClick={this.handleEditOpen}>Edit Calendar</Button>
                         <Button id="createTask" className={"dashboardButton"} onClick={this.handleCreateOpen}>Create Task</Button>
                         <Button id="manageCategories" className={"dashboardButton"} onClick={this.handleCategoryManagerOpen}>Manage Categories</Button>
                         <Button id="deleteCalendar" className={"dashboardButton float-right"} variant={"danger"} onClick={this.handleCalendarDelete}>Delete Calendar</Button>
@@ -218,7 +230,7 @@ class CalendarDashboard extends React.Component {
                 buttons =
                     <>
                         <Button id="calendarInfo" className={"dashboardButton"} variant="info" onClick={this.handleInfoOpen}>Calendar Info</Button>
-                        <Button id="editCalendar" className={"dashboardButton"} onClick={this.handleCreateOpen}>Edit Calendar</Button>
+                        <Button id="editCalendar" className={"dashboardButton"} onClick={this.handleEditOpen}>Edit Calendar</Button>
                         <Button id="createTask" className={"dashboardButton"} onClick={this.handleCreateOpen}>Create Task</Button>
                         <Button id="manageCategories" className={"dashboardButton"} onClick={this.handleCategoryManagerOpen}>Manage Categories</Button>
                     </>
@@ -272,6 +284,12 @@ class CalendarDashboard extends React.Component {
                             <Modal.Title>Category Manager</Modal.Title>
                         </Modal.Header>
                         <CategoryManager categories={this.state.categories} updateCategories={this.handleCategoriesUpdate} calendarID={this.props.match.params.id}/>
+                    </Modal>
+                    <Modal show={this.state.showEditModal} onHide={this.handleEditClose}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Edit Calendar</Modal.Title>
+                        </Modal.Header>
+                        <EditCalendar calendarID={this.props.match.params.id} />
                     </Modal>
                     <Row>
                         <Col>
