@@ -283,7 +283,7 @@ class CalendarDashboard extends React.Component {
 
             if (this.state.tasks.length > 0) {
                 cards = this.state.tasks.map((task) =>
-                    <TaskCard key={task._id} task={task} showTask={this.handleShowTask} hideComplete={this.state.hideCompletedTasks} onlyAssigned={this.state.onlyAssigned}/>
+                    <TaskCard key={task._id} task={task} showTask={this.handleShowTask} hideComplete={this.state.hideCompletedTasks} onlyAssigned={this.state.onlyAssigned} categories={this.state.categories}/>
                 );
             }
 

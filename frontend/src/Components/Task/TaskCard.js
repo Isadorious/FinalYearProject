@@ -5,13 +5,14 @@ import Loading from '../Utils/Loading';
 import Error from '../Utils/Error';
 import { Link } from 'react-router-dom';
 import ListGroup from 'react-bootstrap/ListGroup';
-import UserListItem from '../User/ListItem';
+import InlineUsers from './InlineUsers';
 
 class TaskCard extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			visible: true,
+			category: '',
 		}
 
 		this.handleShow = this.handleShow.bind(this);
@@ -30,6 +31,13 @@ class TaskCard extends React.Component {
 				this.setState({visible: false});
 			}
 		}
+
+		if(this.props.categories) {
+			const cat = this.props.categories.find(element => element._id == this.props.task.taskCategory);
+			if(cat !== undefined) {
+				this.setState({category: cat.categoryName});
+			}
+		}
 	}
 
 	handleShow() {
@@ -43,21 +51,14 @@ class TaskCard extends React.Component {
 		if(this.state.visible === false) {
 			return(<></>)
 		} else {
-			let assignedUsers = '';
-
-			if (Array.isArray(this.props.task.taskAssignedUsers)) {
-				assignedUsers = this.props.task.taskAssignedUsers.map((userID, index) =>
-					<UserListItem key={userID} id={userID}/>
-				);
-			}
-	
 			return (
 				<Card id={this.props.task._id} style={{width: "15rem", cursor: "pointer"}} onClick={this.handleShow}>
 					<Card.Body>
 						<Card.Title style={{textAlign: "center"}}>{this.props.task.taskName}</Card.Title>
+						<Card.Subtitle className="mb-2 text-muted" style={{textAlign: "center"}}>{this.state.category}</Card.Subtitle>
 						<ListGroup variant="flush">
-							{assignedUsers}
-							<ListGroup.Item>{new Date(this.props.task.taskDue).toLocaleDateString('en-CA')}</ListGroup.Item>
+							<ListGroup.Item>Users: <InlineUsers users={this.props.task.taskAssignedUsers}/></ListGroup.Item>
+							<ListGroup.Item>{new Date(this.props.task.taskDue).toLocaleDateString('en-GB')}</ListGroup.Item>
 							<ListGroup.Item>{this.props.task.complete ? `Complete` : `Incomplete`}</ListGroup.Item>
 						</ListGroup>
 						</Card.Body>
@@ -72,6 +73,7 @@ TaskCard.defaultProps = {
 	showTask: false,
 	hideComplete: false,
 	onlyAssigned: false,
+	categories: false,
 }
 
 export default TaskCard;
