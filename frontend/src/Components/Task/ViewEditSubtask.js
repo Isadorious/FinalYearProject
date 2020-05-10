@@ -7,6 +7,7 @@ import Axios from 'axios';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import StaffSelect from './StaffSelect';
+import InlineUsers from './InlineUsers';
 
 class ViewEditSubtask extends React.Component {
     constructor(props) {
@@ -21,11 +22,16 @@ class ViewEditSubtask extends React.Component {
         this.handleInputChange = this.handleInputChange.bind(this);
         this.updateAssignedStaff = this.updateAssignedStaff.bind(this);
         this.handleRemove = this.handleRemove.bind(this);
+        this.handleSwitchChange = this.handleSwitchChange.bind(this);
     }
 
     handleInputChange(event) {
         this.props.onChange(event, this.props.index);
     }
+
+    handleSwitchChange(event) {
+        this.props.handleSwitchChange(event, this.props.index);
+	}
 
     updateAssignedStaff(staff) {
         this.props.updateAssignedStaff(staff, this.props.index);
@@ -47,7 +53,7 @@ class ViewEditSubtask extends React.Component {
                             <StaffSelect ownerID={this.props.OwnerID} staffID={this.props.StaffID} AdminID={this.props.AdminID} updateSelectedStaff={this.updateAssignedStaff} initialStaffID={this.props.subTask.subTaskAssignedUsers} />
                         </Form.Group>
                         <Form.Group as={Col} controlId={`completedSubtaskControl${this.props.index}`}>
-                            <Form.Check type="switch" name="completed" label="Completed?" value={this.props.subTask.complete} onChange={this.handleInputChange} />
+                            <Form.Check type="switch" name="complete" label="Completed?" checked={this.props.subTask.complete} onChange={this.handleSwitchChange} />
                         </Form.Group>
                         <Form.Group as={Col} controlId="dueDateControl">
                             <Form.Control name="subTaskDue" type="date" value={new Date(this.props.subTask.subTaskDue).toLocaleDateString('en-CA')} onChange={this.handleInputChange} />
@@ -66,10 +72,10 @@ class ViewEditSubtask extends React.Component {
                             <p>{this.props.subTask.subTaskName}</p>
                         </Form.Group>
                         <Form.Group as={Col} controlId="assignedUsersControl">
-                            <StaffSelect ownerID={this.props.OwnerID} staffID={this.props.StaffID} AdminID={this.props.AdminID} updateSelectedStaff={this.updateAssignedStaff} initialStaffID={this.props.subTask.subTaskAssignedUsers} disabled />
+                            <p><InlineUsers users={this.props.subTask.subTaskAssignedUsers}/></p>
                         </Form.Group>
                         <Form.Group as={Col} controlId={`completedSubtaskControl${this.props.index}`}>
-                            <p>{this.state.complete ? `Complete` : `Incomplete`}</p>
+                            <p>{this.props.subTask.complete ? `Complete` : `Incomplete`}</p>
                         </Form.Group>
                         <Form.Group as={Col} controlId="dueDateControl">
                             <Form.Control name="subTaskDue" type="date" value={new Date(this.props.subTask.subTaskDue).toLocaleDateString('en-CA')} onChange={this.handleInputChange} disabled/>

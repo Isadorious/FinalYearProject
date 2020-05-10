@@ -10,6 +10,7 @@ import StaffSelect from './StaffSelect';
 import ViewEditSubtask from './ViewEditSubtask';
 import Row from 'react-bootstrap/Row';
 import CategorySelect from '../Category/CategorySelect';
+import InlineUsers from './InlineUsers';
 
 class ViewEditTask extends React.Component {
 	constructor(props) {
@@ -32,6 +33,7 @@ class ViewEditTask extends React.Component {
 		}
 
 		this.handleInputChange = this.handleInputChange.bind(this);
+		this.handleSwitchChange = this.handleSwitchChange.bind(this);
 		this.updateAssignedStaff = this.updateAssignedStaff.bind(this);
 		this.updateSubtask = this.updateSubtask.bind(this);
 		this.updateSubtaskAssignedStaff = this.updateSubtaskAssignedStaff.bind(this);
@@ -41,6 +43,7 @@ class ViewEditTask extends React.Component {
 		this.getTask = this.getTask.bind(this);
 		this.updateTask = this.updateTask.bind(this);
 		this.updateCategory = this.updateCategory.bind(this);
+		this.updateSubtaskComplete = this.updateSubtaskComplete.bind(this);
 
 	}
 
@@ -56,6 +59,14 @@ class ViewEditTask extends React.Component {
 		this.setState({
 			[name]: value
 		});
+	}
+
+	handleSwitchChange(event) {
+		const target = event.target;
+		const checked = target.checked;
+		const name = target.name;
+
+		this.setState({[name]: checked });
 	}
 
 	updateAssignedStaff(staff) {
@@ -74,6 +85,15 @@ class ViewEditTask extends React.Component {
 	updateSubtaskAssignedStaff(staff, index) {
 		let subtasks = this.state.subTasks;
 		subtasks[index].subTaskAssignedUsers = staff;
+		this.setState({ subTasks: subtasks });
+	}
+
+	updateSubtaskComplete(event, index) {
+		let subtasks = this.state.subTasks;
+		const target = event.target;
+		const checked = target.checked;
+		const name = target.name;
+		subtasks[index].complete = checked;
 		this.setState({ subTasks: subtasks });
 	}
 
@@ -123,6 +143,7 @@ class ViewEditTask extends React.Component {
 						taskDue: new Date(data.taskDue),
 						taskComments: data.taskComments,
 						subTasks: data.subTasks,
+						complete: data.complete,
 						loading: false,
 					})
 
@@ -167,6 +188,7 @@ class ViewEditTask extends React.Component {
 			taskDue: this.state.taskDue,
 			subTasks: this.state.subTasks,
 			taskCategory: this.state.taskCategory,
+			complete: this.state.complete,
 		}
 
 		await Axios
@@ -201,7 +223,7 @@ class ViewEditTask extends React.Component {
 			let subtasks;
 			if (this.state.subTasks.length > 0) {
 				subtasks = this.state.subTasks.map((subtask, index) =>
-					<React.Fragment key={index}><Row><ViewEditSubtask OwnerID={this.props.OwnerID} StaffID={this.props.StaffID} AdminID={this.props.AdminID} updateAssignedStaff={this.updateSubtaskAssignedStaff} onChange={this.updateSubtask} subTask={subtask} index={index} handleRemove={this.removeSubtask} editMode={this.state.editMode} /></Row></React.Fragment>
+					<React.Fragment key={index}><Row><ViewEditSubtask OwnerID={this.props.OwnerID} StaffID={this.props.StaffID} AdminID={this.props.AdminID} updateAssignedStaff={this.updateSubtaskAssignedStaff} onChange={this.updateSubtask} subTask={subtask} index={index} handleRemove={this.removeSubtask} editMode={this.state.editMode} handleSwitchChange={this.updateSubtaskComplete} /></Row></React.Fragment>
 				);
 			}
 			return (
@@ -232,7 +254,7 @@ class ViewEditTask extends React.Component {
 						</Form.Group>
 						<hr />
 						<Form.Group as={Col} controlId="completedControl">
-							<Form.Check type="switch" name="completed" label="Task Completed?" onChange={this.handleInputChange} />
+							<Form.Check type="switch" name="complete" label="Task Completed?" onChange={this.handleSwitchChange} checked={this.state.complete} />
 						</Form.Group>
 						<hr />
 						<Form.Group as={Col} controlId="dueDateControl">
@@ -272,7 +294,7 @@ class ViewEditTask extends React.Component {
 						<hr />
 						<Form.Group controlId="assignedUsersControl">
 							<Form.Label>Assigned Users</Form.Label>
-							<StaffSelect ownerID={this.props.OwnerID} StaffID={this.props.StaffID} AdminID={this.props.AdminID} updateSelectedStaff={this.updateAssignedStaff} disabled initialStaffID={this.state.taskAssignedUser} />
+							<p><InlineUsers users={this.state.taskAssignedUser} /></p>
 						</Form.Group>
 						<hr />
 						<Form.Group controlId="subTasksControl">
