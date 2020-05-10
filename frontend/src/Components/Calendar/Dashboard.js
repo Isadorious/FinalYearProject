@@ -13,6 +13,7 @@ import TaskCard from '../Task/TaskCard';
 import ViewEditTask from '../Task/ViewEditTask';
 import CategoryManager from '../Category/CategoryManager';
 import EditCalendar from './EditCalendar';
+import CardColumns from 'react-bootstrap/CardColumns';
 
 class CalendarDashboard extends React.Component {
     constructor(props) {
@@ -255,11 +256,11 @@ class CalendarDashboard extends React.Component {
 
             if (this.state.tasks.length > 0) {
                 cards = this.state.tasks.map((task) =>
-                    <Row key={task._id}>
-                        <TaskCard task={task}  showTask={this.handleShowTask}/>
-                    </Row>
+                    <TaskCard key={task._id} task={task}  showTask={this.handleShowTask}/>
                 );
             }
+
+            let cardColumn = <CardColumns>{cards}</CardColumns> 
 
             return (
                 <Container>
@@ -296,7 +297,7 @@ class CalendarDashboard extends React.Component {
                             {buttons}
                         </Col>
                     </Row>
-                    {cards}
+                    {cardColumn}
                 </Container>
             )
 
