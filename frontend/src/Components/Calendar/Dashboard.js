@@ -14,6 +14,7 @@ import ViewEditTask from '../Task/ViewEditTask';
 import CategoryManager from '../Category/CategoryManager';
 import EditCalendar from './EditCalendar';
 import CardColumns from 'react-bootstrap/CardColumns';
+import Form from 'react-bootstrap/Form';
 
 class CalendarDashboard extends React.Component {
     constructor(props) {
@@ -58,6 +59,8 @@ class CalendarDashboard extends React.Component {
         this.handleEditOpen = this.handleEditOpen.bind(this);
         this.handleEditClose = this.handleEditClose.bind(this);
         this.fetchTasks = this.fetchTasks.bind(this);
+        this.handleSwitchChange = this.handleSwitchChange.bind(this);
+        this.handleInputChange = this.handleInputChange.bind(this);
     }
 
     async componentDidMount() {
@@ -236,6 +239,24 @@ class CalendarDashboard extends React.Component {
             })
     }
 
+	handleSwitchChange(event) {
+		const target = event.target;
+		const checked = target.checked;
+		const name = target.name;
+
+		this.setState({[name]: checked });
+    }
+    
+    handleInputChange(event) {
+        const target = event.target;
+        const value = target.value;
+        const name = target.name;
+        
+        this.setState({
+            [name] : value
+        });
+	}
+
     render() {
         if (this.state.loading === true) {
             return (<Loading />)
@@ -289,6 +310,14 @@ class CalendarDashboard extends React.Component {
 
             let cardColumn = <CardColumns>{cards}</CardColumns>
 
+            let select = <></>
+
+            if(this.state.categories.length > 0) {
+                select = this.state.categories.map((category) => 
+                    <option key={category._id}>{category.categoryName}</option>  
+                );
+            }
+
             return (
                 <Container>
                     <Modal show={this.state.showInfoModal} onHide={this.handleInfoClose}>
@@ -324,6 +353,14 @@ class CalendarDashboard extends React.Component {
                             {buttons}
                         </Col>
                     </Row>
+                    <Form>
+                        <Form.Row>
+                            <Form.Group as={Col} controlId="hideCompleteControl"><Form.Check type="switch" name="hideCompletedTasks" label="Hide completed tasks?" onChange={this.handleSwitchChange} checked={this.state.hideCompletedTasks} /></Form.Group>
+                            <Form.Group as={Col} controlId="onlyAssignedTasksControl"><Form.Check type="switch" name="onlyAssigned" label="Only show my tasks?" onChange={this.handleSwitchChange} checked={this.state.onlyAssigned} /></Form.Group>
+                            <Form.Group as={Col} controlId="filterCategoriesControl"><Form.Check type="switch" name="filterCategories" label="Filter by category?" onChange={this.handleSwitchChange} checked={this.state.filterCategories} /></Form.Group>
+                            <Form.Group as={Col} controlId="categorySelect"><Form.Control as="select" custom disabled={!this.state.filterCategories} onChange={this.handleInputChange} name="categoryToFilter">{select}</Form.Control></Form.Group>
+                        </Form.Row>
+                    </Form>
                     {cardColumn}
                 </Container>
             )
