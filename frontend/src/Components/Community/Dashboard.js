@@ -11,6 +11,7 @@ import ManageStaff from './ManageStaff';
 import EditCommunity from './EditCommunity';
 import CreateCalendar from '../Calendar/CreateCalendar';
 import CalendarCard from '../Calendar/CalendarCard';
+import Info from './Info';
 
 class CommunityDashboard extends React.Component {
 	constructor(props) {
@@ -32,6 +33,7 @@ class CommunityDashboard extends React.Component {
 			showEditModal: false,
 			userPermission: 0,
 			hasFetched: 0,
+			showInfoModal: false,
 		}
 
 		this.fetchCalendars = this.fetchCalendars.bind(this);
@@ -44,6 +46,8 @@ class CommunityDashboard extends React.Component {
 		this.handleCreateClose = this.handleCreateClose.bind(this);
 		this.handleCommunityDelete = this.handleCommunityDelete.bind(this);
 		this.handleCalendarCreate = this.handleCalendarCreate.bind(this);
+		this.handleInfoOpen = this.handleInfoOpen.bind(this);
+		this.handleInfoClose = this.handleInfoClose.bind(this);
 	}
 
 	async componentDidMount() {
@@ -99,13 +103,13 @@ class CommunityDashboard extends React.Component {
 	}
 
 	async componentDidUpdate() {
-		if(this.state.calendars.length <= 0 && this.state.hasFetched === false) {
+		if (this.state.calendars.length <= 0 && this.state.hasFetched === false) {
 			await this.fetchCalendars();
 		}
 	}
 
 	async fetchCalendars() {
-		this.setState({hasFetched: true}); // Stops API spam when community has 0 calendars
+		this.setState({ hasFetched: true }); // Stops API spam when community has 0 calendars
 
 		let accessString = localStorage.getItem(`JWT`);
 		if (accessString === null) {
@@ -166,6 +170,14 @@ class CommunityDashboard extends React.Component {
 
 	handleCreateClose() {
 		this.setState({ showCreateModal: false });
+	}
+
+	handleInfoOpen() {
+		this.setState({ showInfoModal: true });
+	}
+
+	handleInfoClose() {
+		this.setState({ showInfoModal: false });
 	}
 
 	async handleCommunityFollow() {
@@ -283,6 +295,7 @@ class CommunityDashboard extends React.Component {
 			if (this.state.userPermission === 3) {
 				buttons =
 					<>
+						<Button id="communityInfo" className={"dashboardButton"} onClick={this.showInfoModal} variant="info">Info</Button>
 						<Button id="communityStaff" className={"dashboardButton"} onClick={this.handleStaffOpen}>Community Staff</Button>
 						<Button id="editCommunity" className={"dashboardButton"} onClick={this.handleEditOpen}>Edit Community</Button>
 						<Button id="createCalendar" className={"dashboardButton"} onClick={this.handleCreateOpen}>Create Calendar</Button>
@@ -293,6 +306,7 @@ class CommunityDashboard extends React.Component {
 			if (this.state.userPermission === 2) {
 				buttons =
 					<>
+						<Button id="communityInfo" className={"dashboardButton"} onClick={this.showInfoModal} variant="info">Info</Button>
 						<Button id="communityStaff" className={"dashboardButton"} onClick={this.handleStaffOpen}>Community Staff</Button>
 						<Button id="editCommunity" className={"dashboardButton"} onClick={this.handleEditOpen}>Edit Community</Button>
 						<Button id="createCalendar" className={"dashboardButton"} onClick={this.handleCreateOpen}>Create Calendar</Button>
@@ -303,6 +317,7 @@ class CommunityDashboard extends React.Component {
 			if (this.state.userPermission == 1) {
 				buttons =
 					<>
+						<Button id="communityInfo" className={"dashboardButton"} onClick={this.showInfoModal} variant="info">Info</Button>
 						<Button id="followCommunity" className={"dashboardButton"} onClick={this.handleCommunityFollow}>Follow</Button>
 					</>
 			}
@@ -310,6 +325,7 @@ class CommunityDashboard extends React.Component {
 			if (this.state.userPermission == 0) {
 				buttons =
 					<>
+						<Button id="communityInfo" className={"dashboardButton"} onClick={this.showInfoModal} variant="info">Info</Button>
 						<Button id="followCommunity" className={"dashboardButton"} onClick={this.handleCommunityFollow}>Follow</Button>
 					</>
 			}
@@ -343,6 +359,12 @@ class CommunityDashboard extends React.Component {
 							<Modal.Title>Create Calendar</Modal.Title>
 						</Modal.Header>
 						<CreateCalendar communityID={this.props.match.params.id} onComplete={this.handleCalendarCreate} />
+					</Modal>
+					<Modal show={this.state.showInfoModal} onHide={this.handleInfoClose}>
+						<Modal.Header closeButton>
+							<Modal.Title>Community Info</Modal.Title>
+						</Modal.Header>
+						<Info name={this.state.name} description={this.state.description} />
 					</Modal>
 					<Row>
 						<Col>
