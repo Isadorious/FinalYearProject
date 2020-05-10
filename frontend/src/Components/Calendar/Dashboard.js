@@ -264,7 +264,7 @@ class CalendarDashboard extends React.Component {
                     </Modal>
                     <Modal show={this.state.showTaskModal} onHide={this.handleHideTask} size="lg">
                         <Modal.Header closeButton />
-                        <ViewEditTask OwnerID={this.state.ownerID} StaffID={this.state.communityStaffID} AdminID={this.state.communityAdminsID} calendarID={this.props.match.params.id} id={this.state.shownTaskID} userPermission = {this.state.userPermission} />
+                        <ViewEditTask OwnerID={this.state.ownerID} StaffID={this.state.communityStaffID} AdminID={this.state.communityAdminsID} calendarID={this.props.match.params.id} id={this.state.shownTaskID} userPermission = {this.state.userPermission} categories={this.state.categories} />
                     </Modal>
                     <Modal show={this.state.showCategoryManager} onHide={this.handleCategoryManagerClose}>
                         <Modal.Header closeButton>

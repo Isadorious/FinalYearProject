@@ -9,6 +9,7 @@ import Container from 'react-bootstrap/Container';
 import StaffSelect from './StaffSelect';
 import ViewEditSubtask from './ViewEditSubtask';
 import Row from 'react-bootstrap/Row';
+import CategorySelect from '../Category/CategorySelect';
 
 class ViewEditTask extends React.Component {
 	constructor(props) {
@@ -39,6 +40,7 @@ class ViewEditTask extends React.Component {
 		this.toggleEditMode = this.toggleEditMode.bind(this);
 		this.getTask = this.getTask.bind(this);
 		this.updateTask = this.updateTask.bind(this);
+		this.updateCategory = this.updateCategory.bind(this);
 
 	}
 
@@ -164,6 +166,7 @@ class ViewEditTask extends React.Component {
 			taskAssignedUsers: this.state.taskAssignedUser,
 			taskDue: this.state.taskDue,
 			subTasks: this.state.subTasks,
+			taskCategory: this.state.taskCategory,
 		}
 
 		await Axios
@@ -182,6 +185,10 @@ class ViewEditTask extends React.Component {
 				console.log(error);
 				this.setState({ error: true, errorMessage: error.data });
 			});
+	}
+
+	updateCategory(categoryID) {
+		this.setState({ taskCategory: categoryID });
 	}
 
 	render() {
@@ -233,6 +240,11 @@ class ViewEditTask extends React.Component {
 							<Form.Control name="taskDue" type="date" value={new Date(this.state.taskDue).toLocaleDateString('en-CA')} onChange={this.handleInputChange} />
 						</Form.Group>
 						<hr />
+						<Form.Group controlId="categorySelect">
+							<Form.Label>Category:</Form.Label>
+							<CategorySelect categories={this.props.categories} updateCategory={this.updateCategory} initialCategory={this.state.taskCategory} />
+						</Form.Group>
+						<hr />
 
 						<Button variant="success" className={"float-right dashboardButton"} onClick={this.updateTask}>Update</Button>
 					</Form>
@@ -280,6 +292,11 @@ class ViewEditTask extends React.Component {
 							<p>{new Date(this.state.taskDue).toLocaleDateString('en-GB')}</p>
 						</Form.Group>
 						<hr />
+						<Form.Group controlId="categorySelect">
+							<Form.Label>Category:</Form.Label>
+							<CategorySelect categories={this.props.categories} updateCategory={this.updateCategory} initialCategory={this.state.taskCategory} disabled/>
+						</Form.Group>
+						<hr />
 					</Form>
 				</Container>
 			)
@@ -294,6 +311,7 @@ ViewEditTask.defaultProps = {
 	calendarID: undefined,
 	id: undefined,
 	userPermission: 0,
+	categories: false,
 }
 
 export default ViewEditTask;

@@ -52,9 +52,10 @@ class CategorySelect extends React.Component {
     }
 
     generateInitialData() {
+        const category = this.props.categories.find(element => element._id == this.props.initialCategory);
         const option = {
-            "id": this.props.initialCategory._id,
-            "name": this.props.initialCategory.categoryName,
+            "id": category._id,
+            "name": category.categoryName,
             "size": "Medium",
         };
 
@@ -66,7 +67,7 @@ class CategorySelect extends React.Component {
             return (<Loading />)
         } else {
             return (
-                <ReactSuperSelect onChange={this.handleSelectionChanged} dataSource={this.state.dataSource} disabled={this.props.disabled} initialValue={this.props.initialCategory ? this.state.initialSelection : false} placeholder="Category" />
+                <ReactSuperSelect onChange={this.handleSelectionChanged} dataSource={this.state.dataSource} disabled={this.props.disabled} initialValue={this.props.initialCategory ? this.state.initialSelection : null} placeholder="Category" />
             )
         }
     }
