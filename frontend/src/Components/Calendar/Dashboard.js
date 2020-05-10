@@ -53,6 +53,7 @@ class CalendarDashboard extends React.Component {
         this.handleCategoryManagerClose = this.handleCategoryManagerClose.bind(this);
         this.handleEditOpen = this.handleEditOpen.bind(this);
         this.handleEditClose = this.handleEditClose.bind(this);
+        this.fetchTasks = this.fetchTasks.bind(this);
     }
 
     async componentDidMount() {
@@ -97,7 +98,7 @@ class CalendarDashboard extends React.Component {
                     userPermission: data.permission,
                     communityStaffID: data.communityStaffID,
                     communityAdminsID: data.communityAdminsID,
-                    ownerID: data.ownerID,        
+                    ownerID: data.ownerID,
                     loading: false,
                     visbility: data.visibility,
                 });
@@ -166,27 +167,27 @@ class CalendarDashboard extends React.Component {
     }
 
     handleInfoOpen() {
-        this.setState({showInfoModal: true});
+        this.setState({ showInfoModal: true });
     }
 
     handleInfoClose() {
-        this.setState({showInfoModal: false});
+        this.setState({ showInfoModal: false });
     }
 
     handleCreateOpen() {
-        this.setState({showCreateModal: true});
+        this.setState({ showCreateModal: true });
     }
 
     handleCreateClose() {
-        this.setState({showCreateModal: false});
+        this.setState({ showCreateModal: false });
     }
 
     handleShowTask(id) {
-        this.setState({shownTaskID: id, showTaskModal: true });
+        this.setState({ shownTaskID: id, showTaskModal: true });
     }
 
     handleHideTask() {
-        this.setState({showTaskModal: false});
+        this.setState({ showTaskModal: false });
     }
 
     handleCategoriesUpdate(categories) {
@@ -194,19 +195,32 @@ class CalendarDashboard extends React.Component {
     }
 
     handleCategoryManagerOpen() {
-        this.setState({showCategoryManager: true});
+        this.setState({ showCategoryManager: true });
     }
 
     handleCategoryManagerClose() {
-        this.setState({showCategoryManager: false});
+        this.setState({ showCategoryManager: false });
     }
 
     handleEditOpen() {
-        this.setState({showEditModal: true});
+        this.setState({ showEditModal: true });
     }
-    
+
     handleEditClose() {
-        this.setState({showEditModal: false});
+        this.setState({ showEditModal: false });
+    }
+
+    fetchTasks() {
+        let accessString = localStorage.getItem(`JWT`);
+        Axios
+            .get(`${process.env.REACT_APP_API_URL}/calendars/${this.props.match.params.id}/tasks`, {
+                headers: { Authorization: `JWT ${accessString}` }
+            })
+            .then((response) => {
+                this.setState({ tasks: response.data.tasks });
+            }).catch((error) => {
+                this.setState({ error: true, errorStatusCode: 500, errorMessage: `Unable to fetch tasks` });
+            })
     }
 
     render() {
@@ -256,11 +270,11 @@ class CalendarDashboard extends React.Component {
 
             if (this.state.tasks.length > 0) {
                 cards = this.state.tasks.map((task) =>
-                    <TaskCard key={task._id} task={task}  showTask={this.handleShowTask}/>
+                    <TaskCard key={task._id} task={task} showTask={this.handleShowTask} />
                 );
             }
 
-            let cardColumn = <CardColumns>{cards}</CardColumns> 
+            let cardColumn = <CardColumns>{cards}</CardColumns>
 
             return (
                 <Container>
@@ -274,17 +288,17 @@ class CalendarDashboard extends React.Component {
                         <Modal.Header closeButton>
                             <Modal.Title>Create Task</Modal.Title>
                         </Modal.Header>
-                        <CreateTask OwnerID={this.state.ownerID} StaffID={this.state.communityStaffID} AdminID={this.state.communityAdminsID} onCancel={this.handleCreateClose} calendarID={this.props.match.params.id} categories={this.state.categories}/>
+                        <CreateTask OwnerID={this.state.ownerID} StaffID={this.state.communityStaffID} AdminID={this.state.communityAdminsID} onCancel={this.handleCreateClose} calendarID={this.props.match.params.id} categories={this.state.categories} />
                     </Modal>
                     <Modal show={this.state.showTaskModal} onHide={this.handleHideTask} size="lg">
                         <Modal.Header closeButton />
-                        <ViewEditTask OwnerID={this.state.ownerID} StaffID={this.state.communityStaffID} AdminID={this.state.communityAdminsID} calendarID={this.props.match.params.id} id={this.state.shownTaskID} userPermission = {this.state.userPermission} categories={this.state.categories} />
+                        <ViewEditTask OwnerID={this.state.ownerID} StaffID={this.state.communityStaffID} AdminID={this.state.communityAdminsID} calendarID={this.props.match.params.id} id={this.state.shownTaskID} userPermission={this.state.userPermission} categories={this.state.categories} />
                     </Modal>
                     <Modal show={this.state.showCategoryManager} onHide={this.handleCategoryManagerClose}>
                         <Modal.Header closeButton>
                             <Modal.Title>Category Manager</Modal.Title>
                         </Modal.Header>
-                        <CategoryManager categories={this.state.categories} updateCategories={this.handleCategoriesUpdate} calendarID={this.props.match.params.id}/>
+                        <CategoryManager categories={this.state.categories} updateCategories={this.handleCategoriesUpdate} calendarID={this.props.match.params.id} />
                     </Modal>
                     <Modal show={this.state.showEditModal} onHide={this.handleEditClose}>
                         <Modal.Header closeButton>
