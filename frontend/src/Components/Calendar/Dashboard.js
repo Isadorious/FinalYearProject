@@ -94,6 +94,7 @@ class CalendarDashboard extends React.Component {
                     communityAdminsID: data.communityAdminsID,
                     ownerID: data.ownerID,        
                     loading: false,
+                    visbility: data.visibility,
                 });
             }).catch(error => {
                 if (error.response !== undefined) {
@@ -254,7 +255,7 @@ class CalendarDashboard extends React.Component {
                         <Modal.Header closeButton>
                             <Modal.Title>Calendar Info</Modal.Title>
                         </Modal.Header>
-                        <Info name={this.state.name} description={this.state.description} />
+                        <Info name={this.state.name} description={this.state.description} visibility={this.state.visibility} />
                     </Modal>
                     <Modal show={this.state.showCreateModal} onHide={this.handleCreateClose} size="lg">
                         <Modal.Header closeButton>
