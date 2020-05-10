@@ -19,7 +19,7 @@ class EditCalendarForm extends React.Component {
         }
 
         this.handleInputChange = this.handleInputChange.bind(this);
-		this.handleCreation = this.handleCreation.bind(this);
+		this.handleUpdate = this.handleUpdate.bind(this);
 		this.handleInputChangeSelect = this.handleInputChangeSelect.bind(this);
 		this.getCalendar = this.getCalendar.bind(this);
     }
@@ -70,7 +70,7 @@ class EditCalendarForm extends React.Component {
 		let accessString = localStorage.getItem(`JWT`);
 
 		await Axios
-			.get(`${process.env.REACT_APP_API_URL}/api/calendars/${this.props.id}`, {
+			.get(`${process.env.REACT_APP_API_URL}/api/calendars/${this.props.calendarID}`, {
 				headers: {Authorization : `JWT ${accessString}`}
 			})
 			.then((response) => {
@@ -86,7 +86,7 @@ class EditCalendarForm extends React.Component {
 					}
 
 					this.setState({
-						name: response.data.name,
+						name: response.data.calendarName,
 						description: response.data.description,
 						visibility: visibility,
 						loading: false,
@@ -124,11 +124,11 @@ class EditCalendarForm extends React.Component {
 		}
 
         await Axios
-            .put(`${process.env.REACT_APP_API_URL}/api/calendars`, data, {
+            .put(`${process.env.REACT_APP_API_URL}/api/calendars/${this.props.calendarID}`, data, {
                 headers: {Authorization: `JWT ${accessString}`},
             })
             .then(response => {
-                if(response.data.message === `Calendar updated successfully!`) {                 
+                if(response.data.message === `Calendar updated!`) {                 
                     alert(`Calendar updated!`);
                 } else {
                     console.log(response);
