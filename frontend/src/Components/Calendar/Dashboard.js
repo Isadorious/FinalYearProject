@@ -61,6 +61,7 @@ class CalendarDashboard extends React.Component {
         this.fetchTasks = this.fetchTasks.bind(this);
         this.handleSwitchChange = this.handleSwitchChange.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
+        this.createTaskOnComplete = this.createTaskOnComplete.bind(this);
     }
 
     async componentDidMount() {
@@ -222,9 +223,9 @@ class CalendarDashboard extends React.Component {
         this.setState({ showEditModal: false });
     }
 
-    fetchTasks() {
+    async fetchTasks() {
         let accessString = localStorage.getItem(`JWT`);
-        Axios
+        await Axios
             .get(`${process.env.REACT_APP_API_URL}/calendars/${this.props.match.params.id}/tasks`, {
                 headers: { Authorization: `JWT ${accessString}` }
             })
@@ -255,7 +256,12 @@ class CalendarDashboard extends React.Component {
         this.setState({
             [name] : value
         });
-	}
+    }
+    
+    async createTaskOnComplete() {
+        await this.fetchTasks();
+        this.handleHideTask();
+    }
 
     render() {
         if (this.state.loading === true) {
@@ -330,7 +336,7 @@ class CalendarDashboard extends React.Component {
                         <Modal.Header closeButton>
                             <Modal.Title>Create Task</Modal.Title>
                         </Modal.Header>
-                        <CreateTask OwnerID={this.state.ownerID} StaffID={this.state.communityStaffID} AdminID={this.state.communityAdminsID} onCancel={this.handleCreateClose} calendarID={this.props.match.params.id} categories={this.state.categories} />
+                        <CreateTask OwnerID={this.state.ownerID} StaffID={this.state.communityStaffID} AdminID={this.state.communityAdminsID} onCancel={this.handleCreateClose} calendarID={this.props.match.params.id} categories={this.state.categories} onComplete={this.createTaskOnComplete} />
                     </Modal>
                     <Modal show={this.state.showTaskModal} onHide={this.handleHideTask} size="lg">
                         <Modal.Header closeButton />
