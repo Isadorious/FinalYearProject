@@ -5,6 +5,7 @@ const passport = require(`passport`);
 const jwt = require(`jsonwebtoken`);
 const User = require(`../models/user`);
 const { isOwner, isAdmin, isStaff } = require(`../Utils/community`);
+const customDataStructure = require(`../models/customData/customDataStructure`);
 
 router.get(`/`, (req, res) => {
 	passport.authenticate(`jwt`, { session: false }, (err, user, info) => {
@@ -331,6 +332,39 @@ router.get(`/:communityID/structures/:structureID`, (req, res) => {
 						}).catch((result) => {
 							res.status(result.status).json({message: result.message});
 						})
+				}
+			});
+		}
+	})(req, res);
+});
+
+router.post(`/:communityID/structures`, (req, res) => {
+	passport.authenticate(`jwt`, { session: false }, (err, user, info) => {
+		if (err) {
+			res.send(err);
+		} else if (info !== undefined) {
+			res.json({ message: info.message });
+		} else {
+			const query = Community.findById(req.params.id);
+			query.exec((err, community) => {
+				if (err) {
+					res.send(err);
+				} else {
+					isAdmin(community._id, user._id)
+						.then((result) => {
+							const structure = new customDataStructure(req.body);
+							community.dataStores.push(structure);
+
+							community.save((error) => {
+								if (error) {
+									res.send(error);
+								} else {
+									res.json({ message: `Custom Stucture added successfully!`, structure });
+								}
+							});
+						}).catch((result) => {
+							res.status(result.status).json({ message: result.message });
+						});
 				}
 			});
 		}
