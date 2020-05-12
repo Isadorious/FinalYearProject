@@ -277,4 +277,35 @@ router.delete(`/:id`, (req, res) => {
 	})(req, res);
 });
 
+/*
+* Custom Structure routes
+*/
+router.get(`/:id/structures`, (req, res) => {
+	passport.authenticate(`jwt`, {session: false}, (err, user, info) => {
+		if(err) {
+			res.send(err);
+		} else if(info !== undefined) {
+			res.json({message: info.message});
+		} else {
+			const query = Community.findById(req.params.id);
+			query.exec((err, community) => {
+				if(err) {
+					res.send(err);
+					return;
+				}
+				if(community === null) {
+					res.status(404).json({message: `No community found`});
+				} else {
+					isStaff(community._id, user._id)
+						.then((result) => {
+							res.json(community.dataStores);
+						}).catch((result) => {
+							res.status(result.status).json({ message: result.message });
+						});
+				}
+			});
+		}
+	})(req, res);
+});
+
 module.exports = router;
