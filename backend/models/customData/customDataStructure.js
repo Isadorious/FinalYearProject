@@ -5,7 +5,7 @@ const customDataPairs = require(`./customDataPairs`);
 const Schema = mongoose.Schema;
 
 const structureSchema = new Schema({
-	customDataTitle: {
+	customDataName: {
 		type: `String`,
 		required: true,
 		trim: true
