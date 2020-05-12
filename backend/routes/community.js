@@ -345,7 +345,7 @@ router.post(`/:communityID/structures`, (req, res) => {
 		} else if (info !== undefined) {
 			res.json({ message: info.message });
 		} else {
-			const query = Community.findById(req.params.id);
+			const query = Community.findById(req.params.communityID);
 			query.exec((err, community) => {
 				if (err) {
 					res.send(err);
