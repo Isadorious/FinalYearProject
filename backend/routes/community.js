@@ -371,4 +371,37 @@ router.post(`/:communityID/structures`, (req, res) => {
 	})(req, res);
 });
 
+router.put(`/:communityID/structures/:structureID`, (req, res) => {
+	passport.authenticate(`jwt`, { session: false }, (err, user, info) => {
+		if (err) {
+			res.send(err);
+		} else if (info !== undefined) {
+			res.json({ message: info.message });
+		} else {
+			const query = Community.findById(req.params.communityID);
+			query.exec((err, community) => {
+				if (err) {
+					res.send(err);
+				} else {
+					isAdmin(community._id, user._id)
+						.then((result) => {
+							const structure = community.dataStores.id(req.params.structureID);
+							structure.set(req.body);
+
+							community.save((error) => {
+								if (error) {
+									res.send(error);
+								} else {
+									res.json({ message: `Custom Stucture updated successfully!`, structure });
+								}
+							});
+						}).catch((result) => {
+							res.status(result.status).json({ message: result.message });
+						});
+				}
+			});
+		}
+	})(req, res);	
+})
+
 module.exports = router;
