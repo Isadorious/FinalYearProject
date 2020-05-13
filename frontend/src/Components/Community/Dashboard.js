@@ -324,8 +324,8 @@ class CommunityDashboard extends React.Component {
 					</>
 			}
 
-			if(this.state.userPermission >= 1) {
-				dash = <><StructureDashboard communityID={this.props.match.params.id} userPermission={this.state.userPermission}/></>
+			if (this.state.userPermission >= 1) {
+				dash = <><StructureDashboard communityID={this.props.match.params.id} userPermission={this.state.userPermission} /></>
 			}
 
 			if (this.state.userPermission == 0) {
@@ -347,39 +347,49 @@ class CommunityDashboard extends React.Component {
 			}
 
 			return (
-				<Container>
-					<Modal show={this.state.showStaffModal} onHide={this.handleStaffClose}>
-						<Modal.Header closeButton>
-							<Modal.Title>Edit Community Staff</Modal.Title>
-						</Modal.Header>
-						<ManageStaff id={this.props.match.params.id} />
-					</Modal>
-					<Modal show={this.state.showEditModal} onHide={this.handleEditClose}>
-						<Modal.Header closeButton>
-							<Modal.Title>Edit Community</Modal.Title>
-						</Modal.Header>
-						<EditCommunity id={this.props.match.params.id} />
-					</Modal>
-					<Modal show={this.state.showCreateModal} onHide={this.handleCreateClose}>
-						<Modal.Header closeButton>
-							<Modal.Title>Create Calendar</Modal.Title>
-						</Modal.Header>
-						<CreateCalendar communityID={this.props.match.params.id} onComplete={this.handleCalendarCreate} />
-					</Modal>
-					<Modal show={this.state.showInfoModal} onHide={this.handleInfoClose}>
-						<Modal.Header closeButton>
-							<Modal.Title>Community Info</Modal.Title>
-						</Modal.Header>
-						<Info name={this.state.name} description={this.state.description} />
-					</Modal>
-					<Row>
-						<Col>
-							{buttons}
-						</Col>
-					</Row>
-					{cards}
+				<>
+					<Container>
+						<Modal show={this.state.showStaffModal} onHide={this.handleStaffClose}>
+							<Modal.Header closeButton>
+								<Modal.Title>Edit Community Staff</Modal.Title>
+							</Modal.Header>
+							<ManageStaff id={this.props.match.params.id} />
+						</Modal>
+						<Modal show={this.state.showEditModal} onHide={this.handleEditClose}>
+							<Modal.Header closeButton>
+								<Modal.Title>Edit Community</Modal.Title>
+							</Modal.Header>
+							<EditCommunity id={this.props.match.params.id} />
+						</Modal>
+						<Modal show={this.state.showCreateModal} onHide={this.handleCreateClose}>
+							<Modal.Header closeButton>
+								<Modal.Title>Create Calendar</Modal.Title>
+							</Modal.Header>
+							<CreateCalendar communityID={this.props.match.params.id} onComplete={this.handleCalendarCreate} />
+						</Modal>
+						<Modal show={this.state.showInfoModal} onHide={this.handleInfoClose}>
+							<Modal.Header closeButton>
+								<Modal.Title>Community Info</Modal.Title>
+							</Modal.Header>
+							<Info name={this.state.name} description={this.state.description} />
+						</Modal>
+						<Row>
+							<Col>
+								{buttons}
+							</Col>
+						</Row>
+						<hr />
+						<Row>
+							<Col>
+								<h2>Calendars</h2>
+							</Col>
+						</Row>
+						<hr />
+						{cards}
+					</Container>
 					{dash}
-				</Container>
+				</>
+
 			)
 
 		}
