@@ -297,7 +297,7 @@ class CommunityDashboard extends React.Component {
 			if (this.state.userPermission === 3) {
 				buttons =
 					<>
-						<Button id="communityInfo" className={"dashboardButton"} onClick={this.showInfoModal} variant="info">Info</Button>
+						<Button id="communityInfo" className={"dashboardButton"} onClick={this.handleInfoOpen} variant="info">Info</Button>
 						<Button id="communityStaff" className={"dashboardButton"} onClick={this.handleStaffOpen}>Community Staff</Button>
 						<Button id="editCommunity" className={"dashboardButton"} onClick={this.handleEditOpen}>Edit Community</Button>
 						<Button id="createCalendar" className={"dashboardButton"} onClick={this.handleCreateOpen}>Create Calendar</Button>
@@ -308,7 +308,7 @@ class CommunityDashboard extends React.Component {
 			if (this.state.userPermission === 2) {
 				buttons =
 					<>
-						<Button id="communityInfo" className={"dashboardButton"} onClick={this.showInfoModal} variant="info">Info</Button>
+						<Button id="communityInfo" className={"dashboardButton"} onClick={this.handleInfoOpen} variant="info">Info</Button>
 						<Button id="communityStaff" className={"dashboardButton"} onClick={this.handleStaffOpen}>Community Staff</Button>
 						<Button id="editCommunity" className={"dashboardButton"} onClick={this.handleEditOpen}>Edit Community</Button>
 						<Button id="createCalendar" className={"dashboardButton"} onClick={this.handleCreateOpen}>Create Calendar</Button>
@@ -319,7 +319,7 @@ class CommunityDashboard extends React.Component {
 			if (this.state.userPermission == 1) {
 				buttons =
 					<>
-						<Button id="communityInfo" className={"dashboardButton"} onClick={this.showInfoModal} variant="info">Info</Button>
+						<Button id="communityInfo" className={"dashboardButton"} onClick={this.handleInfoOpen} variant="info">Info</Button>
 						<Button id="followCommunity" className={"dashboardButton"} onClick={this.handleCommunityFollow}>Follow</Button>
 					</>
 			}
@@ -331,7 +331,7 @@ class CommunityDashboard extends React.Component {
 			if (this.state.userPermission == 0) {
 				buttons =
 					<>
-						<Button id="communityInfo" className={"dashboardButton"} onClick={this.showInfoModal} variant="info">Info</Button>
+						<Button id="communityInfo" className={"dashboardButton"} onClick={this.handleInfoOpen} variant="info">Info</Button>
 						<Button id="followCommunity" className={"dashboardButton"} onClick={this.handleCommunityFollow}>Follow</Button>
 					</>
 			}
