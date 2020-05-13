@@ -2,8 +2,10 @@ import React from 'react';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
-import Axios from 'Axios';
+import Axios from 'axios';
 import CreateKeyValuePair from './CreateKeyValuePair';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
 
 class CreateStructureForm extends React.Component {
     constructor(props) {
@@ -33,7 +35,7 @@ class CreateStructureForm extends React.Component {
 
     addDisplayKeyPair() {
         let displayKeyPairs = this.state.DisplayKeyPairs;
-        const displayKeyPair = { displayName: '', key: '', dataType: '' };
+        const displayKeyPair = { displayName: '', key: '', dataType: 'Short Text' };
         displayKeyPairs.push(displayKeyPair);
         this.setState({ DisplayKeyPairs: displayKeyPairs });
     }
@@ -48,7 +50,7 @@ class CreateStructureForm extends React.Component {
         // Update the key value based on a fields display name, removes whitespacing from display name
         if (name == `displayName`) {
             const keyValue = value.replace(/\s+/g, '');
-            keyValuePairs[index][key] = keyValue;
+            keyValuePairs[index].key = keyValue;
         }
 
         this.setState({
@@ -71,19 +73,21 @@ class CreateStructureForm extends React.Component {
         }
 
         await Axios
-            .post(`${process.env.REACT_APP_API_URL}/communities/${this.props.communityID}/structures`, data, {
+            .post(`${process.env.REACT_APP_API_URL}/api/communities/${this.props.communityID}/structures`, data, {
                 headers: { Authorization: `JWT ${accessString}` }
             })
             .then((response) => {
-                if (response.message === `Custom Structure added successfully`) {
+                let data = response.data;
+                console.log(data.message);
+                if (data.message == "Custom Structure added successfully!") {
                     if (this.props.onComplete) {
                         this.props.onComplete();
                         return;
                     }
-
                     alert(`Structure added!`)
                 } else {
-                    console.log(response);
+                    console.log(`then if failed`);
+                    console.log(response.data);
                     this.setState({ error: true, errorMessage: response.data });
                 }
             }).catch((error) => {
@@ -94,7 +98,7 @@ class CreateStructureForm extends React.Component {
     }
 
     render() {
-        let displayKeyPairs = this.state.displayKeyPairs.map((pair, index) =>
+        let displayKeyPairs = this.state.DisplayKeyPairs.map((pair, index) =>
             <CreateKeyValuePair key={index} keyValuePair={pair} handleInputChange={this.handleKeyPairChange} handleRemove={this.removeDisplayKeyPair} index={index} />
         );
 
@@ -116,7 +120,7 @@ class CreateStructureForm extends React.Component {
                     </Form.Group>
 
                     <Button variant="danger" className={"float-right dashboardButton"} onClick={this.props.onCancel}>Cancel</Button>
-					<Button variant="success" className={"float-right dashboardButton"} onClick={this.createStructure}>Save</Button>
+                    <Button variant="success" className={"float-right dashboardButton"} onClick={this.createStructure}>Save</Button>
                 </Form>
             </Container>
         )

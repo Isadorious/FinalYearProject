@@ -359,7 +359,7 @@ router.post(`/:communityID/structures`, (req, res) => {
 								if (error) {
 									res.send(error);
 								} else {
-									res.json({ message: `Custom Stucture added successfully!`, structure });
+									res.json({ message: `Custom Structure added successfully!`, structure });
 								}
 							});
 						}).catch((result) => {

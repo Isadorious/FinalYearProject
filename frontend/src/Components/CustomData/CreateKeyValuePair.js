@@ -2,6 +2,7 @@ import React from 'react';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
+import Container from 'react-bootstrap/Container';
 
 class CreateKeyValuePair extends React.Component {
     constructor(props) {
@@ -22,21 +23,21 @@ class CreateKeyValuePair extends React.Component {
     render() {
         return (
             <Container fluid>
-            <Form.Row>
-                <Form.Group as={Col} controlId="displayNameControl">
-                    <Form.Control name="displayName" type="text" placeholder="Field Name" value={this.props.keyValuePair.displayName} onChange={this.handleInputChange} />
-                </Form.Group>
-                <Form.Group as={Col} controlId="dataTypeControl">
-                    <Form.Control name="dataType" as="select" value={this.props.subTask.subTaskDue} onChange={this.handleInputChange}>
-                        <option>Short Text</option>
-                        <option>Long Text</option>
-                    </Form.Control>
-                </Form.Group>
-                <Form.Group as={Col} controlId="removeControl">
-                    <Button className={"float-right"} variant="danger" onClick={this.handleRemove}>Delete</Button>
-                </Form.Group>
-            </Form.Row>
-        </Container>
+                <Form.Row>
+                    <Form.Group as={Col} controlId="displayNameControl">
+                        <Form.Control name="displayName" type="text" placeholder="Field Name" value={this.props.keyValuePair.displayName} onChange={this.handleInputChange} />
+                    </Form.Group>
+                    <Form.Group as={Col} controlId="dataTypeControl">
+                        <Form.Control name="dataType" as="select" value={this.props.keyValuePair.dataType} onChange={this.handleInputChange}>
+                            <option>Short Text</option>
+                            <option>Long Text</option>
+                        </Form.Control>
+                    </Form.Group>
+                    <Form.Group as={Col} controlId="removeControl">
+                        <Button className={"float-right"} variant="danger" onClick={this.handleRemove}>Delete</Button>
+                    </Form.Group>
+                </Form.Row>
+            </Container>
         )
     }
 }

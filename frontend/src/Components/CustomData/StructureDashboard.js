@@ -8,6 +8,7 @@ import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import StructureCard from './StructureCard';
+import CreateStructure from './CreateStructure';
 
 class CustomStructureDashboard extends React.Component {
     constructor(props) {
@@ -145,8 +146,7 @@ class CustomStructureDashboard extends React.Component {
                         <Modal.Header closeButton>
                             <Modal.Title>Create Custom Structure</Modal.Title>
                         </Modal.Header>
-                        {//<CreateStructure communityID={this.props.communityID} onComplete={this.handleStructureCreate} />
-                        }
+                        <CreateStructure communityID={this.props.communityID} onComplete={this.handleStructureCreate} onCancel={this.handleCreateClose} />
                     </Modal>
                     <hr />
                     <Row>
