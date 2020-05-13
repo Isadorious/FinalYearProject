@@ -12,6 +12,7 @@ import EditCommunity from './EditCommunity';
 import CreateCalendar from '../Calendar/CreateCalendar';
 import CalendarCard from '../Calendar/CalendarCard';
 import Info from './Info';
+import StructureDashboard from '../CustomData/StructureDashboard';
 
 class CommunityDashboard extends React.Component {
 	constructor(props) {
@@ -292,6 +293,7 @@ class CommunityDashboard extends React.Component {
 			return (<Error statusCode={this.state.errorStatusCode} message={this.state.errorMessage} />)
 		} else {
 			let buttons;
+			let dash;
 			if (this.state.userPermission === 3) {
 				buttons =
 					<>
@@ -320,6 +322,10 @@ class CommunityDashboard extends React.Component {
 						<Button id="communityInfo" className={"dashboardButton"} onClick={this.showInfoModal} variant="info">Info</Button>
 						<Button id="followCommunity" className={"dashboardButton"} onClick={this.handleCommunityFollow}>Follow</Button>
 					</>
+			}
+
+			if(this.state.userPermission >= 1) {
+				dash = <><StructureDashboard communityID={this.props.match.params.id} userPermission={this.state.userPermission}/></>
 			}
 
 			if (this.state.userPermission == 0) {
@@ -372,6 +378,7 @@ class CommunityDashboard extends React.Component {
 						</Col>
 					</Row>
 					{cards}
+					{dash}
 				</Container>
 			)
 
