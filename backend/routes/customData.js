@@ -2,6 +2,7 @@ const express = require(`express`);
 const router = express.Router();
 const CustomData = require(`../models/customData`);
 const Community = require(`../models/community`);
+const { isStaff, isAdmin, isOwner } = require('../Utils/community');
 
 /*
 * route/:communityID/structure/:structureID/data/:customDataID
@@ -62,50 +63,86 @@ router.post(`/`, (req, res) => {
 	// Mark content as modified
 	// Save the custom data object
 	// Return result based on status
-	const customData = new CustomData(req.body);
-
-	customData.save((err, customData) => {
-		if(err) {
+	passport.authenticate(`jwt`, { session: false }, (err, user, info) => {
+		if (err) {
 			res.send(err);
+		} else if (info != undefined) {
+			res.json({ message: info.message });
 		} else {
-			res.json({message: `CustomData added successfully!`, customData});
+			isStaff(req.body.communityID, user._id)
+				.then((result) => {
+					const customData = new CustomData(req.body);
+					customData.save((err, customData) => {
+						if (err) {
+							res.send(err);
+						} else {
+							res.json({ message: `CustomData added successfully!`, customData });
+						}
+					});
+				}).catch((result) => {
+					res.status(result.status).json({ message: result.message });
+				});
 		}
-	});
+	})(req, res);
 });
 
 router.put(`/:communityID/structure/:structureID/data/:dataID`, (req, res) => {
-
-	const query = CustomData.findOne({_id: req.params.dataID, communityID: req.params.communityID, structureID: req.params.structureID});
-
-	query.exec((err, customData) => {
-		if(err) {
+	passport.authenticate(`jwt`, { session: false }, (err, user, info) => {
+		if (err) {
 			res.send(err);
+		} else if (info != undefined) {
+			res.json({ message: info.message });
 		} else {
-			customData.set(req.body);
-			
-			customData.markModified(`content`);
-			customData.save((error, customData) => {
-				if(error) {
-					res.send(error);
+			const query = CustomData.findOne({ _id: req.params.dataID, communityID: req.params.communityID, structureID: req.params.structureID });
+
+			query.exec((err, customData) => {
+				if (err) {
+					res.send(err);
 				} else {
-					res.send({message: `customData updated successfully!`, customData});
+					isStaff(req.params.communityID, user._id)
+						.then((result) => {
+							customData.set(req.body);
+
+							customData.markModified(`content`);
+							customData.save((error, customData) => {
+								if (error) {
+									res.send(error);
+								} else {
+									res.send({ message: `customData updated successfully!`, customData });
+								}
+							});
+						}).catch((result) => {
+							res.status(result.status).json({ message: result.message });
+						});
 				}
 			});
 		}
-	});
+	})(req, res);
 });
 
 router.delete(`/:communityID/structure/:structureID/data/:dataID`, (req, res) => {
-	// Delete the custom data object that matches all 3 IDs
-	const query = CustomData.deleteOne({_id: req.params.dataID, communityID: req.params.communityID, structureID: req.params.structureID});
-
-	query.exec((err, result) => {
-		if(err) {
+	passport.authenticate(`jwt`, { session: false }, (err, user, info) => {
+		if (err) {
 			res.send(err);
+		} else if (info != undefined) {
+			res.json({ message: info.message });
 		} else {
-			res.json({message: `customData successfully deleted!`, result});
+			isAdmin(req.params.communityID, user._id)
+				.then((result) => {
+					// Delete the custom data object that matches all 3 IDs
+					const query = CustomData.deleteOne({ _id: req.params.dataID, communityID: req.params.communityID, structureID: req.params.structureID });
+					query.exec((err, result) => {
+						if (err) {
+							res.send(err);
+						} else {
+							res.json({ message: `customData successfully deleted!`, result });
+						}
+					});
+				}).catch((result) => {
+					res.status(result.status).json({ message: result.message });
+				});
 		}
-	});
+	})(req, res);
 });
 
 module.exports = router;
