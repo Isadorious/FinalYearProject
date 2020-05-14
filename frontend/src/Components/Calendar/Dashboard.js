@@ -97,8 +97,8 @@ class CalendarDashboard extends React.Component {
                 let data = response.data;
 
 
-                if(Array.isArray(data.tasks)) {
-                    data.tasks.sort((a,b)=>new Date(a.taskDue).getTime() - new Date(b.taskDue).getTime());
+                if (Array.isArray(data.tasks)) {
+                    data.tasks.sort((a, b) => new Date(a.taskDue).getTime() - new Date(b.taskDue).getTime());
                 }
 
                 document.title = `${data.calendarName} - GCOrg`;
@@ -226,38 +226,38 @@ class CalendarDashboard extends React.Component {
     async fetchTasks() {
         let accessString = localStorage.getItem(`JWT`);
         await Axios
-            .get(`${process.env.REACT_APP_API_URL}/calendars/${this.props.match.params.id}/tasks`, {
+            .get(`${process.env.REACT_APP_API_URL}/api/calendars/${this.props.match.params.id}/tasks`, {
                 headers: { Authorization: `JWT ${accessString}` }
             })
             .then((response) => {
                 let data = response.data;
-                if(Array.isArray(data)) {
-                    data.sort((a,b)=>new Date(a.taskDue).getTime() - new Date(b.taskDue).getTime());
+                if (Array.isArray(data)) {
+                    data.sort((a, b) => new Date(a.taskDue).getTime() - new Date(b.taskDue).getTime());
                 }
-                this.setState({ tasks: data});
+                this.setState({ tasks: data });
             }).catch((error) => {
                 this.setState({ error: true, errorStatusCode: 500, errorMessage: `Unable to fetch tasks` });
             })
     }
 
-	handleSwitchChange(event) {
-		const target = event.target;
-		const checked = target.checked;
-		const name = target.name;
+    handleSwitchChange(event) {
+        const target = event.target;
+        const checked = target.checked;
+        const name = target.name;
 
-		this.setState({[name]: checked });
+        this.setState({ [name]: checked });
     }
-    
+
     handleInputChange(event) {
         const target = event.target;
         const value = target.value;
         const name = target.name;
-        
+
         this.setState({
-            [name] : value
+            [name]: value
         });
     }
-    
+
     async createTaskOnComplete() {
         await this.fetchTasks();
         this.handleHideTask();
@@ -310,7 +310,7 @@ class CalendarDashboard extends React.Component {
 
             if (this.state.tasks.length > 0) {
                 cards = this.state.tasks.map((task) =>
-                    <TaskCard key={task._id} task={task} showTask={this.handleShowTask} hideComplete={this.state.hideCompletedTasks} onlyAssigned={this.state.onlyAssigned} categories={this.state.categories} filterCategories={this.state.filterCategories} categoryToFilter={this.state.categoryToFilter}/>
+                    <TaskCard key={task._id} task={task} showTask={this.handleShowTask} hideComplete={this.state.hideCompletedTasks} onlyAssigned={this.state.onlyAssigned} categories={this.state.categories} filterCategories={this.state.filterCategories} categoryToFilter={this.state.categoryToFilter} />
                 );
             }
 
@@ -318,9 +318,9 @@ class CalendarDashboard extends React.Component {
 
             let select = <></>
 
-            if(this.state.categories.length > 0) {
-                select = this.state.categories.map((category) => 
-                    <option key={category._id}>{category.categoryName}</option>  
+            if (this.state.categories.length > 0) {
+                select = this.state.categories.map((category) =>
+                    <option key={category._id}>{category.categoryName}</option>
                 );
             }
 
