@@ -4,13 +4,13 @@ function isOwner(communityID, userID) {
     return new Promise((resolve, reject) => {
         Community.findById(communityID, (err, community) => {
             if (community === null) {
-                let result = { status: 404, message: `Unable to find community`, permission: false, }
+                let result = { status: 404, message: `Unable to find community`, permission: 0, }
                 reject(result);
             } else if (userID == community.ownerID) {
-                let result = { permission: true, status: 200, message: `Authorized` }
+                let result = { permission: 3, status: 200, message: `Authorized` }
                 resolve(result);
             } else {
-                let result = { permission: false, status: 401, message: `Unauthorized` }
+                let result = { permission: 0, status: 401, message: `Unauthorized` }
                 reject(result);
             }
         });
@@ -28,13 +28,13 @@ function isAdmin(communityID, userID) {
                 } else {
                     Community.findById(communityID, (err, community) => {
                         if (community === null) {
-                            let result = { status: 404, message: `Unable to find community` }
+                            let result = { status: 404, message: `Unable to find community`, permission: 0, }
                             reject(result);
                         } else if (community.communityAdminsID.includes(userID) === true) {
-                            let result = { permission: true, status: 200, message: `Authorized` }
+                            let result = { permission: 2, status: 200, message: `Authorized` }
                             resolve(result);
                         } else {
-                            let result = { permission: false, status: 401, message: `Unauthorized` }
+                            let result = { permission: 0, status: 401, message: `Unauthorized` }
                             reject(result);
                         }
                     });
@@ -54,13 +54,13 @@ function isStaff(communityID, userID) {
                 } else {
                     Community.findById(communityID, (err, community) => {
                         if (community === null) {
-                            let result = { status: 404, message: `Unable to find community` }
+                            let result = { status: 404, message: `Unable to find community`, permission: 0, }
                             reject(result);
                         } else if (community.communityStaffID.includes(userID) === true) {
-                            let result = { permission: true, status: 200, message: `Authorized` }
+                            let result = { permission: 1, status: 200, message: `Authorized` }
                             resolve(result);
                         } else {
-                            let result = { permission: false, status: 401, message: `Unauthorized` }
+                            let result = { permission: 0, status: 401, message: `Unauthorized` }
                             reject(result);
                         }
                     });
