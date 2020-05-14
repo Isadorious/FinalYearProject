@@ -191,7 +191,7 @@ class CustomDataDashboard extends React.Component {
 
     async createDataOnComplete() {
         await this.fetchCustomData();
-        this.handleHideData();
+        this.handleCreateClose();
     }
 
     render() {
