@@ -14,7 +14,7 @@ router.get(`/:communityID/structure/:structureID`, (req, res) => {
 		} else if (info != undefined) {
 			res.json({ message: info.message });
 		} else {
-			isStaff(communityID, user._id)
+			isStaff(req.params.communityID, user._id)
 				.then((result) => {
 					const query = CustomData.find({ communityID: req.params.communityID, structureID: req.params.structureID });
 					query.exec((err, customData) => {
@@ -38,7 +38,7 @@ router.get(`/:communityID/structure/:structureID/data/:dataID`, (req, res) => {
 		} else if (info != undefined) {
 			res.json({ message: info.message });
 		} else {
-			isStaff(communityID, user._id)
+			isStaff(req.params.communityID, user._id)
 				.then((result) => {
 					const query = CustomData.findOne({ _id: req.params.dataID, communityID: req.params.communityID, structureID: req.params.structureID });
 					query.exec((err, customData) => {
