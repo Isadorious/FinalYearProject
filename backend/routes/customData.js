@@ -8,27 +8,51 @@ const Community = require(`../models/community`);
 */
 
 router.get(`/:communityID/structure/:structureID`, (req, res) => {
-	const query = CustomData.find({communityID: req.params.communityID, structureID: req.params.structureID});
-
-	query.exec((err, customData) => {
-		if(err) {
+	passport.authenticate(`jwt`, { session: false }, (err, user, info) => {
+		if (err) {
 			res.send(err);
+		} else if (info != undefined) {
+			res.json({ message: info.message });
 		} else {
-			res.send(customData);
+			isStaff(communityID, user._id)
+				.then((result) => {
+					const query = CustomData.find({ communityID: req.params.communityID, structureID: req.params.structureID });
+					query.exec((err, customData) => {
+						if (err) {
+							res.send(err);
+						} else {
+							res.send(customData);
+						}
+					});
+				}).catch((result) => {
+					res.status(result.status).json({ message: result.message });
+				});
 		}
-	});
+	})(req, res);
 });
 
 router.get(`/:communityID/structure/:structureID/data/:dataID`, (req, res) => {
-	const query = CustomData.findOne({_id: req.params.dataID, communityID: req.params.communityID, structureID: req.params.structureID});
-
-	query.exec((err, customData) => {
-		if(err) {
+	passport.authenticate(`jwt`, { session: false }, (err, user, info) => {
+		if (err) {
 			res.send(err);
+		} else if (info != undefined) {
+			res.json({ message: info.message });
 		} else {
-			res.send(customData);
+			isStaff(communityID, user._id)
+				.then((result) => {
+					const query = CustomData.findOne({ _id: req.params.dataID, communityID: req.params.communityID, structureID: req.params.structureID });
+					query.exec((err, customData) => {
+						if (err) {
+							res.send(err);
+						} else {
+							res.send(customData);
+						}
+					});
+				}).catch((result) => {
+					res.status(result.status).json({ message: result.message });
+				});
 		}
-	});
+	})(req, res);
 });
 
 router.post(`/`, (req, res) => {
