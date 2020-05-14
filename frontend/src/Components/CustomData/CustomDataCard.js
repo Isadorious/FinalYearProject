@@ -43,7 +43,7 @@ class CustomDataCard extends React.Component {
 
     setCardTitle() {
         const key = this.props.displayKeyPairs[0].key;
-        this.setState({ title: this.customData[key] });
+        this.setState({ title: this.props.customData.content[key] });
     }
 
     render() {
@@ -57,7 +57,7 @@ class CustomDataCard extends React.Component {
                         <Card.Title style={{ textAlign: "center" }}>{this.state.title}</Card.Title>
                         <Card.Subtitle className="mb-2 text-muted" style={{ textAlign: "center" }}><InlineUsers users={new Array(this.props.customData.authorID)} /></Card.Subtitle>
                         <ListGroup variant="flush">
-                            <ListGroup.Item>{new Date(this.props.task.taskDue).toLocaleDateString('en-GB')}</ListGroup.Item>
+                            <ListGroup.Item>{new Date(this.props.customData.date).toLocaleDateString('en-GB')}</ListGroup.Item>
                         </ListGroup>
                     </Card.Body>
                 </Card>
