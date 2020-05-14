@@ -49,6 +49,18 @@ router.get(`/:id`, (req, res) => {
 		} else if (info != undefined) {
 			res.json({ message: info.message });
 		} else {
+
+			if (req.query.permission !== undefined) {
+				isStaff(req.params.id, user._id)
+					.then((result) => {
+						res.json({ permission: result.permission });
+						return;
+					}).catch((result) => {
+						res.status(result.status).json({ permission: result.permission });
+						return;
+					})
+			}
+
 			const query = Community.findById(req.params.id);
 			query.setOptions({ lean: true }); // Query returns a javascript object allowing for modification outside of model
 			query.exec((err, community) => {
