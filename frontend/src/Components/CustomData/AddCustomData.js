@@ -69,7 +69,7 @@ class AddCustomDataForm extends React.Component {
 
     render() {
         let fields = this.props.structure.DisplayKeyPairs.map((pair, index) =>
-            <CreateKeyValuePair key={index} keyValuePair={pair} handleInputChange={this.handleInputChange} data={this.state.customData} />
+            <AddCustomDataField key={index} keyValuePair={pair} handleInputChange={this.handleInputChange} data={this.state.customData} />
         );
 
         return (
