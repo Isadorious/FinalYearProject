@@ -24,10 +24,10 @@ class AddCustomDataForm extends React.Component {
         const target = event.target;
         const value = target.value;
         const name = target.name;
+        let customData = this.state.customData;
+        customData[name] = value;
         this.setState({
-            customData: {
-                [name]: value
-            }
+            customData: customData
         });
     }
 
