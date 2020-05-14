@@ -17,6 +17,7 @@ import Logout from './User/Logout';
 import CommunityDashboard from './Community/Dashboard';
 import CommunityFinder from './Community/CommunityFinder';
 import CalendarDashboard from './Calendar/Dashboard';
+import CustomDataDashboard from './CustomData/CustomDataDashboard';
 
 class App extends React.Component {
   constructor(props) {
@@ -30,11 +31,11 @@ class App extends React.Component {
 
   async componentDidMount() {
     let accessString = localStorage.getItem(`JWT`);
-		if (accessString === null) {
-			this.setState({
-			loggedIn: false,
-			});
-		} else {
+    if (accessString === null) {
+      this.setState({
+        loggedIn: false,
+      });
+    } else {
       this.setState({
         loggedIn: true,
       });
@@ -42,32 +43,33 @@ class App extends React.Component {
   }
 
   updateLoggedIn(status) {
-		if(status === true) {
-			this.setState({loggedIn: true})
-		} else if(status === false) {
-      this.setState({loggedIn: false});
-		}
-	}
+    if (status === true) {
+      this.setState({ loggedIn: true })
+    } else if (status === false) {
+      this.setState({ loggedIn: false });
+    }
+  }
 
   render() {
     return (
       <div className="App">
         <Router>
           <div>
-          <Navbar loggedIn={this.state.loggedIn} updateLogin={this.updateLoggedIn} />
+            <Navbar loggedIn={this.state.loggedIn} updateLogin={this.updateLoggedIn} />
             <Switch>
-              <Route path="/login"> 
-                <Login loggedIn={this.state.loggedIn} updateLogin={this.updateLoggedIn} /> 
+              <Route path="/login">
+                <Login loggedIn={this.state.loggedIn} updateLogin={this.updateLoggedIn} />
               </Route>
               <Route path="/register" component={Register} />
               <Route path="/profile/e/:id" component={EditProfile} />
               <Route path="/logout">
                 <Logout updateLogin={this.updateLoggedIn} />
               </Route>
+              <Route path="/community/:communityID/structures/:structureID" component={CustomDataDashboard} />
               <Route path="/community/find" component={CommunityFinder} />
               <Route path="/community/:id" component={CommunityDashboard} />
               <Route path="/calendar/:id" component={CalendarDashboard} />
-              <Route path="/"> 
+              <Route path="/">
                 <Home loggedIn={this.state.loggedIn} updateLogin={this.updateLoggedIn} />
               </Route>
             </Switch>
