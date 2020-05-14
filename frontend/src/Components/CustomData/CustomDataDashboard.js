@@ -140,7 +140,7 @@ class CustomDataDashboard extends React.Component {
         }
 
         await Axios
-            .delete(`${process.env.REACT_APP_API_URL}/api/community/${this.props.match.params.communityID}/structures/${this.props.match.params.structureID}`, {
+            .delete(`${process.env.REACT_APP_API_URL}/api/communities/${this.props.match.params.communityID}/structures/${this.props.match.params.structureID}`, {
                 headers: { Authorization: `JWT ${accessString}` }
             }).then((response) => {
                 console.log(response.status);
