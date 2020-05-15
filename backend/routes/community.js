@@ -61,43 +61,45 @@ router.get(`/:id`, (req, res) => {
 					})
 			}
 
-			const query = Community.findById(req.params.id);
-			query.setOptions({ lean: true }); // Query returns a javascript object allowing for modification outside of model
-			query.exec((err, community) => {
-				if (err) {
-					res.send(err);
-					return;
-				}
-				if (community === null) {
-					res.status(404).json({ message: `No community found` });
-				} else {
-					community.permission = 0;
+			else {
+				const query = Community.findById(req.params.id);
+				query.setOptions({ lean: true }); // Query returns a javascript object allowing for modification outside of model
+				query.exec((err, community) => {
+					if (err) {
+						res.send(err);
+						return;
+					}
+					if (community === null) {
+						res.status(404).json({ message: `No community found` });
+					} else {
+						community.permission = 0;
 
-					isOwner(community._id, user._id)
-						.then((result) => {
-							community.permission = 3;
-							res.json(community);
-							return;
-						}).catch((result) => {
-							isAdmin(community._id, user._id)
-								.then((result) => {
-									community.permission = 2;
-									res.json(community);
-									return;
-								}).catch((result) => {
-									isStaff(community._id, user._id)
-										.then((result) => {
-											community.permission = 1;
-											res.json(community);
-											return;
-										}).catch((result) => {
-											res.json(community);
-											return;
-										});
-								});
-						});
-				}
-			});
+						isOwner(community._id, user._id)
+							.then((result) => {
+								community.permission = 3;
+								res.json(community);
+								return;
+							}).catch((result) => {
+								isAdmin(community._id, user._id)
+									.then((result) => {
+										community.permission = 2;
+										res.json(community);
+										return;
+									}).catch((result) => {
+										isStaff(community._id, user._id)
+											.then((result) => {
+												community.permission = 1;
+												res.json(community);
+												return;
+											}).catch((result) => {
+												res.json(community);
+												return;
+											});
+									});
+							});
+					}
+				});
+			}
 		}
 	})(req, res);
 });

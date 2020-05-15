@@ -3,6 +3,8 @@ const router = express.Router();
 const CustomData = require(`../models/customData`);
 const Community = require(`../models/community`);
 const { isStaff, isAdmin, isOwner } = require('../Utils/community');
+const passport = require(`passport`);
+const jwt = require(`jsonwebtoken`);
 
 /*
 * route/:communityID/structure/:structureID/data/:customDataID
