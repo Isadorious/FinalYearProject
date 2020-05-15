@@ -36,8 +36,8 @@ class CustomDataCard extends React.Component {
     }
 
     handleShow() {
-        if (this.props.showTask) {
-            this.props.showTask(this.props.customData._id);
+        if (this.props.showData) {
+            this.props.showData(this.props.customData._id);
         }
     }
 

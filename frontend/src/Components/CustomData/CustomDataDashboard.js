@@ -11,6 +11,7 @@ import CardColumns from 'react-bootstrap/CardColumns';
 import Form from 'react-bootstrap/Form';
 import CustomDataCard from './CustomDataCard';
 import CreateCustomData from './AddCustomData';
+import CustomDataViewEdit from './CustomDataViewEdit';
 
 class CustomDataDashboard extends React.Component {
     constructor(props) {
@@ -241,6 +242,7 @@ class CustomDataDashboard extends React.Component {
                     </Modal>
                     <Modal show={this.state.showDataModal} onHide={this.handleHideData} size="lg">
                         <Modal.Header closeButton />
+                        <CustomDataViewEdit communityID={this.props.match.params.communityID} structure={this.state.customStructure} dataID={this.state.shownDataID} userPermission={this.state.userPermission} />
                     </Modal>
                     <Row>
                         <Col>
