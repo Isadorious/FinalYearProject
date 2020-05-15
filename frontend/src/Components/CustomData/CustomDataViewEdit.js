@@ -84,7 +84,7 @@ class CustomDataViewEditForm extends React.Component {
         }
 
         await Axios
-            .put(`${process.env.REACT_APP_API_URL}/api/customData`, data, {
+            .put(`${process.env.REACT_APP_API_URL}/api/customData/${this.props.communityID}/structure/${this.props.structure._id}/data/${this.props.dataID}`, data, {
                 headers: { Authorization: `JWT ${accessString}` }
             })
             .then((response) => {
