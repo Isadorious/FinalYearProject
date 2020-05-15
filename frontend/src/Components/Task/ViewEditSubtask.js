@@ -7,7 +7,7 @@ import Axios from 'axios';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import StaffSelect from './StaffSelect';
-import InlineUsers from './InlineUsers';
+import InlineUsers from '../User/InlineUsers';
 
 class ViewEditSubtask extends React.Component {
     constructor(props) {
@@ -31,7 +31,7 @@ class ViewEditSubtask extends React.Component {
 
     handleSwitchChange(event) {
         this.props.handleSwitchChange(event, this.props.index);
-	}
+    }
 
     updateAssignedStaff(staff) {
         this.props.updateAssignedStaff(staff, this.props.index);
@@ -72,13 +72,13 @@ class ViewEditSubtask extends React.Component {
                             <p>{this.props.subTask.subTaskName}</p>
                         </Form.Group>
                         <Form.Group as={Col} controlId="assignedUsersControl">
-                            <p><InlineUsers users={this.props.subTask.subTaskAssignedUsers}/></p>
+                            <p><InlineUsers users={this.props.subTask.subTaskAssignedUsers} /></p>
                         </Form.Group>
                         <Form.Group as={Col} controlId={`completedSubtaskControl${this.props.index}`}>
                             <p>{this.props.subTask.complete ? `Complete` : `Incomplete`}</p>
                         </Form.Group>
                         <Form.Group as={Col} controlId="dueDateControl">
-                            <Form.Control name="subTaskDue" type="date" value={new Date(this.props.subTask.subTaskDue).toLocaleDateString('en-CA')} onChange={this.handleInputChange} disabled/>
+                            <Form.Control name="subTaskDue" type="date" value={new Date(this.props.subTask.subTaskDue).toLocaleDateString('en-CA')} onChange={this.handleInputChange} disabled />
                         </Form.Group>
                     </Form.Row>
                 </Container>

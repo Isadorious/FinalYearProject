@@ -10,7 +10,7 @@ import StaffSelect from './StaffSelect';
 import ViewEditSubtask from './ViewEditSubtask';
 import Row from 'react-bootstrap/Row';
 import CategorySelect from '../Category/CategorySelect';
-import InlineUsers from './InlineUsers';
+import InlineUsers from '../User/InlineUsers';
 
 class ViewEditTask extends React.Component {
 	constructor(props) {
@@ -66,7 +66,7 @@ class ViewEditTask extends React.Component {
 		const checked = target.checked;
 		const name = target.name;
 
-		this.setState({[name]: checked });
+		this.setState({ [name]: checked });
 	}
 
 	updateAssignedStaff(staff) {
@@ -316,7 +316,7 @@ class ViewEditTask extends React.Component {
 						<hr />
 						<Form.Group controlId="categorySelect">
 							<Form.Label>Category:</Form.Label>
-							<CategorySelect categories={this.props.categories} updateCategory={this.updateCategory} initialCategory={this.state.taskCategory} disabled/>
+							<CategorySelect categories={this.props.categories} updateCategory={this.updateCategory} initialCategory={this.state.taskCategory} disabled />
 						</Form.Group>
 						<hr />
 					</Form>

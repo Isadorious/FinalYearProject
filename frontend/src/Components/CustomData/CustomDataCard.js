@@ -5,7 +5,7 @@ import Loading from '../Utils/Loading';
 import Error from '../Utils/Error';
 import { Link } from 'react-router-dom';
 import ListGroup from 'react-bootstrap/ListGroup';
-import InlineUsers from '../Task/InlineUsers';
+import InlineUsers from '../User/InlineUsers';
 import equal from 'fast-deep-equal';
 
 class CustomDataCard extends React.Component {
